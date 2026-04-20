@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
     const { email, userId } = await req.json()
 
     // Krijo Connected Account
+    // Nuk e vendosim country — Stripe e pyet krijuesin gjatë onboarding (mbështet AL, DE, GB, etj.)
     const account = await stripe.accounts.create({
       type: "express",
-      country: "XK", // Kosovo
       email,
       capabilities: {
         card_payments: { requested: true },

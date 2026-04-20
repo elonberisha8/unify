@@ -1,5 +1,41 @@
 "use client"
 
+// ============================================================
+// KOMPONENTI: DonationCheckout
+// ============================================================
+// ÇFARË BËN:
+//   Krijon PaymentIntent te Stripe dhe shfaq formën e pagesës.
+//   Pas pagesës së suksesshme → thërret onSuccess(paymentIntentId).
+//
+// KU PËRDORET:
+//   → app/kampanjat/[slug]/page.tsx (brenda Modal-it të Donacionit)
+//   → Hapet kur useri klikon butonin "Dono Tani"
+//
+// SI E PËRDOR FRONTISTI:
+//   import { DonationCheckout } from "@/components/stripe"
+//
+//   <DonationCheckout
+//     campaignId={campaign.id}          ← ID e kampanjës nga DB/URL
+//     campaignTitle={campaign.title}    ← Titulli për t'u shfaqur
+//     amount={selectedAmount}           ← Shuma që zgjodhi useri (EUR)
+//     tip={selectedTip}                 ← Tip-i për Unify (0, 5%, 10%) default: 0
+//     anonymous={isAnonymous}           ← Toggle "Dono anonim" default: false
+//     message={donationMessage}         ← Mesazhi opsional default: ""
+//     onSuccess={(paymentIntentId) => {
+//       // Redirect te /sukses/donacion ose shfaq konfirmim
+//       router.push(`/sukses/donacion?pi=${paymentIntentId}`)
+//     }}
+//     onError={(message) => {
+//       // Shfaq toast gabimi
+//       toast.error(message)
+//     }}
+//   />
+//
+// ÇFARË NDODH PAS SUKSESIT (BACKEND):
+//   Webhook → payment_intent.succeeded → ruhet donacioni në DB automatikisht
+//   Frontend nuk duhet të bëjë gjë tjetër — vetëm redirect
+// ============================================================
+
 import { useState, useEffect } from "react"
 import { Elements } from "@stripe/react-stripe-js"
 import { getStripe } from "@/lib/stripe/client"
