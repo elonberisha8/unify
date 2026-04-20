@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe/server"
 import Stripe from "stripe"
 
+// Kjo route duhet të jetë dinamike — Stripe dërgon body raw
+export const dynamic = "force-dynamic"
+
 // Stripe dërgon events këtu pas çdo pagesë
 export async function POST(req: NextRequest) {
   const body = await req.text()
