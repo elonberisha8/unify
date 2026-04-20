@@ -1,7 +1,10 @@
+"use client"
+
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/campaign-detail
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
+//   • Kampanja — Detail → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=55-2
+//   • Kampanja — Modal Donacioni → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=199-2
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -13,10 +16,10 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
+// import { DonationModal, DonorList, ShareButtons, DonationAmountPicker, BookmarkButton } from "@/components/public"
+// import { ProgressBar, Tabs, TabsList, TabsTrigger, TabsContent, Badge, Card, CardContent } from "@/components/ui"
 // import { PublicLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function CampaignDetailPage() {
   return null
 }

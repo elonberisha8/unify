@@ -1,7 +1,7 @@
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/static-pages
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
+//   • Blog — Lista → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-397
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -13,10 +13,9 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
+// import { BlogCard, BlogSidebar } from "@/components/public"
 // import { PublicLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function BlogListPage() {
   return null
 }

@@ -1,7 +1,7 @@
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/admin-core
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
+//   • Admin — Dashboard → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=40-2
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -13,10 +13,9 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
-// import { PublicLayout } from "@/components/layout"
+// import { AdminStatCard, AdminChartCard, AdminQuickStats } from "@/components/admin"
+// import { AdminLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function AdminDashPage() {
   return null
 }

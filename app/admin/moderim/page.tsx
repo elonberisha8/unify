@@ -1,7 +1,11 @@
+"use client"
+
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/admin-moderation
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
+//   • Admin — Moderim → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=44-2
+//   • Admin — Moderim — Përdorues Flagged → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=98-2
+//   • Admin — Moderim — Kampanja Pezulluara → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=99-2
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -13,10 +17,9 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
-// import { PublicLayout } from "@/components/layout"
+// import { ModerationActions, ModerationDecisionCard, AdminStatusBadge } from "@/components/admin"
+// import { AdminLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function AdminModerimPage() {
   return null
 }
