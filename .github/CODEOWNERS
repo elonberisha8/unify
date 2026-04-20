@@ -1,0 +1,70 @@
+# ============================================================
+# UNIFY FRONTEND — CODEOWNERS
+# ============================================================
+# Çdo developer është OWNER i faqeve të tij.
+# Kur bëhet PR te develop, pronari duhet ta aprovojë.
+#
+# Zëvendëso @username me GitHub username-in real të developer-it.
+# Shto username-et e saktë pastaj kësaj liste.
+# ============================================================
+
+# Dev 1 — Homepage
+app/page.tsx                          @dev-homepage
+app/(public)/page.tsx                 @dev-homepage
+
+# Dev 2 — Faqet statike
+app/si-funksionon/                    @dev-static
+app/rreth-nesh/                       @dev-static
+app/kontakt/                          @dev-static
+app/kushtet/                          @dev-static
+app/privatesia/                       @dev-static
+
+# Dev 3 — Listings (Shpalljet + Kampanjat)
+app/shpalljet/                        @dev-listings
+app/kampanjat/                        @dev-listings
+
+# Dev 4 — Campaign Detail
+app/kampanjat/[slug]/                 @dev-campaign-detail
+
+# Dev 5 — Volunteer Detail
+app/vullnetare/                       @dev-volunteer-detail
+
+# Dev 6 — Auth + Onboarding
+app/auth/                             @dev-auth
+app/onboarding/                       @dev-auth
+
+# Dev 7 — Dashboard Home + Transaksionet + Të Ruajtura
+app/dashboard/page.tsx                @dev-dashboard-home
+app/dashboard/transaksionet/          @dev-dashboard-home
+app/dashboard/te-ruajtura/            @dev-dashboard-home
+
+# Dev 8 — Dashboard Kampanjat + Shpalljet
+app/dashboard/kampanjat/              @dev-dashboard-campaigns
+app/dashboard/shpalljet/              @dev-dashboard-campaigns
+
+# Dev 9 — Dashboard Inbox
+app/dashboard/inbox/                  @dev-dashboard-inbox
+
+# Dev 10 — Dashboard Profili + Profili publik
+app/dashboard/profili/                @dev-dashboard-profile
+app/profili/                          @dev-dashboard-profile
+
+# Dev 11 — Admin Core
+app/admin/page.tsx                    @dev-admin-core
+app/admin/kampanjat/                  @dev-admin-core
+app/admin/vullnetare/                 @dev-admin-core
+
+# Dev 12 — Admin Moderation
+app/admin/perdoruesit/                @dev-admin-mod
+app/admin/raportimet/                 @dev-admin-mod
+app/admin/blog/                       @dev-admin-mod
+app/admin/moderim/                    @dev-admin-mod
+
+# ============================================================
+# ZONA E MBROJTUR — askush nuk prek pa aprovim nga Lead Dev
+# ============================================================
+components/                           @lead-dev
+tailwind.config.ts                    @lead-dev
+next.config.js                        @lead-dev
+package.json                          @lead-dev
+.eslintrc.json                        @lead-dev
