@@ -20,6 +20,10 @@
 // import { BookmarkButton, ShareButtons, StatisticCard } from "@/components/public"
 // import { Badge, Card, CardContent, Button, Textarea } from "@/components/ui"
 // import { PublicLayout } from "@/components/layout"
+// import { IMAGES } from "@/lib/images"
+//
+// IMAGES.campaigns.campaign2   <- Cover vullnetar (760×400)
+// IMAGES.sections.vullnetare   <- Background seksioni
 
 export default function VolunteerDetailPage() {
   return null

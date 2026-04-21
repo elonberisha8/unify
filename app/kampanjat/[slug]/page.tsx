@@ -60,6 +60,21 @@
 // import { DonationCheckout } from "@/components/stripe"
 // import { ProgressBar, Tabs, TabsList, TabsTrigger, TabsContent, Badge, Card, CardContent } from "@/components/ui"
 // import { PublicLayout } from "@/components/layout"
+// import { IMAGES } from "@/lib/images"
+//
+// IMAGES.campaigns.campaign1  <- Cover kampanje (760x400)
+// IMAGES.campaigns.campaign2  <- Thumbnail 2
+// IMAGES.campaigns.campaign3  <- Thumbnail 3
+// import { IMAGES } from "@/lib/images"
+//
+// ============================================================
+// IMAGES — Imazhet për këtë faqe
+// ============================================================
+// IMAGES.campaigns.campaign1   ← Cover kryesor kampanje (760×400)
+// IMAGES.campaigns.campaign2   ← Thumbnail galerie 2
+// IMAGES.campaigns.campaign3   ← Thumbnail galerie 3
+// (fotot reale vijnë nga API — campaign.imageUrl)
+// ============================================================
 
 export default function CampaignDetailPage() {
   return null
