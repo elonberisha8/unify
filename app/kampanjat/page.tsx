@@ -4,6 +4,7 @@
 // BRANCH: feat/listings
 // FIGMA:
 //   • Shpalljet Publike → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=54-2
+// NOTION: https://www.notion.so/34874891227e81fd9a06df93436ce2d9
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

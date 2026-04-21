@@ -4,6 +4,7 @@
 // BRANCH: feat/admin-core
 // FIGMA:
 //   • Admin — Cilësimet → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=53-2
+// NOTION: https://www.notion.so/34874891227e812cb190ea4b86cfa9bc
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

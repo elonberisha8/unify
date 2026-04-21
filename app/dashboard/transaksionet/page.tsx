@@ -4,6 +4,7 @@
 // BRANCH: feat/dashboard-home
 // FIGMA:
 //   • Dashboard — Transaksionet → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=79-2
+// NOTION: https://www.notion.so/34874891227e81f2a6e0ec234fd70570
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

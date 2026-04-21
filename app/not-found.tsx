@@ -2,6 +2,7 @@
 // BRANCH: feat/static-pages
 // FIGMA:
 //   • 404 — Faqja Nuk U Gjet → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=123-2
+// NOTION: https://www.notion.so/34874891227e8130855afa1edb64a28b
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

@@ -2,6 +2,7 @@
 // BRANCH: feat/dashboard-campaigns
 // FIGMA:
 //   • Bëhu Krijues → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=48-2
+// NOTION: https://www.notion.so/34874891227e8188a4d5e1c80adc017a
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

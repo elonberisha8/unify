@@ -6,6 +6,7 @@
 //   • Krijo Shpallje Vullnetare — Hapi 1 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=59-2
 //   • Krijo Shpallje Vullnetare — Hapi 2 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=145-2
 //   • Krijo Shpallje Vullnetare — Hapi 3 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=146-2
+// NOTION: https://www.notion.so/34874891227e8166b6e1db98166ca406
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"

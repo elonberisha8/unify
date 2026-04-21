@@ -4,6 +4,7 @@
 // BRANCH: feat/dashboard-campaigns
 // FIGMA:
 //   • Dashboard — Kampanjat → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=80-2
+// NOTION: https://www.notion.so/34874891227e8166b6e1db98166ca406
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
