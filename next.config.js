@@ -2,8 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // Stripe dhe librari tjera server-side nuk bundle-ohen nga Next.js
-  serverExternalPackages: ["stripe"],
+  experimental: {
+    // Stripe nuk bundle-ohet nga Next.js (server-side only)
+    serverComponentsExternalPackages: ["stripe"],
+  },
 
   images: {
     remotePatterns: [
