@@ -52,10 +52,10 @@ export default function VolunteerDetailPage() {
 
   const post = {
     id: params?.id ?? "1",
-    title: "Koordinator/e për shpërndarjen e ushqimeve",
-    subtype: "Vullnetar terreni",
-    category: "Humanitare",
-    location: "Prishtinë",
+    title: "Vullnetarë — Spitali i Gjakovës",
+    subtype: "AKTIVE",
+    category: "SHËNDETËSI",
+    location: "Gjakovë, Kosovë",
     ownerName: "Shoqata Drita",
     ownerAnonymous: false,
     ownerVerified: true,
@@ -63,21 +63,22 @@ export default function VolunteerDetailPage() {
     positionsOpen: 5,
     deadline: "30 Prill 2026",
     collaborationUntil: "3 muaj",
-    weeklyHours: "4-6 ore/jave",
-    applicantsCount: 27,
+    weeklyHours: "4-6 orë/javë",
+    publishedAt: "3 ditë më parë",
+    applicantsCount: 12,
     description:
-      "Kërkojmë vullnetarë të përkushtuar për koordinimin e shpërndarjes javore të pakove ushqimore për familjet në nevojë. Roli përfshin organizimin e pikave të shpërndarjes, komunikimin me ekipin e logjistikës dhe mbikëqyrjen e dorëzimeve gjatë fundjavës.",
+      "Spitali Rajonaj i Gjakovës është në kërkim të vullnetarëve të përkushtuar për të ndihmuar pacientët dhe stafin mjekësor. Kjo është një mundësi e shkëlqyer për të kontribuar në komunitetin tuaj dhe për të fituar përvojë në fushën e shëndetësisë.\n\nSi vullnetar në spitalin tonë, ju do të punoni krah për krah me stafin tonë profesional dhe do të ndihmoni në përmirësimin e cilësisë së jetës së pacientëve tanë. Kjo është një përvojë që transformon jetën dhe ju mëson vlera të rëndësishme rreth shërbimit ndaj komunitetit.",
     terms: [
-      "Duhet të jesh mbi 18 vjeç.",
-      "Disponueshmëri minimale: 2 ditë në javë.",
-      "Aftësi komunikimi dhe pune në ekip.",
-      "Përvoja në aktivitete humanitare është përparësi.",
+      "18 vjeç",
+      "Disponueshmëri fundjavë",
+      "Komunikim i mirë",
+      "Vullnet të ndihmosh",
     ],
     responsibilities: [
-      "Asistencë në pikën e pranimit",
-      "Ndihmë me distribuimin e ushqimit",
-      "Mbështetje në evente dhe aktivitete",
-      "Asistencë logjistike për terenin",
+      "Asistencë në pritjen e pacientëve",
+      "Ndihmë në distribuimin e ushqimit",
+      "Mbështetje emocionale për pacientët",
+      "Aktivitete argëtuese për fëmijët",
     ],
     organization: {
       name: "Spitali Rajonal Gjakove",
@@ -126,16 +127,43 @@ export default function VolunteerDetailPage() {
     }
   }
 
-  return (
     <PublicLayout mainClassName="bg-unify-cream">
       <section className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-10">
-        <div className="mb-3 text-xs text-muted-foreground">
-          Kryefaqja &gt; Shpalljet &gt; Vullnetare &gt; {post.title}
+        <div className="mb-6 text-sm text-muted-foreground/60">
+          Kryefaqja &nbsp; &gt; &nbsp; Shpalljet &nbsp; &gt; &nbsp; <span className="font-bold text-unify-brown">{post.title}</span>
         </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[65%_35%] lg:items-start">
-          <div className="space-y-6">
-            <Card className="overflow-hidden rounded-2xl border-border/70">
-              <div className="aspect-[16/9] w-full bg-muted">
+        
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="bg-[#3ecf8e] hover:bg-[#3ecf8e]/90 text-white border-none px-4 py-1 text-[10px] font-bold tracking-wider">
+              {post.subtype}
+            </Badge>
+            <Badge className="bg-unify-blue hover:bg-unify-blue/90 text-white border-none px-4 py-1 text-[10px] font-bold tracking-wider">
+              {post.category}
+            </Badge>
+          </div>
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-4">
+              <h1 className="text-3xl font-bold tracking-tight text-unify-brown md:text-5xl">
+                {post.title}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground/70">
+                <div className="flex items-center gap-1">
+                  <span className="text-lg">📍</span> {post.location}
+                </div>
+                <div className="flex items-center gap-1">
+                  <ClockIcon className="h-4 w-4" /> Publikuar {post.publishedAt}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[65%_35%] lg:items-start">
+          <div className="space-y-8">
+            <Card className="overflow-hidden rounded-[2.5rem] border-none shadow-sm">
+              <div className="aspect-[16/9] w-full bg-muted relative">
                 {post.imageUrl ? (
                   <Image
                     src={post.imageUrl}
@@ -151,133 +179,116 @@ export default function VolunteerDetailPage() {
               </div>
             </Card>
 
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">{post.subtype}</Badge>
-                  <Badge variant="secondary">{post.category}</Badge>
-                  <Badge variant="secondary">{post.location}</Badge>
-                  <Badge variant="secondary">
-                    {post.ownerAnonymous
-                      ? "ANONIM"
-                      : post.ownerVerified
-                        ? <span className="flex items-center gap-1"><BadgeCheckIcon className="h-3 w-3" /> VERIFIED</span>
-                        : "E PAVERIFIKUAR"}
-                  </Badge>
-                </div>
-                <BookmarkButton postId={post.id} />
-              </div>
-              <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-                {post.title}
-              </h1>
-            </div>
-
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-3 p-5">
-                <p className="text-sm text-muted-foreground">Pronar i asetit</p>
-                <p className="text-base font-medium text-foreground">
-                  {post.ownerAnonymous ? "Pronar Anonim 🌟" : post.ownerName}
+            <Card className="rounded-[2.5rem] border-none shadow-sm bg-white p-2">
+              <CardContent className="space-y-6 p-8">
+                <h2 className="text-2xl font-bold text-unify-brown">Rreth Pozitës</h2>
+                <p className="leading-relaxed text-muted-foreground text-base whitespace-pre-line">
+                  {post.description}
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-3 p-5">
-                <h2 className="text-lg font-semibold text-foreground">Rreth Pozites</h2>
-                <p className="leading-7 text-foreground/90">{post.description}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-3 p-5">
-                <h2 className="text-lg font-semibold text-foreground">Pergjegjesite</h2>
-                <ul className="space-y-2 text-foreground/90">
+            <Card className="rounded-[2.5rem] border-none shadow-sm bg-white p-2">
+              <CardContent className="space-y-6 p-8">
+                <h2 className="text-2xl font-bold text-unify-brown">Përgjegjësitë</h2>
+                <ul className="space-y-4">
                   {post.responsibilities.map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-sky-100 text-sky-700">
-                        <CheckIcon className="h-3 w-3" />
-                      </span>
-                      <span>{item}</span>
+                    <li key={item} className="flex items-center gap-4">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-unify-blue text-white">
+                        <CheckIcon className="h-4 w-4" />
+                      </div>
+                      <span className="text-muted-foreground font-medium">{item}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-3 p-5">
-                <h2 className="text-lg font-semibold text-foreground">Kerkesat</h2>
-                <ul className="list-disc space-y-2 pl-5 text-foreground/90">
+            <Card className="rounded-[2.5rem] border-none shadow-sm bg-white p-2">
+              <CardContent className="space-y-6 p-8">
+                <h2 className="text-2xl font-bold text-unify-brown">Kërkesat</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {post.terms.map((term) => (
-                    <li key={term}>{term}</li>
+                    <div key={term} className="flex items-center gap-3 p-4 rounded-2xl bg-[#eff5f2]">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#3cc08e]">
+                        <CheckIcon className="h-3 w-3" />
+                      </div>
+                      <span className="text-sm font-bold text-muted-foreground/80">{term}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </CardContent>
             </Card>
           </div>
 
           <aside className="space-y-4 lg:sticky lg:top-24">
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-5 p-5">
-                <div className="grid grid-cols-2 gap-4 rounded-xl bg-white p-3 text-center">
-                  <div className="border-r border-border">
-                    <p className="text-3xl font-bold text-unify-blue">{post.applicantsCount}</p>
-                    <p className="text-xs text-muted-foreground">Aplikues</p>
+            <Card className="rounded-[2rem] border-none shadow-sm py-4">
+              <CardContent className="space-y-8 p-6">
+                <div className="flex items-center justify-around text-center">
+                  <div className="flex-1 border-r border-border/10">
+                    <p className="text-4xl font-bold text-unify-blue">{post.applicantsCount}</p>
+                    <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">Aplikues</p>
                   </div>
-                  <div>
-                    <p className="text-3xl font-bold text-unify-green">{post.positionsOpen}</p>
-                    <p className="text-xs text-muted-foreground">Vende</p>
+                  <div className="flex-1">
+                    <p className="text-4xl font-bold text-[#3ecf8e]">{post.positionsOpen}</p>
+                    <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">Vende</p>
                   </div>
                 </div>
 
-                <div className="space-y-3 text-sm text-foreground/80">
-                  <p className="flex items-center gap-2">
-                    <CalendarIcon className="h-4 w-4 text-primary" />
+                <div className="space-y-4 pt-2">
+                  <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground/80">
+                    <CalendarIcon className="h-4 w-4 text-unify-blue" />
                     <span>Fillimi: {post.deadline}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <ClockIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground/80">
+                    <ClockIcon className="h-4 w-4 text-unify-blue" />
                     <span>Kohëzgjatja: {post.collaborationUntil}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <UsersIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground/80">
+                    <UsersIcon className="h-4 w-4 text-unify-blue" />
                     <span>Orët: {post.weeklyHours}</span>
-                  </p>
+                  </div>
                 </div>
 
-                <Button className="w-full rounded-full" onClick={onApplyClick}>
-                  APLIKO TANI
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full rounded-full border-border text-unify-brown"
-                  onClick={() => setShareModalOpen(true)}
-                >
-                  SHPERNDAJ
-                </Button>
+                <div className="space-y-3 pt-2">
+                  <Button className="w-full rounded-2xl h-12 bg-unify-blue hover:bg-unify-blue/90 font-bold uppercase tracking-wide gap-2" onClick={onApplyClick}>
+                    <div className="flex h-4 w-4 items-center justify-center rounded-full border border-white">
+                      <CheckIcon className="h-2 w-2" />
+                    </div>
+                    APLIKO TANI
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full rounded-2xl h-12 border-border/20 text-unify-brown font-bold uppercase tracking-wide gap-2 bg-transparent hover:bg-muted/5 tracker-wide"
+                    onClick={() => setShareModalOpen(true)}
+                  >
+                    <ShareButtons className="scale-75" url={currentUrl} />
+                    SHPËRNDAJ
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-            
-            <Card className="rounded-2xl">
-              <CardContent className="space-y-3 p-5">
-                <h3 className="text-2xl font-semibold text-unify-brown">Rreth Organizates</h3>
-                <div className="space-y-3">
+
+            <Card className="rounded-[2rem] border-none shadow-sm py-4">
+              <CardContent className="space-y-6 p-6">
+                <h3 className="text-xl font-bold text-unify-brown">Rreth Organizatës</h3>
+                <div className="grid grid-cols-1 gap-5">
                   <div>
-                    <p className="text-xs text-muted-foreground">Emri</p>
-                    <p className="font-semibold text-foreground">{post.organization.name}</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest leading-none mb-1">Emri</p>
+                    <p className="font-bold text-unify-brown leading-tight">{post.organization.name}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Lokacioni</p>
-                    <p className="font-medium text-foreground">{post.organization.locationFull}</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest leading-none mb-1">Lokacioni</p>
+                    <p className="font-bold text-unify-brown leading-tight">{post.organization.locationFull}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Lloji</p>
-                    <p className="font-medium text-foreground">{post.organization.type}</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest leading-none mb-1">Lloji</p>
+                    <p className="font-bold text-unify-brown leading-tight">{post.organization.type}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Viti i Themelimit</p>
-                    <p className="font-medium text-foreground">{post.organization.foundedYear}</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest leading-none mb-1">Viti i Themelimit</p>
+                    <p className="font-bold text-unify-brown leading-tight">{post.organization.foundedYear}</p>
                   </div>
                 </div>
               </CardContent>
