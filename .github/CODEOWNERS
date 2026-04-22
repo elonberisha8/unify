@@ -17,6 +17,9 @@ next.config.js                        @elonberisha8
 package.json                          @elonberisha8
 .eslintrc.json                        @elonberisha8
 .github/                              @elonberisha8
+app/api/                              @elonberisha8
+app/test-stripe/                      @elonberisha8
+app/showcase/                         @elonberisha8
 
 # ══════════════════════════════════════════════════════════════
 # 🌐 PUBLIC (5 devs)
@@ -45,6 +48,7 @@ app/kontakt/                          @Genti10-A @elonberisha8
 app/blog/                             @Genti10-A @elonberisha8
 app/kushtet/                          @Genti10-A @elonberisha8
 app/privatesia/                       @Genti10-A @elonberisha8
+app/sherbimet/                        @Genti10-A @elonberisha8
 app/not-found.tsx                     @Genti10-A @elonberisha8
 
 # ══════════════════════════════════════════════════════════════
