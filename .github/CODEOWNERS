@@ -50,7 +50,7 @@ app/privatesia/                       @Genti10-A @elonberisha8
 app/not-found.tsx                     @Genti10-A @elonberisha8
 
 # ══════════════════════════════════════════════════════════════
-# 📊 DASHBOARD (4 devs)
+# 📊 DASHBOARD + AUTH (5 devs)
 # ══════════════════════════════════════════════════════════════
 
 # ── Rilind Krasniqi (rkrasniqi693@gmail.com) — feat/dashboard-home ──
@@ -74,8 +74,13 @@ app/dashboard/krijo/                  @GITHUB_USERNAME_ZENEL @elonberisha8
 # ── Leart Ibrahimi (leart3.ibrahimi@universitetiaab.com) — feat/dashboard-inbox ──
 app/dashboard/inbox/                  @GITHUB_USERNAME_LEART @elonberisha8
 
+# ── Erin Laci (erin.laci@universitetiaab.com) — feat/auth ────
+app/auth/                             @erinlaci-ai @elonberisha8
+app/onboarding/                       @erinlaci-ai @elonberisha8
+app/sso-callback/                     @erinlaci-ai @elonberisha8
+
 # ══════════════════════════════════════════════════════════════
-# 🛡️ ADMIN (3 devs)
+# 🛡️ ADMIN (2 devs)
 # ══════════════════════════════════════════════════════════════
 
 # ── Ajet Matoshi (ajet.matoshi@universitetiaab.com) — feat/admin-core ──
@@ -90,8 +95,3 @@ app/admin/raportimet/                 @ErionaRamadani @elonberisha8
 app/admin/moderim/                    @ErionaRamadani @elonberisha8
 app/admin/blog/                       @ErionaRamadani @elonberisha8
 app/admin/audit-log/                  @ErionaRamadani @elonberisha8
-
-# ── Erin Laci (erin.laci@universitetiaab.com) — feat/auth ────
-app/auth/                             @erinlaci-ai @elonberisha8
-app/onboarding/                       @erinlaci-ai @elonberisha8
-app/sso-callback/                     @erinlaci-ai @elonberisha8
