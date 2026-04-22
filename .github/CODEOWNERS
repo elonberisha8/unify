@@ -6,10 +6,8 @@
 #   GitHub automatikisht kërkon review nga owner-i i atij file.
 #   PR nuk mund të merge pa aprovimin e DEVELOPER-it + LEAD-it.
 #
-# ⚠️  TODO: Zëvendëso 3 placeholder-at e mbetur kur devat pranojnë ftesën:
-#       @GITHUB_USERNAME_RILIND  → Rilind Krasniqi
-#       @GITHUB_USERNAME_ZENEL   → Zenel Kastrati
-#       @GITHUB_USERNAME_LEART   → Leart Ibrahimi
+# ⚠️  TODO: Zëvendëso placeholder-in e mbetur kur devi pranon ftesën:
+#       @GITHUB_USERNAME_LEART   → Leart Ibrahimi (leart3.ibrahimi@universitetiaab.com)
 # ============================================================
 
 # ── LEAD — zona e mbrojtur (askush nuk prek pa aprovim) ──────
@@ -54,13 +52,13 @@ app/not-found.tsx                     @Genti10-A @elonberisha8
 # ══════════════════════════════════════════════════════════════
 
 # ── Rilind Krasniqi (rkrasniqi693@gmail.com) — feat/dashboard-home + feat/auth ──
-app/dashboard/page.tsx                @GITHUB_USERNAME_RILIND @elonberisha8
-app/dashboard/transaksionet/          @GITHUB_USERNAME_RILIND @elonberisha8
-app/dashboard/te-ruajtura/            @GITHUB_USERNAME_RILIND @elonberisha8
-app/dashboard/aktiviteti/             @GITHUB_USERNAME_RILIND @elonberisha8
-app/auth/                             @GITHUB_USERNAME_RILIND @elonberisha8
-app/onboarding/                       @GITHUB_USERNAME_RILIND @elonberisha8
-app/sso-callback/                     @GITHUB_USERNAME_RILIND @elonberisha8
+app/dashboard/page.tsx                @Lindii118 @elonberisha8
+app/dashboard/transaksionet/          @Lindii118 @elonberisha8
+app/dashboard/te-ruajtura/            @Lindii118 @elonberisha8
+app/dashboard/aktiviteti/             @Lindii118 @elonberisha8
+app/auth/                             @Lindii118 @elonberisha8
+app/onboarding/                       @Lindii118 @elonberisha8
+app/sso-callback/                     @Lindii118 @elonberisha8
 
 # ── Florian Qestaj (florian.qestaj@universitetiaab.com) — feat/dashboard-profile ──
 app/dashboard/profili/                @Florian138 @elonberisha8
@@ -69,10 +67,10 @@ app/dashboard/behu-krijues/           @Florian138 @elonberisha8
 app/profili/                          @Florian138 @elonberisha8
 
 # ── Zenel Kastrati (zenel.kastrati@universitetiaab.com) — feat/dashboard-campaigns ──
-app/dashboard/kampanjat/              @GITHUB_USERNAME_ZENEL @elonberisha8
-app/dashboard/shpalljet/              @GITHUB_USERNAME_ZENEL @elonberisha8
-app/dashboard/aplikimet/              @GITHUB_USERNAME_ZENEL @elonberisha8
-app/dashboard/krijo/                  @GITHUB_USERNAME_ZENEL @elonberisha8
+app/dashboard/kampanjat/              @Zenel @elonberisha8
+app/dashboard/shpalljet/              @Zenel @elonberisha8
+app/dashboard/aplikimet/              @Zenel @elonberisha8
+app/dashboard/krijo/                  @Zenel @elonberisha8
 
 # ── Leart Ibrahimi (leart3.ibrahimi@universitetiaab.com) — feat/dashboard-inbox ──
 app/dashboard/inbox/                  @GITHUB_USERNAME_LEART @elonberisha8
