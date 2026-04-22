@@ -6,8 +6,10 @@
 #   GitHub automatikisht kërkon review nga owner-i i atij file.
 #   PR nuk mund të merge pa aprovimin e DEVELOPER-it + LEAD-it.
 #
-# ⚠️  TODO: Zëvendëso @GITHUB_USERNAME me username-in real të GitHub.
-#       Devo duhet të pranojnë ftesën dhe të ndajnë username-in e tyre.
+# ⚠️  TODO: Zëvendëso 3 placeholder-at e mbetur kur devat pranojnë ftesën:
+#       @GITHUB_USERNAME_RILIND  → Rilind Krasniqi
+#       @GITHUB_USERNAME_ZENEL   → Zenel Kastrati
+#       @GITHUB_USERNAME_LEART   → Leart Ibrahimi
 # ============================================================
 
 # ── LEAD — zona e mbrojtur (askush nuk prek pa aprovim) ──────
@@ -23,34 +25,34 @@ package.json                          @elonberisha8
 # ══════════════════════════════════════════════════════════════
 
 # ── Alketa Citaku (alketacitakuu@gmail.com) — feat/homepage ──
-app/page.tsx                          @GITHUB_USERNAME_ALKETA @elonberisha8
-app/layout.tsx                        @GITHUB_USERNAME_ALKETA @elonberisha8
-components/layout/Navbar.tsx          @GITHUB_USERNAME_ALKETA @elonberisha8
-components/layout/Footer.tsx          @GITHUB_USERNAME_ALKETA @elonberisha8
+app/page.tsx                          @alketac @elonberisha8
+app/layout.tsx                        @alketac @elonberisha8
+components/layout/Navbar.tsx          @alketac @elonberisha8
+components/layout/Footer.tsx          @alketac @elonberisha8
 
 # ── Idonjeta (idonjeta8@gmail.com) — feat/listings ───────────
-app/shpalljet/                        @GITHUB_USERNAME_IDONJETA @elonberisha8
-app/kampanjat/page.tsx                @GITHUB_USERNAME_IDONJETA @elonberisha8
+app/shpalljet/                        @donjetaibrahimi @elonberisha8
+app/kampanjat/page.tsx                @donjetaibrahimi @elonberisha8
 
 # ── Floart Tahiri (tahirifloart@gmail.com) — feat/campaign-detail ──
-app/kampanjat/[slug]/                 @GITHUB_USERNAME_FLOART @elonberisha8
-app/sukses/                           @GITHUB_USERNAME_FLOART @elonberisha8
+app/kampanjat/[slug]/                 @Floart1 @elonberisha8
+app/sukses/                           @Floart1 @elonberisha8
 
 # ── Albert Aliu (albert2.aliu@universitetiaab.com) — feat/volunteer-detail ──
-app/vullnetare/                       @GITHUB_USERNAME_ALBERT @elonberisha8
+app/vullnetare/                       @albert2aliu-alt @elonberisha8
 
 # ── Genti (gentiib098@gmail.com) — feat/static-pages ─────────
-app/rreth-nesh/                       @GITHUB_USERNAME_GENTI @elonberisha8
-app/kontakt/                          @GITHUB_USERNAME_GENTI @elonberisha8
-app/blog/                             @GITHUB_USERNAME_GENTI @elonberisha8
-app/kushtet/                          @GITHUB_USERNAME_GENTI @elonberisha8
-app/privatesia/                       @GITHUB_USERNAME_GENTI @elonberisha8
-app/not-found.tsx                     @GITHUB_USERNAME_GENTI @elonberisha8
+app/rreth-nesh/                       @Genti10-A @elonberisha8
+app/kontakt/                          @Genti10-A @elonberisha8
+app/blog/                             @Genti10-A @elonberisha8
+app/kushtet/                          @Genti10-A @elonberisha8
+app/privatesia/                       @Genti10-A @elonberisha8
+app/not-found.tsx                     @Genti10-A @elonberisha8
 
 # ── Erin Laci (erin.laci@universitetiaab.com) — feat/auth ────
-app/auth/                             @GITHUB_USERNAME_ERIN @elonberisha8
-app/onboarding/                       @GITHUB_USERNAME_ERIN @elonberisha8
-app/sso-callback/                     @GITHUB_USERNAME_ERIN @elonberisha8
+app/auth/                             @erinlaci-ai @elonberisha8
+app/onboarding/                       @erinlaci-ai @elonberisha8
+app/sso-callback/                     @erinlaci-ai @elonberisha8
 
 # ══════════════════════════════════════════════════════════════
 # 📊 DASHBOARD (4 devs)
@@ -63,10 +65,10 @@ app/dashboard/te-ruajtura/            @GITHUB_USERNAME_RILIND @elonberisha8
 app/dashboard/aktiviteti/             @GITHUB_USERNAME_RILIND @elonberisha8
 
 # ── Florian Qestaj (florian.qestaj@universitetiaab.com) — feat/dashboard-profile ──
-app/dashboard/profili/                @GITHUB_USERNAME_FLORIAN @elonberisha8
-app/dashboard/verifikimi/             @GITHUB_USERNAME_FLORIAN @elonberisha8
-app/dashboard/behu-krijues/           @GITHUB_USERNAME_FLORIAN @elonberisha8
-app/profili/                          @GITHUB_USERNAME_FLORIAN @elonberisha8
+app/dashboard/profili/                @Florian138 @elonberisha8
+app/dashboard/verifikimi/             @Florian138 @elonberisha8
+app/dashboard/behu-krijues/           @Florian138 @elonberisha8
+app/profili/                          @Florian138 @elonberisha8
 
 # ── Zenel Kastrati (zenel.kastrati@universitetiaab.com) — feat/dashboard-campaigns ──
 app/dashboard/kampanjat/              @GITHUB_USERNAME_ZENEL @elonberisha8
@@ -82,14 +84,14 @@ app/dashboard/inbox/                  @GITHUB_USERNAME_LEART @elonberisha8
 # ══════════════════════════════════════════════════════════════
 
 # ── Ajet Matoshi (ajet.matoshi@universitetiaab.com) — feat/admin-core ──
-app/admin/page.tsx                    @GITHUB_USERNAME_AJET @elonberisha8
-app/admin/kampanjat/                  @GITHUB_USERNAME_AJET @elonberisha8
-app/admin/vullnetare/                 @GITHUB_USERNAME_AJET @elonberisha8
-app/admin/cilesimet/                  @GITHUB_USERNAME_AJET @elonberisha8
+app/admin/page.tsx                    @AjetMatoshi @elonberisha8
+app/admin/kampanjat/                  @AjetMatoshi @elonberisha8
+app/admin/vullnetare/                 @AjetMatoshi @elonberisha8
+app/admin/cilesimet/                  @AjetMatoshi @elonberisha8
 
 # ── Eriona Ramadani (erionaramadani9@gmail.com) — feat/admin-moderation ──
-app/admin/perdoruesit/                @GITHUB_USERNAME_ERIONA @elonberisha8
-app/admin/raportimet/                 @GITHUB_USERNAME_ERIONA @elonberisha8
-app/admin/moderim/                    @GITHUB_USERNAME_ERIONA @elonberisha8
-app/admin/blog/                       @GITHUB_USERNAME_ERIONA @elonberisha8
-app/admin/audit-log/                  @GITHUB_USERNAME_ERIONA @elonberisha8
+app/admin/perdoruesit/                @ErionaRamadani @elonberisha8
+app/admin/raportimet/                 @ErionaRamadani @elonberisha8
+app/admin/moderim/                    @ErionaRamadani @elonberisha8
+app/admin/blog/                       @ErionaRamadani @elonberisha8
+app/admin/audit-log/                  @ErionaRamadani @elonberisha8
