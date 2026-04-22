@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ShieldIcon, CheckCircleIcon, AlertCircleIcon } from "@/components/icons";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export type VerifyStatus = "not-started" | "pending" | "verified" | "failed";

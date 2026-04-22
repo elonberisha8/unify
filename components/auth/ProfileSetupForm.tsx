@@ -1,9 +1,6 @@
 "use client";
 import * as React from "react";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
+import { Input, Label, Textarea, Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface ProfileSetupData {
@@ -32,7 +29,7 @@ export function ProfileSetupForm({ onSubmit, submitLabel = "Vazhdo", className }
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="fullName">Emri i plotë</Label>
-          <Input id="fullName" value={data.fullName} onChange={upd("fullName")} placeholder="Elona Krasniqi" />
+          <Input id="fullName" value={data.fullName} onChange={upd("fullName")} placeholder="Arta Hoxha" />
         </div>
         <div>
           <Label htmlFor="phone">Telefoni</Label>

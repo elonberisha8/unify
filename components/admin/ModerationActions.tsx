@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CheckIcon, CloseIcon, FlagIcon, PauseIcon } from "@/components/icons";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface ModerationActionsProps {

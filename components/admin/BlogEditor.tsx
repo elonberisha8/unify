@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { BoldIcon, ItalicIcon, LinkIcon, ListIcon, ImageIcon, HeadingIcon } from "@/components/icons";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface BlogEditorData {
