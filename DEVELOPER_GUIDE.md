@@ -119,7 +119,145 @@ git push
 - [ ] `npm run typecheck` → 0 gabime  
 - [ ] `npm run build` → kalon
 
-## 8. Kërko ndihmë
+## 8. Gabime të zakonshme — lexo para se të fillosh
+
+Gabime reale nga developerat tanë. Secila shkakton **fail** në CI dhe bllokon PR-in.
+
+---
+
+### ❌ Gabim 1 — Ngjyra hardcoded (HEX në Tailwind)
+
+```tsx
+// ❌ GABIM
+<div className="bg-[#f4f0e6] text-[#3a1700] border-[#d8d0c2]">
+
+// ✅ SAKTË — përdor tokenat e dizajnit
+<div className="bg-unify-cream text-unify-brown border-border">
+```
+
+**Tokenat e vetme të lejuara:**
+
+| Klasa | Ngjyra |
+|-------|--------|
+| `bg-unify-blue` / `text-unify-blue` | `#009eff` — butonat primary, linket |
+| `bg-unify-brown` / `text-unify-brown` | `#3a1700` — teksti kryesor |
+| `bg-unify-cream` | `#f3f2e7` — background sekondar |
+| `bg-unify-green` / `text-unify-green` | `#059669` — sukses |
+| `text-muted-foreground` | tekst dytësor (gri) |
+| `border-border` | ndarësi standard |
+| `bg-background` | background i bardhë/krem |
+
+**Kurrë mos shkruaj `#` ose `[#...]` — nëse nuk gjen tokenin, pyet lead dev-in.**
+
+---
+
+### ❌ Gabim 2 — Auth hardcoded (isSignedIn = false)
+
+```tsx
+// ❌ GABIM — auth e falsifikuar
+const isSignedIn = false  // "Fallback until ClerkProvider..."
+
+// ✅ SAKTË — Clerk është instaluar, përdore
+import { useUser } from "@clerk/nextjs"
+
+export default function MyPage() {
+  const { isSignedIn, user } = useUser()
+  // ...
+}
+```
+
+`@clerk/nextjs` është instaluar dhe funksionon. `useUser()` kthen `isSignedIn`, `user`, dhe `isLoaded`. Kurrë mos hardkodo state-in e auth-it.
+
+---
+
+### ❌ Gabim 3 — `<img>` direkt (jo `next/image`)
+
+```tsx
+// ❌ GABIM
+<img src={post.imageUrl} alt="foto" className="w-full h-full object-cover" />
+
+// ✅ SAKTË
+import Image from "next/image"
+
+<Image src={post.imageUrl} alt="foto" fill className="object-cover" />
+// ose me dimensione fikse:
+<Image src={post.imageUrl} alt="foto" width={800} height={450} />
+```
+
+`next/image` optimizon imazhet automatikisht (lazy load, WebP, CDN). Cloudinary URLs janë të konfiguruara në `next.config.js`.
+
+---
+
+### ❌ Gabim 4 — QR Code nga API e jashtme
+
+```tsx
+// ❌ GABIM — kurrë mos thirr API të jashtme nga frontend
+<img src={`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${url}`} />
+
+// ✅ SAKTË — backend gjeneron QR (me logon e Unify), frontend shfaq vetëm URL-në
+const [qrUrl, setQrUrl] = useState("")
+useEffect(() => {
+  fetch(`/api/qr?url=${encodeURIComponent(currentUrl)}`)
+    .then(r => r.json())
+    .then(d => setQrUrl(d.qrUrl))  // kthen URL Cloudinary
+}, [currentUrl])
+
+<Image src={qrUrl} alt="QR Code" width={260} height={260} />
+```
+
+Shënim: `/api/qr` nuk ekziston ende — backend e ndërton. Deri atëherë, lër QR modalin pa imazh.
+
+---
+
+### ❌ Gabim 5 — Komponent BookmarkButton i harruar
+
+Secili post (kampanjë ose aset vullnetar) duhet të ketë butonin ❤️ save/unsave:
+
+```tsx
+import { BookmarkButton } from "@/components/public"
+
+// Vendos pranë titullit ose në kartë
+<BookmarkButton postId={post.id} />
+```
+
+---
+
+### ❌ Gabim 6 — Props manuale tek PublicLayout (navLinks, footerSections)
+
+```tsx
+// ❌ GABIM — PublicLayout i menaxhon vetë
+<PublicLayout
+  navbar={{ links: navLinks, onLogin: ..., onRegister: ... }}
+  footer={{ sections: footerSections, socials: [...] }}
+>
+
+// ✅ SAKTË — PublicLayout e merr gjithçka vetë
+<PublicLayout>
+  {/* content here */}
+</PublicLayout>
+```
+
+`PublicLayout` → `Navbar` dhe `Footer` kanë listat e linkave dhe socials të hardkoduara brenda tyre. Nuk duhet t'i jepësh ti.
+
+---
+
+### ❌ Gabim 7 — Import direkt (rikujtues)
+
+```tsx
+// ❌ GABIM
+import { Button } from "@/components/ui/Button"
+import { Navbar } from "@/components/layout/Navbar"
+
+// ✅ SAKTË
+import { Button } from "@/components/ui"
+import { Navbar } from "@/components/layout"
+```
+
+ESLint tregon gabimin menjëherë me vijë të kuqe. Nëse CI fail-on me `import error` → ky është problemi.
+
+---
+
+## 9. Kërko ndihmë
 
 Nëse bllokohet:
 - Shiko komponentin në `components/[folder]/[Komponenti].tsx` për props
