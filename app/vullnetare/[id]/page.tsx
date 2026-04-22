@@ -19,8 +19,10 @@
 
 import { useMemo, useState } from "react"
 import { useParams } from "next/navigation"
+import Image from "next/image"
+import { useUser } from "@clerk/nextjs"
 import { PublicLayout } from "@/components/layout"
-import { ShareButtons } from "@/components/public"
+import { ShareButtons, BookmarkButton } from "@/components/public"
 import {
   Badge,
   Button,
@@ -39,8 +41,7 @@ import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon } from "@
 
 export default function VolunteerDetailPage() {
   const params = useParams<{ id: string }>()
-  // Fallback auth state until ClerkProvider is mounted app-wide.
-  const isSignedIn = false
+  const { isSignedIn } = useUser()
   const [applyOpen, setApplyOpen] = useState(false)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
@@ -94,27 +95,6 @@ export default function VolunteerDetailPage() {
   }, [])
 
   const canSubmit = applyReason.trim().length >= 50
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Rreth Nesh", href: "/rreth-nesh" },
-    { label: "Shpalljet", href: "/shpalljet" },
-    { label: "Sherbimet", href: "/sherbimet" },
-    { label: "Blog", href: "/blog" },
-    { label: "Kontakt", href: "/kontakt" },
-  ]
-  const footerSections = [
-    {
-      title: "Menu",
-      links: navLinks,
-    },
-    {
-      title: "Ligjore",
-      links: [
-        { label: "Kushtet e Perdorimit", href: "/kushtet" },
-        { label: "Politika e Privatesise", href: "/privatesia" },
-      ],
-    },
-  ]
   const onApplyClick = () => {
     if (!isSignedIn) {
       setLoginModalOpen(true)
@@ -147,24 +127,7 @@ export default function VolunteerDetailPage() {
   }
 
   return (
-    <PublicLayout
-      mainClassName="bg-[#f4f0e6]"
-      navbar={{
-        links: navLinks,
-        onLogin: () => (window.location.href = "/sign-in"),
-        onRegister: () => (window.location.href = "/sign-up"),
-        className: "bg-[#f4f0e6]",
-      }}
-      footer={{
-        className: "bg-[#0796e6]",
-        sections: footerSections,
-        socials: [
-          { platform: "twitter", href: "#" },
-          { platform: "instagram", href: "#" },
-          { platform: "facebook", href: "#" },
-        ],
-      }}
-    >
+    <PublicLayout mainClassName="bg-unify-cream">
       <section className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-10">
         <div className="mb-3 text-xs text-muted-foreground">
           Kryefaqja &gt; Shpalljet &gt; Vullnetare &gt; {post.title}
@@ -174,10 +137,11 @@ export default function VolunteerDetailPage() {
             <Card className="overflow-hidden rounded-2xl border-border/70">
               <div className="aspect-[16/9] w-full bg-muted">
                 {post.imageUrl ? (
-                  <img
+                  <Image
                     src={post.imageUrl}
                     alt={post.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -188,17 +152,20 @@ export default function VolunteerDetailPage() {
             </Card>
 
             <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">{post.subtype}</Badge>
-                <Badge variant="secondary">{post.category}</Badge>
-                <Badge variant="secondary">{post.location}</Badge>
-                <Badge variant="secondary">
-                  {post.ownerAnonymous
-                    ? "ANONIM"
-                    : post.ownerVerified
-                      ? <span className="flex items-center gap-1"><BadgeCheckIcon className="h-3 w-3" /> VERIFIED</span>
-                      : "E PAVERIFIKUAR"}
-                </Badge>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary">{post.subtype}</Badge>
+                  <Badge variant="secondary">{post.category}</Badge>
+                  <Badge variant="secondary">{post.location}</Badge>
+                  <Badge variant="secondary">
+                    {post.ownerAnonymous
+                      ? "ANONIM"
+                      : post.ownerVerified
+                        ? <span className="flex items-center gap-1"><BadgeCheckIcon className="h-3 w-3" /> VERIFIED</span>
+                        : "E PAVERIFIKUAR"}
+                  </Badge>
+                </div>
+                <BookmarkButton postId={post.id} />
               </div>
               <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
                 {post.title}
@@ -254,11 +221,11 @@ export default function VolunteerDetailPage() {
               <CardContent className="space-y-5 p-5">
                 <div className="grid grid-cols-2 gap-4 rounded-xl bg-white p-3 text-center">
                   <div className="border-r border-border">
-                    <p className="text-3xl font-bold text-[#0398ed]">{post.applicantsCount}</p>
+                    <p className="text-3xl font-bold text-unify-blue">{post.applicantsCount}</p>
                     <p className="text-xs text-muted-foreground">Aplikues</p>
                   </div>
                   <div>
-                    <p className="text-3xl font-bold text-[#35b39f]">{post.positionsOpen}</p>
+                    <p className="text-3xl font-bold text-unify-green">{post.positionsOpen}</p>
                     <p className="text-xs text-muted-foreground">Vende</p>
                   </div>
                 </div>
@@ -284,17 +251,17 @@ export default function VolunteerDetailPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full rounded-full border-[#d8d0c2] text-[#5b3a1f]"
+                  className="w-full rounded-full border-border text-unify-brown"
                   onClick={() => setShareModalOpen(true)}
                 >
                   SHPERNDAJ
                 </Button>
               </CardContent>
             </Card>
-
+            
             <Card className="rounded-2xl">
               <CardContent className="space-y-3 p-5">
-                <h3 className="text-2xl font-semibold text-[#5b3a1f]">Rreth Organizates</h3>
+                <h3 className="text-2xl font-semibold text-unify-brown">Rreth Organizates</h3>
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs text-muted-foreground">Emri</p>
@@ -383,14 +350,12 @@ export default function VolunteerDetailPage() {
             <DialogTitle>QR i linkut</DialogTitle>
             <DialogDescription>Skano kodin për ta hapur këtë faqe shpejt.</DialogDescription>
           </DialogHeader>
-          <div className="flex justify-center">
-            <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
-                currentUrl || "https://localhost:3000",
-              )}`}
-              alt="QR code per faqen e asetit"
-              className="h-64 w-64 rounded-md border border-border"
-            />
+          <div className="flex justify-center py-10">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="h-48 w-48 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted/30">
+                <p className="text-sm text-muted-foreground px-4">Gjenerimi i QR kodit do bëhet së shpejti nga sistemi.</p>
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setQrModalOpen(false)}>
