@@ -35,6 +35,7 @@ import {
   Switch,
   Textarea,
 } from "@/components/ui"
+import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon } from "@/components/icons"
 
 export default function VolunteerDetailPage() {
   const params = useParams<{ id: string }>()
@@ -195,7 +196,7 @@ export default function VolunteerDetailPage() {
                   {post.ownerAnonymous
                     ? "ANONIM"
                     : post.ownerVerified
-                      ? "✓ VERIFIED"
+                      ? <span className="flex items-center gap-1"><BadgeCheckIcon className="h-3 w-3" /> VERIFIED</span>
                       : "E PAVERIFIKUAR"}
                 </Badge>
               </div>
@@ -226,8 +227,8 @@ export default function VolunteerDetailPage() {
                 <ul className="space-y-2 text-foreground/90">
                   {post.responsibilities.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-sky-100 text-[11px] font-bold text-sky-700">
-                        ✓
+                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-sky-100 text-sky-700">
+                        <CheckIcon className="h-3 w-3" />
                       </span>
                       <span>{item}</span>
                     </li>
@@ -262,10 +263,19 @@ export default function VolunteerDetailPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2 text-sm text-foreground/80">
-                  <p>📅 Fillimi: {post.deadline}</p>
-                  <p>🕘 Kohëzgjatja: {post.collaborationUntil}</p>
-                  <p>👥 Orët: {post.weeklyHours}</p>
+                <div className="space-y-3 text-sm text-foreground/80">
+                  <p className="flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4 text-primary" />
+                    <span>Fillimi: {post.deadline}</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <ClockIcon className="h-4 w-4 text-primary" />
+                    <span>Kohëzgjatja: {post.collaborationUntil}</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <UsersIcon className="h-4 w-4 text-primary" />
+                    <span>Orët: {post.weeklyHours}</span>
+                  </p>
                 </div>
 
                 <Button className="w-full rounded-full" onClick={onApplyClick}>
