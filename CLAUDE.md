@@ -247,14 +247,15 @@ Each developer owns only their files. **Never edit files from another branch.**
 | `feat/listings` | `app/shpalljet/page.tsx`, `app/kampanjat/page.tsx` | [Open](https://www.notion.so/34874891227e81fd9a06df93436ce2d9) |
 | `feat/campaign-detail` | `app/kampanjat/[slug]/page.tsx` | [Open](https://www.notion.so/34874891227e8164afc4f7f6568c7a81) |
 | `feat/volunteer-detail` | `app/vullnetare/[id]/page.tsx` | [Open](https://www.notion.so/34874891227e81f29f6fe850f597bd61) |
-| `feat/auth` | `app/auth/*/page.tsx`, `app/onboarding/page.tsx` | [Open](https://www.notion.so/34874891227e810bb074e9e50dab305f) |
+| `feat/auth` | `app/auth/*/page.tsx`, `app/onboarding/page.tsx`, `app/sso-callback/page.tsx` | [Open](https://www.notion.so/34874891227e81f2a6e0ec234fd70570) |
 | `feat/dashboard-home` | `app/dashboard/page.tsx`, `aktiviteti`, `transaksionet`, `te-ruajtura` | [Open](https://www.notion.so/34874891227e81f2a6e0ec234fd70570) |
-| `feat/dashboard-profile` | `app/dashboard/profili`, `verifikimi`, `behu-krijues` | [Open](https://www.notion.so/34874891227e8188a4d5e1c80adc017a) |
+| `feat/dashboard-profile` | `app/dashboard/profili`, `verifikimi`, `behu-krijues`, `app/profili/` | [Open](https://www.notion.so/34874891227e8188a4d5e1c80adc017a) |
 | `feat/dashboard-campaigns` | `app/dashboard/kampanjat`, `shpalljet`, `aplikimet`, `krijo/*` | [Open](https://www.notion.so/34874891227e8166b6e1db98166ca406) |
 | `feat/dashboard-inbox` | `app/dashboard/inbox/page.tsx` | [Open](https://www.notion.so/34874891227e8138a5abebbfd9a6d3ae) |
-| `feat/admin-core` | `app/admin/page.tsx`, `kampanjat`, `vullnetare`, `cilesimet` | [Open](https://www.notion.so/34874891227e812cb190ea4b86cfa9bc) |
-| `feat/admin-moderation` | `app/admin/perdoruesit`, `raportimet`, `moderim`, `blog`, `audit-log` | [Open](https://www.notion.so/34874891227e8145ac16f2b024b58fc0) |
-| `feat/static-pages` | `app/blog/*`, `app/sukses/*`, `app/profili/*`, `kontakt`, `kushtet`, `not-found` | [Open](https://www.notion.so/34874891227e8130855afa1edb64a28b) |
+| `feat/admin-core` | `app/admin/page.tsx`, `kampanjat`, `vullnetare` | [Open](https://www.notion.so/34874891227e812cb190ea4b86cfa9bc) |
+| `feat/admin-moderation` | `app/admin/perdoruesit`, `raportimet`, `moderim` | [Open](https://www.notion.so/34874891227e8145ac16f2b024b58fc0) |
+| `feat/admin-settings` | `app/admin/cilesimet`, `blog`, `audit-log` | [Open](https://www.notion.so/34874891227e810bb074e9e50dab305f) |
+| `feat/static-pages` | `app/blog/*`, `app/sukses/*`, `kontakt`, `kushtet`, `sherbimet`, `not-found` | [Open](https://www.notion.so/34874891227e8130855afa1edb64a28b) |
 
 ---
 
@@ -418,5 +419,5 @@ Every file has a `// FIGMA: ...` comment at the top with direct links to the rel
 
 ## 📞 Contact
 
-Questions → ask Elon (project manager) before writing code you're unsure about.
+Questions → ask the project manager before writing code you're unsure about.
 Notion workspace: https://www.notion.so/34874891227e81f48429dc2a89caf854
