@@ -34,10 +34,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  Label,
   Switch,
   Textarea,
 } from "@/components/ui"
-import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon } from "@/components/icons"
+import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon, ShareIcon } from "@/components/icons"
 
 export default function VolunteerDetailPage() {
   const params = useParams<{ id: string }>()
@@ -96,6 +97,29 @@ export default function VolunteerDetailPage() {
   }, [])
 
   const canSubmit = applyReason.trim().length >= 50
+
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Rreth Nesh", href: "/rreth-nesh" },
+    { label: "Shpalljet", href: "/shpalljet" },
+    { label: "Sherbimet", href: "/sherbimet" },
+    { label: "Blog", href: "/blog" },
+    { label: "Kontakt", href: "/kontakt" },
+  ]
+  const footerSections = [
+    {
+      title: "Menu",
+      links: navLinks,
+    },
+    {
+      title: "Ligjore",
+      links: [
+        { label: "Kushtet e Perdorimit", href: "/kushtet" },
+        { label: "Politika e Privatesise", href: "/privatesia" },
+      ],
+    },
+  ]
+
   const onApplyClick = () => {
     if (!isSignedIn) {
       setLoginModalOpen(true)
@@ -126,8 +150,25 @@ export default function VolunteerDetailPage() {
       setCopiedLink(false)
     }
   }
-
-    <PublicLayout mainClassName="bg-unify-cream">
+  return (
+    <PublicLayout
+      mainClassName="bg-unify-cream"
+      navbar={{
+        links: navLinks,
+        onLogin: () => (window.location.href = "/sign-in"),
+        onRegister: () => (window.location.href = "/sign-up"),
+        className: "bg-white",
+      }}
+      footer={{
+        className: "bg-unify-blue",
+        sections: footerSections,
+        socials: [
+          { platform: "twitter", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "facebook", href: "#" },
+        ],
+      }}
+    >
       <section className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-10">
         <div className="mb-6 text-sm text-muted-foreground/60">
           Kryefaqja &nbsp; &gt; &nbsp; Shpalljet &nbsp; &gt; &nbsp; <span className="font-bold text-unify-brown">{post.title}</span>
@@ -263,9 +304,9 @@ export default function VolunteerDetailPage() {
                     className="w-full rounded-2xl h-12 border-border/20 text-unify-brown font-bold uppercase tracking-wide gap-2 bg-transparent hover:bg-muted/5 tracker-wide"
                     onClick={() => setShareModalOpen(true)}
                   >
-                    <ShareButtons className="scale-75" url={currentUrl} />
-                    SHPËRNDAJ
-                  </Button>
+                  <ShareIcon className="h-4 w-4" />
+                  SHPËRNDAJ
+                </Button>
                 </div>
               </CardContent>
             </Card>
@@ -298,43 +339,60 @@ export default function VolunteerDetailPage() {
       </section>
 
       <Dialog open={applyOpen} onOpenChange={setApplyOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Forma e aplikimit</DialogTitle>
-            <DialogDescription>
-              Shkruaj arsyen pse dëshiron të aplikosh (minimumi 50 karaktere).
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-none rounded-[2rem]">
+          <div className="p-8 space-y-6">
+            <div>
+              <p className="text-[10px] font-bold text-unify-blue uppercase tracking-widest mb-1">Apliko</p>
+              <h2 className="text-2xl font-bold text-unify-brown leading-tight">
+                {post.title}
+              </h2>
+            </div>
 
-          <div className="space-y-4">
-            <Textarea
-              value={applyReason}
-              onChange={(event) => setApplyReason(event.target.value)}
-              placeholder="Përshkruaj motivimin tënd..."
-              rows={6}
-            />
-            <p className="text-xs text-muted-foreground">
-              {applyReason.trim().length}/50 karaktere minimale
-            </p>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-bold text-unify-blue block mb-2">
+                  Pse dëshiron të bëhesh vullnetar? <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  value={applyReason}
+                  onChange={(event) => setApplyReason(event.target.value)}
+                  placeholder="Shkruaj arsyen tënde (min. 50 karaktere)..."
+                  rows={5}
+                  className="rounded-2xl border-border/10 bg-muted/20 focus-visible:ring-unify-blue"
+                />
+                <p className="text-right text-[10px] font-medium text-muted-foreground mt-1">
+                  {applyReason.length} / 50 min
+                </p>
+              </div>
 
-            <div className="flex items-center justify-between rounded-lg border border-border p-3">
-              <p className="text-sm text-foreground">Apliko anonim</p>
-              <Switch
-                checked={applyAnonymous}
-                onCheckedChange={setApplyAnonymous}
-                aria-label="Apliko anonim"
-              />
+              <div className="flex items-center justify-between rounded-2xl bg-unify-cream p-5">
+                <div>
+                  <p className="text-sm font-bold text-unify-brown">Apliko anonimisht</p>
+                  <p className="text-[10px] text-muted-foreground">Emri juaj nuk do të zbulohet publikisht</p>
+                </div>
+                <Switch
+                  checked={applyAnonymous}
+                  onCheckedChange={setApplyAnonymous}
+                  aria-label="Apliko anonim"
+                />
+              </div>
+
+              <Button 
+                onClick={onSubmitApplication} 
+                disabled={!canSubmit}
+                className="w-full h-14 rounded-2xl bg-unify-blue hover:bg-unify-blue/90 font-bold uppercase tracking-wider text-sm gap-2"
+              >
+                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-white">
+                  <CheckIcon className="h-2 w-2" />
+                </div>
+                DËRGO APLIKIMIN
+              </Button>
+              
+              <p className="text-center text-[10px] text-muted-foreground/60 italic">
+                Aplikimet shqyrtohen nga stafi brenda 3 ditësh pune.
+              </p>
             </div>
           </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setApplyOpen(false)}>
-              Anulo
-            </Button>
-            <Button onClick={onSubmitApplication} disabled={!canSubmit}>
-              Dergo aplikimin
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
