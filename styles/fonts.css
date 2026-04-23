@@ -1,0 +1,59 @@
+/**
+ * Unify — Typography
+ * Self-hosted @font-face rules. Drop the .woff2 files into public/fonts/
+ * (file names listed below). Until the binaries are added, we fall back to
+ * the Google Fonts CDN (see app/layout.tsx).
+ */
+
+/* Rowdies — display */
+@font-face {
+  font-family: "Rowdies";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/Rowdies-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Rowdies";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Rowdies-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Rowdies";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Rowdies-Bold.woff2") format("woff2");
+}
+
+/* Arimo — body */
+@font-face {
+  font-family: "Arimo";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Arimo-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Arimo";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/Arimo-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Arimo";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/Arimo-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Arimo";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Arimo-Bold.woff2") format("woff2");
+}
