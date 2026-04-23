@@ -98,27 +98,7 @@ export default function VolunteerDetailPage() {
 
   const canSubmit = applyReason.trim().length >= 50
 
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Rreth Nesh", href: "/rreth-nesh" },
-    { label: "Shpalljet", href: "/shpalljet" },
-    { label: "Sherbimet", href: "/sherbimet" },
-    { label: "Blog", href: "/blog" },
-    { label: "Kontakt", href: "/kontakt" },
-  ]
-  const footerSections = [
-    {
-      title: "Menu",
-      links: navLinks,
-    },
-    {
-      title: "Ligjore",
-      links: [
-        { label: "Kushtet e Perdorimit", href: "/kushtet" },
-        { label: "Politika e Privatesise", href: "/privatesia" },
-      ],
-    },
-  ]
+
 
   const onApplyClick = () => {
     if (!isSignedIn) {
@@ -151,24 +131,7 @@ export default function VolunteerDetailPage() {
     }
   }
   return (
-    <PublicLayout
-      mainClassName="bg-unify-cream"
-      navbar={{
-        links: navLinks,
-        onLogin: () => (window.location.href = "/sign-in"),
-        onRegister: () => (window.location.href = "/sign-up"),
-        className: "bg-white",
-      }}
-      footer={{
-        className: "bg-unify-blue",
-        sections: footerSections,
-        socials: [
-          { platform: "twitter", href: "#" },
-          { platform: "instagram", href: "#" },
-          { platform: "facebook", href: "#" },
-        ],
-      }}
-    >
+    <PublicLayout mainClassName="bg-unify-cream">
       <section className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-10">
         <div className="mb-6 text-sm text-muted-foreground/60">
           Kryefaqja &nbsp; &gt; &nbsp; Shpalljet &nbsp; &gt; &nbsp; <span className="font-bold text-unify-brown">{post.title}</span>
@@ -176,7 +139,7 @@ export default function VolunteerDetailPage() {
         
         <div className="mb-6 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="bg-[#3ecf8e] hover:bg-[#3ecf8e]/90 text-white border-none px-4 py-1 text-[10px] font-bold tracking-wider">
+            <Badge className="bg-unify-blue hover:bg-unify-blue/90 text-white border-none px-4 py-1 text-[10px] font-bold tracking-wider">
               {post.subtype}
             </Badge>
             <Badge className="bg-unify-blue hover:bg-unify-blue/90 text-white border-none px-4 py-1 text-[10px] font-bold tracking-wider">
@@ -250,8 +213,8 @@ export default function VolunteerDetailPage() {
                 <h2 className="text-2xl font-bold text-unify-brown">Kërkesat</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {post.terms.map((term) => (
-                    <div key={term} className="flex items-center gap-3 p-4 rounded-2xl bg-[#eff5f2]">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#3cc08e]">
+                    <div key={term} className="flex items-center gap-3 p-4 rounded-2xl bg-unify-cream">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-unify-blue">
                         <CheckIcon className="h-3 w-3" />
                       </div>
                       <span className="text-sm font-bold text-muted-foreground/80">{term}</span>
@@ -271,7 +234,7 @@ export default function VolunteerDetailPage() {
                     <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">Aplikues</p>
                   </div>
                   <div className="flex-1">
-                    <p className="text-4xl font-bold text-[#3ecf8e]">{post.positionsOpen}</p>
+                    <p className="text-4xl font-bold text-unify-blue">{post.positionsOpen}</p>
                     <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">Vende</p>
                   </div>
                 </div>
