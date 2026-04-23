@@ -1,10 +1,9 @@
 // NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 "use client";
 import * as React from "react";
-import { MenuIcon, CloseIcon, SearchIcon } from "@/components/icons";
+import { MenuIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/Button";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/Sheet";
+import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
 
 export interface NavLink {
   label: string;
