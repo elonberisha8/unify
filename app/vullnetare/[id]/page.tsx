@@ -40,6 +40,31 @@ import {
 } from "@/components/ui"
 import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon, ShareIcon } from "@/components/icons"
 
+// ── Konstante statike jashtë komponentit ──────────────────────────────────────
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Rreth Nesh", href: "/rreth-nesh" },
+  { label: "Shpalljet", href: "/shpalljet" },
+  { label: "Sherbimet", href: "/sherbimet" },
+  { label: "Blog", href: "/blog" },
+  { label: "Kontakt", href: "/kontakt" },
+]
+
+const FOOTER_SECTIONS = [
+  {
+    title: "Menu",
+    links: NAV_LINKS,
+  },
+  {
+    title: "Ligjore",
+    links: [
+      { label: "Kushtet e Perdorimit", href: "/kushtet" },
+      { label: "Politika e Privatesise", href: "/privatesia" },
+    ],
+  },
+]
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function VolunteerDetailPage() {
   const params = useParams<{ id: string }>()
   const { isSignedIn } = useUser()
@@ -131,7 +156,24 @@ export default function VolunteerDetailPage() {
     }
   }
   return (
-    <PublicLayout mainClassName="bg-unify-cream">
+    <PublicLayout
+      mainClassName="bg-unify-cream"
+      navbar={{
+        links: NAV_LINKS,
+        onLogin: () => (window.location.href = "/sign-in"),
+        onRegister: () => (window.location.href = "/sign-up"),
+        className: "bg-white",
+      }}
+      footer={{
+        className: "bg-unify-blue",
+        sections: FOOTER_SECTIONS,
+        socials: [
+          { platform: "twitter", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "facebook", href: "#" },
+        ],
+      }}
+    >
       <section className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-10">
         <div className="mb-6 text-sm text-muted-foreground/60">
           Kryefaqja &nbsp; &gt; &nbsp; Shpalljet &nbsp; &gt; &nbsp; <span className="font-bold text-unify-brown">{post.title}</span>
