@@ -1,0 +1,46 @@
+@import "./fonts.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Tokenat e Unify nga Figma */
+    --background: 51 28% 93%;           /* #f3f2e7 */
+    --foreground: 20 100% 11%;          /* #3a1700 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 100% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 100% 11%;
+
+    --primary: 202 100% 50%;            /* #009eff */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 51 28% 93%;
+    --secondary-foreground: 20 100% 11%;
+
+    --muted: 51 20% 90%;
+    --muted-foreground: 20 15% 40%;
+
+    --accent: 202 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 51 15% 85%;
+    --input: 51 15% 85%;
+    --ring: 202 100% 50%;
+
+    --radius: 0.75rem;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3 { @apply font-display; }
+}
