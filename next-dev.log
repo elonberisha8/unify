@@ -1,0 +1,1059 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 12.2s
+ ○ Compiling /kontakt ...
+ ✓ Compiled /kontakt in 22.8s (934 modules)
+ GET /kontakt 200 in 24066ms
+ ○ Compiling /kushtet ...
+ ✓ Compiled /kushtet in 7.9s (940 modules)
+ GET /kushtet 200 in 238ms
+ ○ Compiling /privatesia ...
+ ✓ Compiled /privatesia in 1709ms (959 modules)
+ GET /privatesia 200 in 1853ms
+ GET /blog 200 in 2065ms
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 1459ms (972 modules)
+ GET /rreth-nesh 200 in 1824ms
+ GET /blog/si-te-krijosh-nje-kampanje-te-besueshme 200 in 1932ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1858ms (981 modules)
+ GET /not-real-page 404 in 2039ms
+ GET /sherbimet 200 in 2286ms
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 8.6s
+ ○ Compiling / ...
+ ✓ Compiled / in 18.8s (1312 modules)
+ GET / 200 in 19948ms
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.4s
+ ○ Compiling /kampanjat ...
+ ✓ Compiled /kampanjat in 16.7s (932 modules)
+ GET /kampanjat 200 in 17465ms
+ ○ Compiling /shpalljet ...
+ ✓ Compiled /shpalljet in 7s (938 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 688ms (926 modules)
+ GET /shpalljet 404 in 8197ms
+ GET /shpalljet 200 in 187ms
+ ✓ Compiled in 1949ms (853 modules)
+ ○ Compiling /kampanjat/[slug] ...
+ ✓ Compiled /kampanjat/[slug] in 615ms (922 modules)
+ GET /kampanjat/test-slug 200 in 1389ms
+ ○ Compiling /sukses/donacion ...
+ ✓ Compiled /sukses/donacion in 598ms (928 modules)
+ GET /sukses/donacion 200 in 762ms
+ ✓ Compiled in 1629ms (856 modules)
+ ✓ Compiled in 1049ms (413 modules)
+ ✓ Compiled in 523ms (413 modules)
+ ✓ Compiled in 632ms (413 modules)
+ ✓ Compiled in 471ms (413 modules)
+ ○ Compiling /profili/[username] ...
+ ✓ Compiled /profili/[username] in 4.1s (977 modules)
+ GET /profili/familja-berisha 200 in 4882ms
+ ✓ Compiled in 686ms (476 modules)
+ ✓ Compiled in 583ms (476 modules)
+ ✓ Compiled in 889ms (474 modules)
+ ✓ Compiled in 501ms (474 modules)
+ ✓ Compiled in 2.2s (474 modules)
+ ○ Compiling /vullnetare/[id] ...
+ ✓ Compiled /vullnetare/[id] in 7s (1371 modules)
+ GET /kampanjat 200 in 8044ms
+ GET /shpalljet 200 in 8019ms
+ GET /sukses/donacion 200 in 7933ms
+ GET /kampanjat/c1 200 in 7982ms
+ GET / 200 in 8190ms
+ GET /vullnetare/1 500 in 8020ms
+ GET /vullnetare/1 500 in 129ms
+ ✓ Compiled in 1451ms (1019 modules)
+ GET / 200 in 411ms
+ ○ Compiling /kontakt ...
+ ✓ Compiled /kontakt in 1005ms (1010 modules)
+ GET /kontakt 200 in 1320ms
+ ○ Compiling /kushtet ...
+ ✓ Compiled /kushtet in 818ms (1016 modules)
+ GET /kushtet 200 in 1027ms
+ ○ Compiling /privatesia ...
+ ✓ Compiled /privatesia in 1297ms (1022 modules)
+ GET /privatesia 200 in 1577ms
+ ○ Compiling /rreth-nesh ...
+ ✓ Compiled /rreth-nesh in 921ms (1028 modules)
+ GET /rreth-nesh 200 in 1149ms
+ ○ Compiling /sherbimet ...
+ ✓ Compiled /sherbimet in 1025ms (1034 modules)
+ GET /sherbimet 200 in 1262ms
+ ○ Compiling /blog ...
+ ✓ Compiled /blog in 1378ms (1062 modules)
+ GET /blog 200 in 1601ms
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 1083ms (1069 modules)
+ GET /blog/si-te-krijosh-nje-kampanje-te-besueshme 200 in 1938ms
+ ○ Compiling /profili/[username] ...
+ ✓ Compiled /profili/[username] in 909ms (595 modules)
+ GET /profili/familja-berisha 200 in 1487ms
+ GET /kampanjat 200 in 114ms
+ GET /kampanjat/c1 200 in 133ms
+ GET /shpalljet 200 in 95ms
+ GET /vullnetare/1 200 in 144ms
+ GET /sukses/donacion 200 in 94ms
+ GET / 200 in 103ms
+ GET /kontakt 200 in 95ms
+ GET /kushtet 200 in 91ms
+ GET /privatesia 200 in 87ms
+ GET /rreth-nesh 200 in 140ms
+ GET /sherbimet 200 in 124ms
+ GET /blog 200 in 144ms
+ GET /blog/si-te-krijosh-nje-kampanje-te-besueshme 200 in 116ms
+ GET /profili/familja-berisha 200 in 74ms
+ GET /kampanjat 200 in 89ms
+ GET /kampanjat/c1 200 in 86ms
+ GET /shpalljet 200 in 80ms
+ GET /vullnetare/1 200 in 110ms
+ GET /sukses/donacion 200 in 92ms
+ ✓ Compiled in 4.1s (993 modules)
+ ○ Compiling /kampanjat ...
+ ✓ Compiled /kampanjat in 580ms (487 modules)
+ GET /kampanjat 200 in 1434ms
+ ✓ Compiled /_not-found in 475ms (489 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 910ms
+ GET /sukses/donacion 200 in 264ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.5s (1000 modules)
+ GET /_next/static/webpack/233eb7d8dedc942d.webpack.hot-update.json 404 in 2147ms
+ GET /kampanjat 200 in 402ms
+ GET /fonts/Arimo-Regular.woff2 404 in 395ms
+ ✓ Compiled / in 377ms (494 modules)
+ GET / 200 in 843ms
+ GET /kampanjat 200 in 97ms
+ ✓ Compiled /shpalljet in 345ms (498 modules)
+ GET /shpalljet 200 in 774ms
+ ✓ Compiled /kampanjat/[slug] in 341ms (502 modules)
+ GET /kampanjat/c1 200 in 902ms
+ ○ Compiling /vullnetare/[id] ...
+ ✓ Compiled /vullnetare/[id] in 804ms (522 modules)
+ GET /vullnetare/1 200 in 1359ms
+ GET /fonts/Arimo-Regular.woff2 404 in 109ms
+ GET / 200 in 143ms
+ GET /kampanjat 200 in 186ms
+ GET /kampanjat/c1 200 in 262ms
+ GET /shpalljet 200 in 304ms
+ GET /vullnetare/1 200 in 291ms
+ GET /sukses/donacion 200 in 330ms
+ GET /fonts/Arimo-Regular.woff2 404 in 495ms
+ ○ Compiling /sherbimet ...
+ ✓ Compiled /sherbimet in 1268ms (549 modules)
+ ✓ Compiled in 0ms (561 modules)
+ ✓ Compiled in 0ms (561 modules)
+ ✓ Compiled in 1ms (561 modules)
+ GET /blog 200 in 3849ms
+ ✓ Compiled in 1ms (561 modules)
+ GET /kontakt 200 in 4622ms
+ GET /rreth-nesh 200 in 4434ms
+ GET /sherbimet 200 in 4422ms
+ ✓ Compiled in 1ms (561 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 3118ms
+ ✓ Compiled in 1ms (561 modules)
+ ✓ Compiled in 0ms (561 modules)
+ ✓ Compiled in 1ms (561 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 2713ms
+ GET /blog 200 in 1217ms
+ GET /fonts/Arimo-Regular.woff2 404 in 81ms
+ GET / 200 in 136ms
+ GET /kampanjat 200 in 74ms
+ GET /kampanjat/c1 200 in 110ms
+ GET /shpalljet 200 in 67ms
+ GET /vullnetare/1 200 in 96ms
+ GET /sukses/donacion 200 in 70ms
+ GET /blog 200 in 73ms
+ GET /kontakt 200 in 82ms
+ GET /rreth-nesh 200 in 59ms
+ GET /sherbimet 200 in 72ms
+ GET /kampanjat 200 in 61ms
+ GET /fonts/Arimo-Regular.woff2 404 in 44ms
+ GET /vullnetare 404 in 68ms
+ GET /shpalljet 200 in 104ms
+ GET /fonts/Arimo-Regular.woff2 404 in 140ms
+ GET /sherbimet 200 in 105ms
+ GET /rreth-nesh 200 in 96ms
+ GET /blog 200 in 76ms
+ GET /kampanjat 200 in 123ms
+ GET /fonts/Arimo-Regular.woff2 404 in 59ms
+ GET /fonts/Arimo-Regular.woff2 404 in 103ms
+ GET / 200 in 89ms
+ GET /fonts/Arimo-Regular.woff2 404 in 71ms
+ GET /kampanjat 200 in 89ms
+ GET /fonts/Arimo-Regular.woff2 404 in 60ms
+ GET /kampanjat/c1 200 in 132ms
+ GET /fonts/Arimo-Regular.woff2 404 in 73ms
+ GET /shpalljet 200 in 104ms
+ GET /fonts/Arimo-Regular.woff2 404 in 55ms
+ GET /vullnetare/1 200 in 92ms
+ GET /sukses/donacion 200 in 82ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 5s (1067 modules)
+ GET /_next/static/webpack/e3134213a2766ad1.webpack.hot-update.json 404 in 4370ms
+ GET /_next/static/webpack/e3134213a2766ad1.webpack.hot-update.json 404 in 3691ms
+ GET /kampanjat 200 in 1104ms
+ GET /_next/static/webpack/e3134213a2766ad1.webpack.hot-update.json 404 in 1094ms
+ GET /kampanjat 200 in 1106ms
+ ○ Compiling /_error ...
+ GET /kampanjat 200 in 2021ms
+ ✓ Compiled /_error in 4.6s (1279 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 6088ms
+ GET /fonts/Arimo-Regular.woff2 404 in 3091ms
+ GET /kampanjat/c1 200 in 368ms
+ GET /kontakt 200 in 362ms
+ GET /vullnetare/1 200 in 325ms
+ GET /sukses/donacion 200 in 294ms
+ GET /fonts/Arimo-Regular.woff2 404 in 274ms
+ GET /_next/static/webpack/38643da36af6fbab.webpack.hot-update.json 404 in 94ms
+ GET /blog 200 in 133ms
+ GET /_next/static/webpack/38643da36af6fbab.webpack.hot-update.json 404 in 60ms
+ GET /_next/static/webpack/38643da36af6fbab.webpack.hot-update.json 404 in 62ms
+ GET /_next/static/webpack/38643da36af6fbab.webpack.hot-update.json 404 in 126ms
+ GET /rreth-nesh 200 in 445ms
+ GET /sherbimet 200 in 186ms
+ GET /shpalljet 200 in 277ms
+ GET /fonts/Arimo-Regular.woff2 404 in 163ms
+ GET /fonts/Arimo-Regular.woff2 404 in 84ms
+ GET /fonts/Arimo-Regular.woff2 404 in 466ms
+ GET /_next/static/webpack/0eb96ed00d32c327.webpack.hot-update.json 404 in 94ms
+ GET /kampanjat 200 in 571ms
+ GET /sukses/donacion 500 in 592ms
+ GET /fonts/Arimo-Regular.woff2 404 in 80ms
+ GET /sukses/donacion 500 in 91ms
+ GET /fonts/Arimo-Regular.woff2 404 in 76ms
+ ✓ Compiled in 1355ms (1294 modules)
+ GET /sukses/donacion 200 in 300ms
+ GET /fonts/Arimo-Regular.woff2 404 in 139ms
+ ✓ Compiled / in 428ms (602 modules)
+ GET / 200 in 794ms
+ GET /kampanjat 200 in 80ms
+ GET /fonts/Arimo-Regular.woff2 404 in 164ms
+ GET /kampanjat/c1 200 in 106ms
+ GET /fonts/Arimo-Regular.woff2 404 in 53ms
+ GET /shpalljet 200 in 94ms
+ GET /vullnetare/1 200 in 207ms
+ GET /sukses/donacion 200 in 238ms
+ GET /fonts/Arimo-Regular.woff2 404 in 87ms
+ GET /sukses/donacion 200 in 43ms
+ ✓ Compiled in 2.4s (1296 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1130ms (1283 modules)
+ GET /kontakt 200 in 336ms
+ GET /vullnetare/1 200 in 334ms
+ GET /kampanjat/c1 200 in 137ms
+ GET /_next/static/webpack/5f93ec5c2d87b1dc.webpack.hot-update.json 404 in 71ms
+ GET /sukses/donacion 200 in 87ms
+ GET /fonts/Arimo-Regular.woff2 404 in 90ms
+ GET /vullnetare 404 in 75ms
+ ✓ Compiled in 4.3s (1294 modules)
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 96ms
+ GET /vullnetare/1 200 in 119ms
+ GET /vullnetare/1 404 in 308ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 100ms
+ GET /kontakt 404 in 148ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 58ms
+ GET /kontakt 404 in 139ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 79ms
+ GET /sukses/donacion 404 in 114ms
+ GET /kampanjat/c1 404 in 111ms
+ GET /sukses/donacion 404 in 64ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 36ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 55ms
+ GET /vullnetare/1 404 in 104ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 50ms
+ GET /kontakt 404 in 102ms
+ GET /kampanjat/c1 404 in 75ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 19ms
+ GET /kontakt 404 in 48ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 32ms
+ GET /vullnetare/1 404 in 61ms
+ GET /sukses/donacion 404 in 76ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 21ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 44ms
+ GET /kampanjat/c1 404 in 61ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 51ms
+ GET /kontakt 404 in 113ms
+ GET /kampanjat/c1 404 in 77ms
+ GET /vullnetare/1 404 in 82ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 31ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 52ms
+ GET /kontakt 404 in 76ms
+ GET /sukses/donacion 404 in 85ms
+ GET /kampanjat/c1 404 in 79ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 23ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 31ms
+ GET /vullnetare/1 404 in 87ms
+ GET /kontakt 404 in 88ms
+ GET /sukses/donacion 404 in 110ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 20ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 28ms
+ GET /kampanjat/c1 404 in 126ms
+ GET /kontakt 404 in 119ms
+ GET /vullnetare/1 404 in 127ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 23ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 21ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 43ms
+ GET /kontakt 404 in 91ms
+ GET /vullnetare/1 404 in 88ms
+ GET /sukses/donacion 404 in 75ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 29ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /kampanjat/c1 404 in 64ms
+ GET /vullnetare/1 404 in 62ms
+ GET /kontakt 404 in 77ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 17ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 31ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 48ms
+ GET /sukses/donacion 404 in 82ms
+ GET /kampanjat/c1 404 in 84ms
+ GET /vullnetare/1 404 in 72ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 21ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 24ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 45ms
+ GET /kontakt 404 in 78ms
+ GET /sukses/donacion 404 in 88ms
+ GET /kampanjat/c1 404 in 146ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 34ms
+ GET /vullnetare/1 404 in 53ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 32ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 30ms
+ GET /vullnetare/1 404 in 67ms
+ GET /kontakt 404 in 81ms
+ GET /sukses/donacion 404 in 71ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 28ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 45ms
+ GET /kampanjat/c1 404 in 91ms
+ GET /vullnetare/1 404 in 91ms
+ GET /kontakt 404 in 69ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 19ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 29ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 44ms
+ GET /sukses/donacion 404 in 78ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 47ms
+ GET /kampanjat/c1 404 in 83ms
+ GET /sukses/donacion 404 in 91ms
+ GET /vullnetare/1 404 in 70ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 29ms
+ GET /fonts/Arimo-Regular.woff2 404 in 43ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 34ms
+ GET /kampanjat/c1 404 in 48ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 69ms
+ GET /kontakt 404 in 96ms
+ GET /sukses/donacion 404 in 114ms
+ GET /kontakt 404 in 63ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 29ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 41ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 47ms
+ GET /vullnetare/1 404 in 85ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 45ms
+ GET /kampanjat/c1 404 in 88ms
+ GET /vullnetare/1 404 in 93ms
+ GET /sukses/donacion 404 in 63ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 18ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 47ms
+ GET /vullnetare/1 404 in 88ms
+ GET /kampanjat/c1 404 in 85ms
+ GET /kontakt 404 in 97ms
+ GET /kampanjat 200 in 372ms
+ GET /fonts/Arimo-Regular.woff2 404 in 48ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 33ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 38ms
+ GET /sukses/donacion 404 in 86ms
+ GET /kampanjat/c1 404 in 88ms
+ GET /vullnetare/1 404 in 76ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 38ms
+ GET /kontakt 404 in 71ms
+ GET /kontakt 404 in 48ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 32ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 41ms
+ GET /kampanjat/c1 404 in 63ms
+ GET /sukses/donacion 404 in 198ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 32ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 56ms
+ GET /vullnetare/1 404 in 73ms
+ GET /kampanjat/c1 404 in 106ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 35ms
+ GET /vullnetare/1 404 in 73ms
+ GET /kontakt 404 in 51ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 30ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 31ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 51ms
+ GET /kampanjat/c1 404 in 71ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 41ms
+ GET /sukses/donacion 404 in 89ms
+ GET /kampanjat/c1 404 in 67ms
+ GET /vullnetare/1 404 in 58ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 30ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /sukses/donacion 404 in 65ms
+ GET /kontakt 404 in 99ms
+ GET /kampanjat/c1 404 in 94ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 42ms
+ GET /vullnetare/1 404 in 78ms
+ GET /vullnetare/1 404 in 49ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 20ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 43ms
+ GET /kontakt 404 in 66ms
+ GET /sukses/donacion 404 in 70ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 30ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 39ms
+ GET /kampanjat/c1 404 in 79ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 37ms
+ GET /vullnetare/1 404 in 69ms
+ GET /kontakt 404 in 64ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 28ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 40ms
+ GET /sukses/donacion 404 in 72ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 50ms
+ GET /sukses/donacion 404 in 85ms
+ GET /kampanjat/c1 404 in 85ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 23ms
+ GET /kontakt 404 in 46ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 52ms
+ GET /vullnetare/1 404 in 60ms
+ GET /sukses/donacion 404 in 82ms
+ GET /vullnetare/1 404 in 60ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 24ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 33ms
+ GET /kampanjat/c1 404 in 72ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 38ms
+ GET /kontakt 404 in 74ms
+ GET /sukses/donacion 404 in 46ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 39ms
+ GET /vullnetare/1 404 in 77ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 28ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /kampanjat/c1 404 in 61ms
+ GET /kontakt 404 in 68ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 29ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 23ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 27ms
+ GET /sukses/donacion 404 in 95ms
+ GET /kampanjat/c1 404 in 89ms
+ GET /vullnetare/1 404 in 78ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 23ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 24ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 26ms
+ GET /kontakt 404 in 72ms
+ GET /sukses/donacion 404 in 68ms
+ GET /kampanjat/c1 404 in 73ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 20ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 25ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 40ms
+ GET /vullnetare/1 404 in 78ms
+ GET /kontakt 404 in 80ms
+ GET /sukses/donacion 404 in 67ms
+ GET /fonts/Arimo-Regular.woff2 404 in 178ms
+ ○ Compiling /vullnetare ...
+ ✓ Compiled /vullnetare in 668ms (602 modules)
+ ✓ Compiled in 1305ms (1289 modules)
+ GET / 200 in 2772ms
+ GET /vullnetare 200 in 2745ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 2192ms
+ GET /kontakt 200 in 513ms
+ GET /dashboard/krijo 404 in 327ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 769ms
+ GET /kampanjat 200 in 711ms
+ GET /kampanjat/c1 200 in 882ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 900ms
+ ○ Compiling /auth/register ...
+ ✓ Compiled /auth/register in 2.6s (1291 modules)
+ GET /auth/register 200 in 4190ms
+ GET /kampanjat/c1 200 in 3017ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 4064ms
+ GET /vullnetare/1 200 in 1765ms
+ GET /_next/static/webpack/378c9bf6ef3c958d.webpack.hot-update.json 404 in 255ms
+ GET /kampanjat 200 in 161ms
+ GET /sukses/donacion 200 in 100ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 1527ms (1293 modules)
+ GET /auth/login 200 in 1825ms
+ GET /shpalljet 200 in 1757ms
+ GET /fonts/Arimo-Regular.woff2 404 in 1542ms
+ GET /si-funksionon 404 in 42ms
+ GET /vullnetare 200 in 71ms
+ GET /vullnetare/1 200 in 126ms
+ GET /fonts/Arimo-Regular.woff2 404 in 116ms
+ GET /fonts/Arimo-Regular.woff2 404 in 59ms
+ GET /sukses/donacion 200 in 94ms
+ GET /blog 200 in 114ms
+ GET /kontakt 200 in 95ms
+ GET /rreth-nesh 200 in 109ms
+ GET /sherbimet 200 in 99ms
+ GET / 200 in 101ms
+ GET /fonts/Arimo-Regular.woff2 404 in 60ms
+ GET /vullnetare 200 in 74ms
+ GET /shpalljet 200 in 79ms
+ GET /fonts/Arimo-Regular.woff2 404 in 97ms
+ GET /sherbimet 200 in 89ms
+ GET /rreth-nesh 200 in 89ms
+ GET /blog 200 in 76ms
+ GET /kampanjat 200 in 125ms
+ GET /fonts/Arimo-Regular.woff2 404 in 53ms
+ GET / 200 in 101ms
+ GET /fonts/Arimo-Regular.woff2 404 in 83ms
+ GET / 200 in 88ms
+ GET /fonts/Arimo-Regular.woff2 404 in 46ms
+ GET / 200 in 73ms
+ GET /kampanjat 200 in 76ms
+ GET /kampanjat/c1 200 in 124ms
+ GET /shpalljet 200 in 61ms
+ GET /vullnetare 200 in 82ms
+ GET /vullnetare/1 200 in 85ms
+ GET /sukses/donacion 200 in 73ms
+ GET /blog 200 in 71ms
+ GET /kontakt 200 in 60ms
+ GET /rreth-nesh 200 in 68ms
+ GET /sherbimet 200 in 54ms
+ GET /auth/register 200 in 81ms
+ GET /auth/login 200 in 85ms
+ ✓ Compiled in 6.4s (1305 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 777ms (609 modules)
+ ✓ Compiled in 1246ms (1306 modules)
+ ✓ Compiled in 1ms (609 modules)
+ GET / 200 in 326ms
+ GET /fonts/Arimo-Regular.woff2 404 in 64ms
+ GET / 200 in 99ms
+ GET /kampanjat 200 in 118ms
+ GET /shpalljet 200 in 76ms
+ GET /sukses/donacion 200 in 64ms
+ GET /sherbimet 200 in 83ms
+ GET /fonts/Arimo-Regular.woff2 404 in 81ms
+ GET / 200 in 74ms
+ GET /fonts/Arimo-Regular.woff2 404 in 59ms
+ GET /sukses/donacion 200 in 789ms
+ ✓ Compiled in 5.5s (1298 modules)
+ GET /sukses/donacion 200 in 4851ms
+ GET /_next/static/webpack/2a7382c91e1469a4.webpack.hot-update.json 404 in 5814ms
+ GET /kampanjat/1 200 in 613ms
+ GET /fonts/Arimo-Regular.woff2 404 in 140ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1312ms (1285 modules)
+ ✓ Compiled in 1ms (602 modules)
+ ✓ Compiled in 1ms (602 modules)
+ GET /vullnetare/1 200 in 1630ms
+ GET /sukses/donacion 200 in 1650ms
+ GET /fonts/Arimo-Regular.woff2 404 in 2721ms
+ ✓ Compiled in 1002ms (698 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 380ms
+ GET /sukses/donacion 200 in 316ms
+ GET /_next/static/webpack/b9c6e807cf42fc97.webpack.hot-update.json 404 in 81ms
+ GET /vullnetare/1 200 in 150ms
+ GET /fonts/Arimo-Regular.woff2 404 in 79ms
+ ○ Compiling /vullnetare ...
+ ✓ Compiled /vullnetare in 976ms (605 modules)
+ GET /vullnetare 200 in 1586ms
+ GET /kampanjat 200 in 129ms
+ GET /fonts/Arimo-Regular.woff2 404 in 89ms
+ GET /shpalljet 200 in 114ms
+ GET /fonts/Arimo-Regular.woff2 404 in 51ms
+ GET /kampanjat 200 in 98ms
+ GET /fonts/Arimo-Regular.woff2 404 in 319ms
+ ✓ Compiled in 2.1s (1302 modules)
+ ✓ Compiled in 1ms (605 modules)
+ ✓ Compiled in 1ms (605 modules)
+ ✓ Compiled in 1ms (605 modules)
+ GET /_next/static/webpack/b9c6e807cf42fc97.webpack.hot-update.json 404 in 3308ms
+ GET /fonts/Arimo-Regular.woff2 404 in 1986ms
+ ✓ Compiled in 0ms (605 modules)
+ ✓ Compiled in 1ms (605 modules)
+ ✓ Compiled in 0ms (605 modules)
+ ✓ Compiled in 1ms (605 modules)
+ GET /sukses/donacion 200 in 2581ms
+ ✓ Compiled in 1ms (605 modules)
+ ✓ Compiled in 1ms (605 modules)
+ ✓ Compiled in 0ms (605 modules)
+ ✓ Compiled in 0ms (605 modules)
+ GET /_next/static/webpack/3883dd380055b4c0.webpack.hot-update.json 404 in 2228ms
+ GET /_next/static/webpack/3883dd380055b4c0.webpack.hot-update.json 404 in 207ms
+ GET /kampanjat 200 in 286ms
+ GET /vullnetare/1 200 in 220ms
+ GET /fonts/Arimo-Regular.woff2 404 in 52ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.4s (1294 modules)
+ GET /_next/static/webpack/3883dd380055b4c0.webpack.hot-update.json 404 in 2766ms
+ GET /vullnetare/1 200 in 443ms
+ GET /_next/static/webpack/2f8112f3aed3ed96.webpack.hot-update.json 404 in 111ms
+ GET /_next/static/webpack/2f8112f3aed3ed96.webpack.hot-update.json 404 in 129ms
+ GET /kampanjat 200 in 120ms
+ GET /sukses/donacion 200 in 76ms
+ ✓ Compiled in 1276ms (1294 modules)
+ ✓ Compiled in 1ms (597 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 1574ms
+ ✓ Compiled in 1ms (597 modules)
+ ✓ Compiled in 0ms (597 modules)
+ ✓ Compiled in 0ms (597 modules)
+ ✓ Compiled in 1ms (597 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 160ms
+ ✓ Compiled in 795ms (697 modules)
+ ✓ Compiled in 2.4s (1294 modules)
+ GET /kampanjat/c1 200 in 312ms
+ GET /kampanjat/c2 200 in 94ms
+ GET /kampanjat/c5 200 in 72ms
+ GET /vullnetare/1 200 in 90ms
+ GET /vullnetare/v1 500 in 90ms
+ GET /vullnetare/v3 500 in 108ms
+ GET /vullnetare/v1 500 in 112ms
+ GET /fonts/Arimo-Regular.woff2 404 in 103ms
+ ✓ Compiled in 1721ms (1294 modules)
+ GET /kampanjat/c1 200 in 250ms
+ GET /kampanjat/c2 200 in 98ms
+ GET /kampanjat/c5 200 in 75ms
+ GET /vullnetare/1 200 in 93ms
+ GET /vullnetare/v1 200 in 63ms
+ GET /vullnetare/v2 200 in 65ms
+ GET /vullnetare/v3 200 in 61ms
+ GET /vullnetare/v4 200 in 63ms
+ GET /vullnetare/v5 200 in 62ms
+ GET /kampanjat 200 in 108ms
+ GET /fonts/Arimo-Regular.woff2 404 in 75ms
+ GET /kampanjat 200 in 93ms
+ GET /fonts/Arimo-Regular.woff2 404 in 52ms
+ GET /kampanjat 200 in 88ms
+ GET /fonts/Arimo-Regular.woff2 404 in 62ms
+ GET /kampanjat/c1 200 in 114ms
+ GET /fonts/Arimo-Regular.woff2 404 in 58ms
+ GET /kampanjat 200 in 157ms
+ GET /fonts/Arimo-Regular.woff2 404 in 125ms
+ GET /kampanjat/c2 200 in 170ms
+ GET /fonts/Arimo-Regular.woff2 404 in 150ms
+ GET /kampanjat 200 in 126ms
+ GET /fonts/Arimo-Regular.woff2 404 in 109ms
+ GET /kampanjat/c5 200 in 186ms
+ GET /fonts/Arimo-Regular.woff2 404 in 163ms
+ GET /shpalljet 200 in 163ms
+ GET /fonts/Arimo-Regular.woff2 404 in 152ms
+ GET /vullnetare/v1 200 in 223ms
+ GET /shpalljet 200 in 163ms
+ GET /fonts/Arimo-Regular.woff2 404 in 121ms
+ GET /vullnetare/v3 200 in 175ms
+ GET /kampanjat/c1 200 in 107ms
+ GET /kampanjat/c2 200 in 65ms
+ GET /kampanjat/c3 200 in 87ms
+ GET /kampanjat/c4 200 in 82ms
+ GET /kampanjat/c5 200 in 59ms
+ GET /kampanjat/c6 200 in 89ms
+ GET /kampanjat/c7 200 in 100ms
+ GET /kampanjat/c8 200 in 65ms
+ GET /kampanjat/c9 200 in 75ms
+ GET /kampanjat/c10 200 in 67ms
+ GET /vullnetare/1 200 in 89ms
+ GET /vullnetare/v1 200 in 76ms
+ GET /vullnetare/v2 200 in 72ms
+ GET /vullnetare/v3 200 in 89ms
+ GET /vullnetare/v4 200 in 55ms
+ GET /vullnetare/v5 200 in 82ms
+ GET /fonts/Arimo-Regular.woff2 404 in 76ms
+ GET /fonts/Arimo-Regular.woff2 404 in 81ms
+ GET /kampanjat 200 in 101ms
+ GET /fonts/Arimo-Regular.woff2 404 in 75ms
+ GET /kampanjat/c7 200 in 78ms
+ GET /fonts/Arimo-Regular.woff2 404 in 79ms
+ GET /kampanjat 200 in 81ms
+ GET /fonts/Arimo-Regular.woff2 404 in 67ms
+ GET /kampanjat/c5 200 in 94ms
+ GET /fonts/Arimo-Regular.woff2 404 in 60ms
+ GET /kampanjat 200 in 81ms
+ GET /fonts/Arimo-Regular.woff2 404 in 67ms
+ GET /kampanjat/c5 200 in 90ms
+ GET /fonts/Arimo-Regular.woff2 404 in 60ms
+ GET /kampanjat 200 in 74ms
+ GET /fonts/Arimo-Regular.woff2 404 in 57ms
+ ○ Compiling / ...
+ ✓ Compiled / in 890ms (601 modules)
+ GET / 200 in 1521ms
+ GET /fonts/Arimo-Regular.woff2 404 in 89ms
+ GET /kampanjat 200 in 143ms
+ GET /fonts/Arimo-Regular.woff2 404 in 66ms
+ GET /shpalljet 200 in 161ms
+ GET /fonts/Arimo-Regular.woff2 404 in 82ms
+ GET / 200 in 86ms
+ GET /fonts/Arimo-Regular.woff2 404 in 71ms
+ GET /kampanjat 200 in 74ms
+ GET /fonts/Arimo-Regular.woff2 404 in 56ms
+ GET / 200 in 60ms
+ GET /fonts/Arimo-Regular.woff2 404 in 62ms
+ GET / 200 in 76ms
+ GET /fonts/Arimo-Regular.woff2 404 in 64ms
+ ○ Compiling /vullnetare ...
+ ✓ Compiled /vullnetare in 1084ms (605 modules)
+ GET / 200 in 376ms
+ GET /fonts/Arimo-Regular.woff2 404 in 95ms
+ GET / 200 in 106ms
+ GET /fonts/Arimo-Regular.woff2 404 in 79ms
+ GET / 200 in 106ms
+ GET /fonts/Arimo-Regular.woff2 404 in 54ms
+ GET / 200 in 85ms
+ GET /fonts/Arimo-Regular.woff2 404 in 67ms
+ GET / 200 in 107ms
+ GET /fonts/Arimo-Regular.woff2 404 in 90ms
+ GET /sherbimet 200 in 85ms
+ GET /rreth-nesh 200 in 122ms
+ GET / 200 in 126ms
+ GET /fonts/Arimo-Regular.woff2 404 in 134ms
+ GET /blog 200 in 133ms
+ ✓ Compiled in 3.5s (1292 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 777ms (597 modules)
+ ✓ Compiled in 4ms (597 modules)
+ ✓ Compiled in 1ms (597 modules)
+ ✓ Compiled in 0ms (597 modules)
+ GET /_next/static/webpack/b2684ed4b6715c9b.webpack.hot-update.json 404 in 3140ms
+ ✓ Compiled in 1ms (597 modules)
+ GET /kampanjat/c1 200 in 1637ms
+ GET /blog 200 in 1642ms
+ GET /fonts/Arimo-Regular.woff2 404 in 69ms
+ ✓ Compiled in 951ms (697 modules)
+ GET /_next/static/webpack/991a27b92cdfdeb0.webpack.hot-update.json 404 in 337ms
+ GET /kampanjat/c1 200 in 258ms
+ GET /_next/static/webpack/091f764fa8464b0c.webpack.hot-update.json 404 in 67ms
+ GET /blog 200 in 82ms
+ GET /fonts/Arimo-Regular.woff2 404 in 92ms
+ GET /fonts/Arimo-Regular.woff2 404 in 86ms
+ ✓ Compiled in 837ms (697 modules)
+ GET /_next/static/webpack/091f764fa8464b0c.webpack.hot-update.json 404 in 379ms
+ GET /kampanjat/c1 200 in 155ms
+ GET /_next/static/webpack/c0b96a70f5774c60.webpack.hot-update.json 404 in 91ms
+ GET /blog 200 in 76ms
+ GET /fonts/Arimo-Regular.woff2 404 in 88ms
+ ✓ Compiled in 847ms (697 modules)
+ GET /_next/static/webpack/53c4053b7e247051.webpack.hot-update.json 404 in 60ms
+ GET /blog 200 in 72ms
+ GET /_next/static/webpack/53c4053b7e247051.webpack.hot-update.json 404 in 67ms
+ GET /kampanjat/c1 200 in 79ms
+ ✓ Compiled in 878ms (697 modules)
+ ✓ Compiled in 714ms (697 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 181ms
+ ✓ Compiled in 1892ms (1294 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 866ms (1281 modules)
+ GET /_next/static/webpack/a48572946fe174fc.webpack.hot-update.json 404 in 989ms
+ GET /blog 200 in 378ms
+ GET /_next/static/webpack/a48572946fe174fc.webpack.hot-update.json 404 in 89ms
+ GET /kampanjat/c1 200 in 165ms
+ GET /fonts/Arimo-Regular.woff2 404 in 61ms
+ ✓ Compiled in 2.1s (1296 modules)
+ GET /sherbimet 500 in 745ms
+ GET /vullnetare/1 404 in 181ms
+ GET /kontakt 404 in 181ms
+ GET /sukses/donacion 404 in 179ms
+ GET /kampanjat/c1 404 in 165ms
+ ✓ Compiled in 1430ms (1296 modules)
+ ✓ Compiled in 1ms (598 modules)
+ ✓ Compiled in 0ms (598 modules)
+ ✓ Compiled in 1ms (598 modules)
+ GET /kontakt 200 in 1664ms
+ GET /_next/static/webpack/ca3f4a8a0af37167.webpack.hot-update.json 404 in 2123ms
+ ✓ Compiled in 1ms (598 modules)
+ GET /sherbimet 200 in 3247ms
+ GET /sukses/donacion 200 in 3249ms
+ GET /kampanjat/c1 200 in 3231ms
+ GET /vullnetare/1 200 in 3251ms
+ ✓ Compiled in 6ms (598 modules)
+ ✓ Compiled in 1ms (598 modules)
+ GET /kontakt 200 in 2900ms
+ ✓ Compiled in 1ms (598 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 1231ms
+ GET /fonts/Arimo-Regular.woff2 404 in 100ms
+ ✓ Compiled in 3.5s (1296 modules)
+ GET /kampanjat 200 in 2964ms
+ GET /fonts/Arimo-Regular.woff2 404 in 69ms
+ GET /kampanjat/c1 404 in 318ms
+ GET /sherbimet 200 in 659ms
+ GET /blog 200 in 673ms
+ GET /rreth-nesh 200 in 201ms
+ GET /sukses/donacion 404 in 87ms
+ GET /vullnetare/1 404 in 60ms
+ GET /blog 200 in 163ms
+ GET /kontakt 404 in 81ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 81ms
+ GET /kontakt 404 in 227ms
+ GET /shpalljet 200 in 320ms
+ GET /sukses/donacion 404 in 232ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 138ms
+ GET /kampanjat 200 in 281ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 61ms
+ GET /kampanjat/c1 404 in 118ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 79ms
+ GET /vullnetare/1 404 in 112ms
+ GET /kontakt 404 in 134ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 47ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 35ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 77ms
+ GET /sukses/donacion 404 in 133ms
+ GET /vullnetare/1 404 in 96ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 962ms
+ GET /fonts/Arimo-Regular.woff2 404 in 1115ms
+ GET /kampanjat/c1 404 in 2018ms
+ GET /fonts/Arimo-Regular.woff2 404 in 1765ms
+ GET /kontakt 404 in 2046ms
+ ✓ Compiled in 3.3s (1296 modules)
+ ✓ Compiled in 1ms (598 modules)
+ ✓ Compiled in 0ms (598 modules)
+ ✓ Compiled in 1ms (598 modules)
+ GET /sukses/donacion 200 in 1914ms
+ GET /_next/static/webpack/307af31b60cf60cb.webpack.hot-update.json 404 in 4510ms
+ GET /_next/static/webpack/f29cefde29c53eb0.webpack.hot-update.json 404 in 2113ms
+ ✓ Compiled in 8.7s (1296 modules)
+ GET /sukses/donacion 200 in 9702ms
+ GET /kampanjat 200 in 10298ms
+ GET /_next/static/webpack/f29cefde29c53eb0.webpack.hot-update.json 404 in 9343ms
+ GET /vullnetare/1 200 in 245ms
+ GET /sukses/donacion 200 in 221ms
+ GET /fonts/Arimo-Regular.woff2 404 in 100ms
+ GET /sherbimet 200 in 73ms
+ ✓ Compiled in 627ms (698 modules)
+ ✓ Compiled in 1256ms (698 modules)
+ GET /blog 200 in 140ms
+ GET /blog 200 in 108ms
+ GET /kontakt 200 in 81ms
+ GET /_next/static/webpack/e140e43d3695b772.webpack.hot-update.json 404 in 59ms
+ GET /rreth-nesh 200 in 165ms
+ ○ Compiling / ...
+ ✓ Compiled / in 576ms (602 modules)
+ GET / 200 in 1016ms
+ GET /rreth-nesh 200 in 84ms
+ GET /sherbimet 200 in 70ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1379ms (1302 modules)
+ GET /dashboard 200 in 1673ms
+ GET /blog 200 in 117ms
+ GET /fonts/Arimo-Regular.woff2 404 in 107ms
+ GET /fonts/Arimo-Regular.woff2 404 in 102ms
+ GET /_next/static/webpack/e140e43d3695b772.webpack.hot-update.json 404 in 249ms
+ GET /kontakt 200 in 209ms
+ GET / 200 in 94ms
+ GET /fonts/Arimo-Regular.woff2 404 in 68ms
+ GET / 200 in 112ms
+ GET /fonts/Arimo-Regular.woff2 404 in 79ms
+ GET / 200 in 92ms
+ GET /fonts/Arimo-Regular.woff2 404 in 59ms
+ GET / 200 in 80ms
+ GET /fonts/Arimo-Regular.woff2 404 in 72ms
+ GET /dashboard 200 in 142ms
+ GET / 200 in 69ms
+ GET /fonts/Arimo-Regular.woff2 404 in 51ms
+ GET /dashboard 200 in 67ms
+ GET /blog 200 in 145ms
+ GET / 200 in 68ms
+ GET /rreth-nesh 200 in 58ms
+ GET /sherbimet 200 in 84ms
+ GET /dashboard 200 in 88ms
+ GET /blog 200 in 68ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 899ms (599 modules)
+ GET /auth/login 200 in 1212ms
+ ○ Compiling /auth/register ...
+ ✓ Compiled /auth/register in 587ms (601 modules)
+ GET /auth/register 200 in 903ms
+ GET /kampanjat 200 in 210ms
+ GET /fonts/Arimo-Regular.woff2 404 in 101ms
+ ○ Compiling /kampanjat/[slug] ...
+ ✓ Compiled /kampanjat/[slug] in 816ms (605 modules)
+ GET /kampanjat/c1 200 in 1128ms
+ GET /fonts/Arimo-Regular.woff2 404 in 75ms
+ ○ Compiling /shpalljet ...
+ ✓ Compiled /shpalljet in 667ms (609 modules)
+ GET /shpalljet 200 in 1072ms
+ GET /fonts/Arimo-Regular.woff2 404 in 64ms
+ GET /rreth-nesh 200 in 105ms
+ GET / 200 in 100ms
+ GET /fonts/Arimo-Regular.woff2 404 in 65ms
+ GET /kampanjat 200 in 106ms
+ GET /fonts/Arimo-Regular.woff2 404 in 53ms
+ GET /shpalljet 200 in 86ms
+ GET /fonts/Arimo-Regular.woff2 404 in 62ms
+ GET /sherbimet 200 in 95ms
+ GET /rreth-nesh 200 in 91ms
+ GET /blog 200 in 125ms
+ GET /rreth-nesh 200 in 75ms
+ GET /blog 200 in 102ms
+ GET / 200 in 74ms
+ GET /fonts/Arimo-Regular.woff2 404 in 58ms
+ GET /blog 200 in 72ms
+ GET /auth/login 200 in 97ms
+ GET /blog 200 in 82ms
+ GET /auth/register 200 in 96ms
+ GET /blog 200 in 86ms
+ ✓ Compiled in 3.5s (1276 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 401ms
+ ✓ Compiled in 1919ms (1264 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 364ms
+ ✓ Compiled in 823ms (699 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 148ms
+ ✓ Compiled in 771ms (699 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 114ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 1183ms (1255 modules)
+ GET /auth/login 200 in 1422ms
+ GET /fonts/Arimo-Regular.woff2 404 in 162ms
+ ○ Compiling /auth/register ...
+ ✓ Compiled /auth/register in 1040ms (1276 modules)
+ GET /auth/register 200 in 1236ms
+ GET /fonts/Arimo-Regular.woff2 404 in 125ms
+ ○ Compiling /auth/forgot-password ...
+ ✓ Compiled /auth/forgot-password in 1259ms (1267 modules)
+ GET /auth/forgot-password 200 in 1472ms
+ ○ Compiling /auth/reset-konfirmim ...
+ ✓ Compiled /auth/reset-konfirmim in 983ms (1273 modules)
+ GET /auth/reset-konfirmim 200 in 1146ms
+ ○ Compiling /onboarding ...
+ ✓ Compiled /onboarding in 1081ms (1279 modules)
+ GET /onboarding 200 in 1257ms
+ GET /auth/login 200 in 185ms
+ GET /fonts/Arimo-Bold.woff2 404 in 176ms
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 1417ms (588 modules)
+ GET /fonts/Arimo-Bold.woff2 404 in 425ms
+ GET /fonts/Arimo-Regular.woff2 404 in 142ms
+ GET /auth/login 200 in 108ms
+ GET /fonts/Arimo-Bold.woff2 404 in 64ms
+ GET /auth/login 200 in 86ms
+ GET /fonts/Arimo-Bold.woff2 404 in 38ms
+ GET /auth/register 200 in 122ms
+ GET /fonts/Arimo-Bold.woff2 404 in 54ms
+ GET /auth/login 200 in 66ms
+ GET /fonts/Arimo-Bold.woff2 404 in 52ms
+ GET /auth/register 200 in 82ms
+ GET /fonts/Arimo-Bold.woff2 404 in 112ms
+ GET /auth/login 200 in 72ms
+ GET /fonts/Arimo-Bold.woff2 404 in 152ms
+ GET /auth/login 200 in 70ms
+ GET /fonts/Arimo-Bold.woff2 404 in 68ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 679ms (576 modules)
+ GET /dashboard 200 in 1364ms
+ GET /auth/register 200 in 131ms
+ GET /fonts/Arimo-Bold.woff2 404 in 152ms
+ ○ Compiling /onboarding ...
+ ✓ Compiled /onboarding in 524ms (580 modules)
+ GET /onboarding 200 in 862ms
+ ○ Compiling /auth/forgot-password ...
+ ✓ Compiled /auth/forgot-password in 814ms (584 modules)
+ GET /auth/forgot-password 200 in 1114ms
+ ○ Compiling /auth/reset-konfirmim ...
+ ✓ Compiled /auth/reset-konfirmim in 610ms (588 modules)
+ GET /auth/reset-konfirmim?email=ana%40unify.local 200 in 906ms
+ GET /onboarding 200 in 157ms
+ ✓ Compiled in 3.6s (1297 modules)
+ GET /auth/login 200 in 149ms
+ GET /auth/register 200 in 68ms
+ GET /auth/forgot-password 200 in 84ms
+ GET /auth/reset-konfirmim 200 in 83ms
+ GET /onboarding 200 in 66ms
+ GET /dashboard 200 in 69ms
+ GET /fonts/Arimo-Regular.woff2 404 in 107ms
+ GET /fonts/Arimo-Bold.woff2 404 in 70ms
+ GET /dashboard 200 in 95ms
+ ○ Compiling /dashboard/kampanjat ...
+ ✓ Compiled /dashboard/transaksionet in 5.6s (1308 modules)
+ GET /dashboard/transaksionet 200 in 2158ms
+ GET /dashboard 200 in 116ms
+ GET /auth/login 200 in 70ms
+ GET /fonts/Arimo-Bold.woff2 404 in 90ms
+ GET /auth/register 200 in 72ms
+ GET /fonts/Arimo-Bold.woff2 404 in 51ms
+ ✓ Compiled in 1516ms (1319 modules)
+ GET /fonts/Arimo-Bold.woff2 404 in 129ms
+ GET /onboarding 200 in 92ms
+ GET /auth/login 200 in 123ms
+ GET /dashboard 200 in 129ms
+ GET /fonts/Arimo-Regular.woff2 404 in 119ms
+ ✓ Compiled in 2.2s (1259 modules)
+ GET /_next/static/webpack/300d47cc87edc954.webpack.hot-update.json 404 in 605ms
+ GET /dashboard 200 in 305ms
+ GET /fonts/Arimo-Regular.woff2 404 in 147ms
+ ✓ Compiled in 1490ms (1259 modules)
+ GET /_next/static/webpack/300d47cc87edc954.webpack.hot-update.json 404 in 445ms
+ GET /dashboard 200 in 201ms
+ GET /fonts/Arimo-Regular.woff2 404 in 169ms
+ GET /onboarding 200 in 73ms
+ ✓ Compiled in 1042ms (717 modules)
+ GET /_next/static/webpack/75c2ddd7f306693e.webpack.hot-update.json 404 in 294ms
+ GET /fonts/Arimo-Regular.woff2 404 in 324ms
+ GET /dashboard 200 in 316ms
+ ✓ Compiled in 892ms (717 modules)
+ ✓ Compiled in 862ms (717 modules)
+ GET /_next/static/webpack/ef55a8da78805f32.webpack.hot-update.json 404 in 805ms
+ GET /dashboard 200 in 491ms
+ ○ Compiling /dashboard/shpalljet ...
+ ✓ Compiled /dashboard/shpalljet in 670ms (544 modules)
+ GET /dashboard/shpalljet 200 in 994ms
+ GET /dashboard 200 in 218ms
+ ✓ Compiled /_not-found in 472ms (546 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 833ms
+ ✓ Compiled in 954ms (717 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 100ms
+ ○ Compiling /rreth-nesh ...
+ ✓ Compiled /rreth-nesh in 783ms (546 modules)
+ ✓ Compiled (550 modules)
+ GET / 200 in 1731ms
+ GET /rreth-nesh 200 in 1717ms
+ ✓ Compiled in 1935ms (1267 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 185ms
+ ✓ Compiled in 1356ms (1267 modules)
+ GET /fonts/Arimo-Regular.woff2 404 in 163ms
+ GET /rreth-nesh 200 in 92ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 915ms (1269 modules)
+ GET / 404 in 1025ms
+ GET /fonts/Arimo-Regular.woff2 404 in 143ms
+ GET / 200 in 113ms
+ GET /rreth-nesh 200 in 96ms
+ GET /dashboard 200 in 165ms
+ ○ Compiling /dashboard/kampanjat ...
+ ✓ Compiled /dashboard/kampanjat in 1038ms (544 modules)
+ GET /onboarding 200 in 1501ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 1002ms (548 modules)
+ GET /auth/register 200 in 1456ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 883ms (550 modules)
+ GET /fonts/Arimo-Bold.woff2 404 in 1334ms
+ ○ Compiling / ...
+ ✓ Compiled / in 788ms (554 modules)
+ GET / 200 in 1255ms
+ GET /fonts/Arimo-Regular.woff2 404 in 70ms
+ GET /dashboard 200 in 310ms
+ GET / 200 in 109ms
+ GET /fonts/Arimo-Regular.woff2 404 in 64ms
+ ✓ Compiled /rreth-nesh in 504ms (554 modules)
+ GET /rreth-nesh 200 in 989ms
+ ○ Compiling /blog ...
+ ✓ Compiled /blog in 1713ms (567 modules)
+ GET /blog 200 in 2248ms
+ GET /rreth-nesh 200 in 84ms
+ ○ Compiling /sherbimet ...
+ ✓ Compiled /sherbimet in 691ms (571 modules)
+ GET /sherbimet 200 in 1221ms

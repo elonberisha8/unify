@@ -88,7 +88,7 @@ export default function TestStripePage() {
           >
             ← Kthehu
           </button>
-          <h2 style={{ fontSize: 16, marginBottom: 16 }}>💳 Dono €{amount} për kampanjën test</h2>
+        <h2 style={{ fontSize: 16, marginBottom: 16 }}>💳 Dhuro €{amount} për kampanjën test</h2>
 
           <DonationCheckout
             campaignId="test-campaign-123"

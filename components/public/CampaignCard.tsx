@@ -3,10 +3,7 @@ import * as React from "react";
 import { HeartIcon, MapPinIcon, CalendarIcon, ShareIcon, BookmarkIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
-import { Card, CardContent } from "../ui/Card";
-import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
-import { Progress } from "../ui/Progress";
+import { Badge, Button, Card, CardContent, Progress } from "@/components/ui";
 
 export interface CampaignCardProps {
   id: string;
@@ -40,7 +37,18 @@ export function CampaignCard({
 
   return (
     <Card className={cn("overflow-hidden group hover:shadow-lg transition-shadow", className)}>
-      <button onClick={onClick} className="relative w-full aspect-[4/3] overflow-hidden bg-muted block">
+      <div
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (onClick && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        className="relative w-full aspect-[4/3] overflow-hidden bg-muted block cursor-pointer"
+      >
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
@@ -59,7 +67,7 @@ export function CampaignCard({
             </button>
           )}
         </div>
-      </button>
+      </div>
 
       <CardContent className="p-5 space-y-3">
         <button onClick={onClick} className="text-left w-full">
@@ -96,7 +104,7 @@ export function CampaignCard({
 
         {onDonate && (
           <Button onClick={onDonate} className="w-full" size="md">
-            <HeartIcon className="h-4 w-4" /> Dono
+            <HeartIcon className="h-4 w-4" /> Dhuro
           </Button>
         )}
       </CardContent>
