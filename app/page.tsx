@@ -106,21 +106,27 @@ export default function HomePage() {
         tagline: "Platforma e parë crowdfunding dhe ndihmë vullnetare për të gjithë shqiptarët.",
         sections: [
           {
-            title: "Menu",
+            title: "Platforma",
             links: [
-              { label: "Rreth Nesh", href: "/rreth-nesh" },
-              { label: "Shpalljet",  href: "/kampanjat"  },
-              { label: "Shërbimet", href: "/sherbimet"  },
-              { label: "Ngjarjet",   href: "/ngjarjet"   },
+              { label: "Si Funksionon", href: "/si-funksionon" },
+              { label: "Rreth Nesh",    href: "/rreth-nesh"    },
+              { label: "Blog",          href: "/blog"          },
+              { label: "Shërbimet",    href: "/sherbimet"     },
             ],
           },
           {
             title: "Ligjore",
             links: [
-              { label: "Kushtet e Përdorimit",   href: "/kushtet"                 },
-              { label: "Politika e Privatësisë", href: "/privatesia"              },
-              { label: "info@unify.ks",          href: "mailto:info@unify.ks"     },
-              { label: "Kontakt",                href: "/kontakt"                 },
+              { label: "Kushtet e Përdorimit",   href: "/kushtet"    },
+              { label: "Politika e Privatësisë", href: "/privatesia" },
+            ],
+          },
+          {
+            title: "Kontakt",
+            links: [
+              { label: "info@unify.ks", href: "mailto:info@unify.ks" },
+              { label: "Instagram",     href: "#"                     },
+              { label: "Facebook",      href: "#"                     },
             ],
           },
         ],
