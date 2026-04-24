@@ -22,7 +22,7 @@ import { useParams } from "next/navigation"
 import Image from "next/image"
 import { useUser } from "@clerk/nextjs"
 import { PublicLayout } from "@/components/layout"
-import { ShareButtons, BookmarkButton } from "@/components/public"
+import { ShareButtons } from "@/components/public"
 import {
   Badge,
   Button,
@@ -38,7 +38,7 @@ import {
   Switch,
   Textarea,
 } from "@/components/ui"
-import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon, ShareIcon } from "@/components/icons"
+import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon, ShareIcon, MapPinIcon } from "@/components/icons"
 
 // ── Konstante statike jashtë komponentit ──────────────────────────────────────
 const NAV_LINKS = [
@@ -196,7 +196,7 @@ export default function VolunteerDetailPage() {
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground/70">
                 <div className="flex items-center gap-1">
-                  <span className="text-lg">📍</span> {post.location}
+                  <MapPinIcon className="h-4 w-4" /> {post.location}
                 </div>
                 <div className="flex items-center gap-1">
                   <ClockIcon className="h-4 w-4" /> Publikuar {post.publishedAt}
