@@ -1,8 +1,8 @@
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/dashboard-profile
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
-// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
+//   • Profili Publik → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=177-2
+// NOTION: https://www.notion.so/34874891227e8130855afa1edb64a28b
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -14,10 +14,11 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
+// import { PublicProfileHero } from "@/components/dashboard"
+// import { CampaignCard } from "@/components/public"
+// import { Tabs, TabsList, TabsTrigger, TabsContent, Button } from "@/components/ui"
 // import { PublicLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function PublicProfilPage() {
   return null
 }

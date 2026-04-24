@@ -1,8 +1,10 @@
+"use client"
+
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/dashboard-home
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
-// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
+//   • Dashboard — Transaksionet → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=79-2
+// NOTION: https://www.notion.so/34874891227e81f2a6e0ec234fd70570
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -14,10 +16,10 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
-// import { PublicLayout } from "@/components/layout"
+// import { TransactionTable } from "@/components/dashboard"
+// import { Button, Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui"
+// import { DashboardLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function TransaksionetPage() {
   return null
 }

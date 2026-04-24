@@ -1,8 +1,10 @@
+"use client"
+
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/dashboard-inbox
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
-// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
+//   • Dashboard — Inbox → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=78-2
+// NOTION: https://www.notion.so/34874891227e8138a5abebbfd9a6d3ae
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -14,10 +16,10 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
-// import { PublicLayout } from "@/components/layout"
+// import { InboxSidebar, ChatWindow, MessageBubble } from "@/components/dashboard"
+// import { Input, Button } from "@/components/ui"
+// import { DashboardLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function InboxPage() {
   return null
 }

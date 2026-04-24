@@ -1,8 +1,8 @@
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/auth
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
-// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
+//   • Forgot Password → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=37-2
+// NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -14,10 +14,9 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
-// import { PublicLayout } from "@/components/layout"
+// import { ForgotPasswordForm } from "@/components/auth"
+// import { AuthLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function ForgotPasswordPage() {
   return null
 }
