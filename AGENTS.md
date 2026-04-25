@@ -1,7 +1,61 @@
 # Unify Platform — AI Assistant Guidelines
 
-> This file is read automatically by Claude Code and other AI assistants.
-> It provides full project context so you can give accurate, project-specific guidance.
+> This file is read automatically by Codex, Claude Code, Cursor, and any other AI assistant.
+> It provides full project context so every agent gives accurate, project-specific output.
+> **Elon often runs multiple agents in parallel** — read the Multi-Agent Coordination section carefully.
+
+---
+
+## 🤝 Multi-Agent Coordination (READ FIRST)
+
+Elon (founder, project manager) runs multiple AI agents simultaneously:
+- **Claude Code** — public pages (homepage, listings, campaign detail, auth, static pages, profiles)
+- **Codex** — backend scaffolding, API routes, helper libraries, occasional cross-branch refactors
+- **Other agents** — Cursor / other tools may also edit the repo
+
+### Hard rules for every agent
+
+1. **One branch per agent at a time.** Before editing, run `git status` and `git branch --show-current`. If you are not on the right branch, `git checkout` first. Never commit mixed-branch work.
+2. **Respect the Branch → File Ownership table** (below). Never touch files outside your branch's scope. If a task requires cross-branch changes, stop and ask Elon.
+3. **Always `git pull origin <branch>` before starting** to avoid overwriting another agent's work.
+4. **Commit frequently and push immediately.** Small, scoped commits. Always push so the other agents can see your work. Never leave local-only commits overnight.
+5. **Never push to `main` or `develop` directly.** Only Elon merges PRs.
+6. **Never edit shared/config files** without explicit permission from Elon:
+   - `tailwind.config.ts`, `next.config.js`, `tsconfig.json`, `package.json`, `.env*`
+   - `components/ui/*` (design system — locked)
+   - `components/stripe/*`, `app/api/stripe/*` (Stripe — locked)
+   - `CODEOWNERS`, `.github/workflows/*`
+   - `AGENTS.md`, `CLAUDE.md` (docs — ask Elon)
+7. **Pull before push.** If `git push` is rejected, `git pull --rebase origin <branch>`, resolve, re-push. Never force-push.
+8. **Commit message convention:** `feat:`, `fix:`, `style:`, `docs:`, `chore:`, `refactor:`. Always lowercase, imperative.
+9. **Leave breadcrumbs.** Every page file starts with:
+   ```
+   // ============================================================
+   // BRANCH: feat/xxx
+   // FIGMA:  <link>
+   // NOTION: <link>
+   // ============================================================
+   ```
+   So the next agent reading the file knows whose territory it is.
+10. **If you find a bug outside your branch,** do NOT fix it. Report it to Elon or leave a `// TODO(elon):` comment in your own file.
+
+### Task division (current)
+
+| Area | Owner agent |
+|------|-------------|
+| Public pages (`/`, `/shpalljet`, `/kampanjat/*`, `/vullnetare/*`, `/auth/*`, `/onboarding`, `/sukses/*`, `/profili/*`, `/blog/*`, `/rreth-nesh`, `/kontakt`, `/kushtet`, `/privatesia`, `/not-found`) | **Claude Code** |
+| Dashboard (`/dashboard/*`) | **Bleon (human) + Codex** |
+| Admin (`/admin/*`) | **TBD** |
+| Backend API routes, Stripe, lib helpers | **Codex** |
+| Design system (`components/ui/*`) | **Locked** — Elon only |
+| Shared layouts (`components/layout/*`) | **Shared** — coordinate before editing |
+
+### Conflict resolution
+
+If two agents end up editing the same file:
+- The agent who pushed **first** wins.
+- The second agent must `git pull --rebase`, resolve conflicts, and re-push.
+- If conflicts are non-trivial, stop and ask Elon.
 
 ---
 

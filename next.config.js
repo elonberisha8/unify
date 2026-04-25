@@ -10,20 +10,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        // Cloudinary — imazhet e Unify (cloud: dyimfvnv3)
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: "/dyimfvnv3/**",
       },
       {
-        // Clerk — avatar e userave
         protocol: "https",
         hostname: "img.clerk.com",
-      },
-      {
-        // Unsplash — placeholder images gjatë development
-        protocol: "https",
-        hostname: "images.unsplash.com",
       },
     ],
   },

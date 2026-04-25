@@ -9,188 +9,30 @@ import * as React from "react";
 
 // ─── UI Primitives ────────────────────────────────────────────────────────────
 import {
-  Button,
-  Input,
-  Textarea,
-  Label,
-  Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
-  Badge,
-  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
-  Tabs, TabsList, TabsTrigger, TabsContent,
-  Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
-  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle,
-  DialogDescription, DialogFooter, DialogClose,
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription,
-  AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
-  AlertDialogTitle, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogAction, AlertDialogCancel,
-  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
-  Checkbox,
-  Switch,
-  Avatar, AvatarFallback,
-  Tooltip, TooltipTrigger, TooltipContent, TooltipProvider,
-  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator,
-  Pagination,
-  Separator,
-  Spinner,
-  Skeleton,
-  Progress,
-  ProgressBar,
-  Breadcrumb,
-  FileUpload,
-  IconButton,
-  RadioGroup, RadioItem,
-  SocialButton,
-  Stepper,
-  TagBadge,
-  UserAvatarWithBadge,
-} from "@/components/ui";
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-import {
-  ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon, ChevronUpIcon,
-  ArrowRightIcon, ArrowLeftIcon, MenuIcon, CloseIcon,
-  CheckIcon, CheckCircleIcon, AlertCircleIcon, InfoIcon, XCircleIcon,
-  HeartIcon, BookmarkIcon, ShareIcon, SearchIcon, FilterIcon,
-  UserIcon, UsersIcon, LogInIcon, LogOutIcon, LockIcon, EyeIcon, EyeOffIcon,
-  MailIcon, PhoneIcon, MapPinIcon, CalendarIcon, ClockIcon,
-  FileIcon, ImageIcon, UploadIcon, DownloadIcon,
-  HomeIcon, LayoutDashboardIcon, SettingsIcon, BellIcon, InboxIcon,
-  TrendingUpIcon, TrendingDownIcon, DollarSignIcon, CreditCardIcon,
-  StarIcon, FlagIcon, PauseIcon, TrashIcon, EditIcon, PlusIcon,
-  GlobeIcon, LinkIcon, MoreHorizontalIcon,
-  ShieldIcon, BadgeCheckIcon, SparklesIcon,
-  FacebookIcon, TwitterIcon, WhatsappIcon,
-  MessageCircleIcon, GiftIcon, TargetIcon, SendIcon, TagIcon,
-  AlertTriangleIcon, MegaphoneIcon, WalletIcon, GoogleIcon,
-  BoldIcon, ItalicIcon, ListIcon, HeadingIcon,
-  InstagramIcon, LinkedinIcon, GithubIcon,
-  LoaderIcon, ExternalLinkIcon, MinusIcon,
-} from "@/components/icons";
-
-// ─── Layout ───────────────────────────────────────────────────────────────────
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { EmptyState } from "@/components/layout/EmptyState";
-
-// ─── Public ───────────────────────────────────────────────────────────────────
-import { CampaignCard } from "@/components/public/CampaignCard";
-import { VolunteerCard } from "@/components/public/VolunteerCard";
-import { BlogCard } from "@/components/public/BlogCard";
-import { StatisticCard } from "@/components/public/StatisticCard";
-import { CategoryCard } from "@/components/public/CategoryCard";
-import { ValueCard } from "@/components/public/ValueCard";
-import { SearchBar } from "@/components/public/SearchBar";
-import { FilterChips } from "@/components/public/FilterChips";
-import { DonationAmountPicker } from "@/components/public/DonationAmountPicker";
-import { StatsBar } from "@/components/public/StatsBar";
-import { FAQAccordion } from "@/components/public/FAQAccordion";
-import { ShareButtons } from "@/components/public/ShareButtons";
-import { DonorList } from "@/components/public/DonorList";
-import { BookmarkButton } from "@/components/public/BookmarkButton";
-import { ContactInfoCard } from "@/components/public/ContactInfoCard";
-import { NewsletterSignup } from "@/components/public/NewsletterSignup";
-
-// ─── Dashboard ────────────────────────────────────────────────────────────────
-import { StatCard } from "@/components/dashboard/StatCard";
-import { CampaignGoalCard } from "@/components/dashboard/CampaignGoalCard";
-import { CreatorCTA } from "@/components/dashboard/CreatorCTA";
-import { PublicProfileHero } from "@/components/dashboard/PublicProfileHero";
-import { StripeVerificationCard } from "@/components/dashboard/StripeVerificationCard";
-import { ActivityLogItem } from "@/components/dashboard/ActivityLogItem";
-import { ApplicationCard } from "@/components/dashboard/ApplicationCard";
-import { MessageBubble } from "@/components/dashboard/MessageBubble";
-import { OnboardingStepper } from "@/components/dashboard/OnboardingStepper";
-
-// ─── Auth ─────────────────────────────────────────────────────────────────────
-import { ProfileSetupForm } from "@/components/auth/ProfileSetupForm";
-import { RoleSelectionCard } from "@/components/auth/RoleSelectionCard";
-import { InterestPicker } from "@/components/auth/InterestPicker";
-
-// ─── Admin ────────────────────────────────────────────────────────────────────
-import { ModerationActions } from "@/components/admin/ModerationActions";
-import { AdminStatCard } from "@/components/admin/AdminStatCard";
-import { AdminStatusBadge } from "@/components/admin/AdminStatusBadge";
-import { AdminFilterBar } from "@/components/admin/AdminFilterBar";
-import { ActionButtonGroup } from "@/components/admin/ActionButtonGroup";
-import { AdminSettingsCard } from "@/components/admin/AdminSettingsCard";
-import { AdminToggleSwitch } from "@/components/admin/AdminToggleSwitch";
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-const DESIGN_COLORS = [
-  { name: "unify-blue",  hex: "#009eff" },
-  { name: "unify-brown", hex: "#3b2f2f" },
-  { name: "unify-cream", hex: "#faf7f2" },
-  { name: "unify-green", hex: "#22c55e" },
-  { name: "background",  hex: "#faf7f2" },
-  { name: "card",        hex: "#ffffff" },
-  { name: "border",      hex: "#e5e0d8" },
-  { name: "muted",       hex: "#f1ede6" },
-  { name: "foreground",  hex: "#1a1a1a" },
-  { name: "muted-fg",    hex: "#6b7280" },
-  { name: "destructive", hex: "#ef4444" },
-  { name: "ring",        hex: "#009eff" },
-];
-
-const ALL_ICONS = [
-  ["ChevronLeft",    ChevronLeftIcon],   ["ChevronRight",  ChevronRightIcon],
-  ["ChevronDown",    ChevronDownIcon],   ["ChevronUp",     ChevronUpIcon],
-  ["ArrowRight",     ArrowRightIcon],    ["ArrowLeft",     ArrowLeftIcon],
-  ["Menu",           MenuIcon],          ["Close",         CloseIcon],
-  ["Check",          CheckIcon],         ["CheckCircle",   CheckCircleIcon],
-  ["AlertCircle",    AlertCircleIcon],   ["Info",          InfoIcon],
-  ["XCircle",        XCircleIcon],       ["Heart",         HeartIcon],
-  ["Bookmark",       BookmarkIcon],      ["Share",         ShareIcon],
-  ["Search",         SearchIcon],        ["Filter",        FilterIcon],
-  ["User",           UserIcon],          ["Users",         UsersIcon],
-  ["LogIn",          LogInIcon],         ["LogOut",        LogOutIcon],
-  ["Lock",           LockIcon],          ["Eye",           EyeIcon],
-  ["EyeOff",        EyeOffIcon],         ["Mail",          MailIcon],
-  ["Phone",          PhoneIcon],         ["MapPin",        MapPinIcon],
-  ["Calendar",       CalendarIcon],      ["Clock",         ClockIcon],
-  ["File",           FileIcon],          ["Image",         ImageIcon],
-  ["Upload",         UploadIcon],        ["Download",      DownloadIcon],
-  ["Home",           HomeIcon],          ["Dashboard",     LayoutDashboardIcon],
-  ["Settings",       SettingsIcon],      ["Bell",          BellIcon],
-  ["Inbox",          InboxIcon],         ["TrendingUp",    TrendingUpIcon],
-  ["TrendingDown",   TrendingDownIcon],  ["DollarSign",    DollarSignIcon],
-  ["CreditCard",     CreditCardIcon],    ["Star",          StarIcon],
-  ["Flag",           FlagIcon],          ["Pause",         PauseIcon],
-  ["Trash",          TrashIcon],         ["Edit",          EditIcon],
-  ["Plus",           PlusIcon],          ["Globe",         GlobeIcon],
-  ["Link",           LinkIcon],          ["MoreHorizontal",MoreHorizontalIcon],
-  ["Shield",         ShieldIcon],        ["BadgeCheck",    BadgeCheckIcon],
-  ["Sparkles",       SparklesIcon],      ["Facebook",      FacebookIcon],
-  ["Twitter",        TwitterIcon],       ["Whatsapp",      WhatsappIcon],
-  ["Instagram",      InstagramIcon],     ["Linkedin",      LinkedinIcon],
-  ["Github",         GithubIcon],        ["Google",        GoogleIcon],
-  ["MessageCircle",  MessageCircleIcon], ["Gift",          GiftIcon],
-  ["Target",         TargetIcon],        ["Send",          SendIcon],
-  ["Tag",            TagIcon],           ["AlertTriangle", AlertTriangleIcon],
-  ["Megaphone",      MegaphoneIcon],     ["Wallet",        WalletIcon],
-  ["Bold",           BoldIcon],          ["Italic",        ItalicIcon],
-  ["List",           ListIcon],          ["Heading",       HeadingIcon],
-  ["Loader",         LoaderIcon],        ["ExternalLink",  ExternalLinkIcon],
-  ["Minus",          MinusIcon],
-] as const;
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-export default function ShowcasePage() {
-  const [bookmarked, setBookmarked]   = React.useState(false);
-  const [switchOn, setSwitchOn]       = React.useState(false);
-  const [radioVal, setRadioVal]       = React.useState("a");
-  const [roleVal, setRoleVal]         = React.useState("donor");
-  const [donationAmt, setDonationAmt] = React.useState(25);
-  const [filterChip, setFilterChip]   = React.useState("all");
-  const [page, setPage]               = React.useState(3);
-  const [toggleAdmin, setToggleAdmin] = React.useState(true);
-  const [interests, setInterests]     = React.useState<string[]>(["health", "education"]);
+  Button, Input, Textarea, Label, Badge, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
+  Checkbox, Switch, Avatar, AvatarFallback, Separator, Spinner, Skeleton, Progress, ProgressBar,
+  TagBadge, IconButton, SocialButton, Stepper,
+  EmptyState, Breadcrumbs,
+  CampaignCard, VolunteerCard, BlogCard, StatisticCard, CategoryCard, ValueCard,
+  StatCard, CampaignGoalCard, CreatorCTA,
+  HeartIcon, SearchIcon, BellIcon, UserIcon, ShareIcon, BookmarkIcon, CalendarIcon, MapPinIcon,
+  CheckCircleIcon, AlertCircleIcon, TrendingUpIcon, DollarSignIcon, SettingsIcon, HomeIcon,
+  InboxIcon, LogInIcon, UploadIcon, StarIcon, FlagIcon, GlobeIcon,
+  colors,
+} from "@/components";
 
   return (
-    <TooltipProvider>
-      <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border bg-card">
+        <div className="container py-10">
+          <p className="font-display text-sm uppercase tracking-widest text-unify-blue">Unify</p>
+          <h1 className="font-display text-5xl">Component Library Showcase</h1>
+          <p className="mt-3 max-w-2xl text-muted-foreground">
+            Te gjitha komponentet jane te disponueshme nga <code className="rounded bg-muted px-1.5 py-0.5">@/components</code>.
+            Frontend-zhvilluesit kompozojne faqe nga keto komponente dhe nuk shkruajne stile jashte library-se.
+          </p>
+        </div>
+      </header>
 
         {/* HEADER */}
         <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
@@ -599,563 +441,108 @@ export default function ShowcasePage() {
                 </div>
               </div>
 
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">ShareButtons</p>
-                <ShareButtons url="https://unify.ks/kampanjat/shkolla-gjakove" title="Ndihmo shkollën në Gjakovë" />
+        <Section title="Typography">
+          <div className="space-y-2">
+            <h1 className="font-display text-5xl">Rowdies - Display 5xl</h1>
+            <h2 className="font-display text-3xl">Rowdies - Display 3xl</h2>
+            <h3 className="font-display text-xl">Rowdies - Display xl</h3>
+            <p className="text-base">Arimo - Body base. Lorem ipsum dolor sit amet.</p>
+            <p className="text-sm text-muted-foreground">Arimo - Body small muted.</p>
+          </div>
+        </Section>
+
+        <Section title="Buttons">
+          <div className="flex flex-wrap gap-3">
+            <Button>Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button disabled>Disabled</Button>
+            <IconButton aria-label="heart"><HeartIcon size={18} /></IconButton>
+          </div>
+        </Section>
+
+        <Section title="Form primitives">
+          <div className="grid max-w-xl gap-4">
+            <div><Label>Email</Label><Input placeholder="emer@shembull.al" /></div>
+            <div><Label>Mesazh</Label><Textarea placeholder="Shkruaj mesazhin..." /></div>
+            <div className="flex items-center gap-3"><Checkbox id="c1" /><Label htmlFor="c1">Pajtohem me kushtet</Label></div>
+            <div className="flex items-center gap-3"><Switch id="s1" /><Label htmlFor="s1">Njoftime email</Label></div>
+          </div>
+        </Section>
+
+        <Section title="Badges & tags">
+          <div className="flex flex-wrap gap-2">
+            <Badge>Default</Badge>
+            <Badge variant="secondary">Secondary</Badge>
+            <Badge variant="outline">Outline</Badge>
+            <Badge variant="destructive">Destructive</Badge>
+            <TagBadge label="Shendetesi" />
+            <TagBadge label="Arsim" />
+          </div>
+        </Section>
+
+        <Section title="Progress & feedback">
+          <div className="max-w-md space-y-4">
+            <Progress value={62} />
+            <ProgressBar value={62} showLabel />
+            <div className="flex items-center gap-3"><Spinner /> Duke ngarkuar...</div>
+            <Skeleton className="h-6 w-full" />
+          </div>
+        </Section>
+
+        <Section title="Avatar / Social / Stepper">
+          <div className="flex flex-wrap items-center gap-6">
+            <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
+            <SocialButton provider="google">Vazhdo me Google</SocialButton>
+            <div className="w-80"><Stepper steps={["Llogaria", "Profili", "Interesat", "Perfundo"]} current={1} /></div>
+          </div>
+        </Section>
+
+        <Section title="Icons (sample)">
+          <div className="grid grid-cols-6 gap-4 md:grid-cols-10">
+            {[
+              ["HeartIcon", HeartIcon], ["SearchIcon", SearchIcon], ["BellIcon", BellIcon],
+              ["UserIcon", UserIcon], ["ShareIcon", ShareIcon], ["BookmarkIcon", BookmarkIcon],
+              ["CalendarIcon", CalendarIcon], ["MapPinIcon", MapPinIcon], ["CheckCircleIcon", CheckCircleIcon],
+              ["AlertCircleIcon", AlertCircleIcon], ["TrendingUpIcon", TrendingUpIcon], ["DollarSignIcon", DollarSignIcon],
+              ["SettingsIcon", SettingsIcon], ["HomeIcon", HomeIcon], ["InboxIcon", InboxIcon],
+              ["LogInIcon", LogInIcon], ["UploadIcon", UploadIcon], ["StarIcon", StarIcon],
+              ["FlagIcon", FlagIcon], ["GlobeIcon", GlobeIcon],
+            ].map(([name, I]: any) => (
+              <div key={name} className="flex flex-col items-center gap-1 rounded-lg border border-border bg-card p-3">
+                <I size={22} className="text-unify-brown" />
+                <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
               </div>
 
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">DonorList</p>
-                <DonorList
-                  donors={[
-                    { name: "Arta H.",      amount: "€100", anonymous: false },
-                    { name: "Anonim 🌟",    amount: "€50",  anonymous: true  },
-                    { name: "Blerim K.",    amount: "€25",  anonymous: false, message: "Shumë fat! 🙏" },
-                    { name: "Anonim 🌟",    amount: "€200", anonymous: true  },
-                    { name: "Fiona Dema",   amount: "€75",  anonymous: false, date: "20 Pri" },
-                  ]}
-                />
-              </div>
+        <Section title="Cards">
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Card title</CardTitle>
+                <CardDescription>Nje pershkrim i shkurter.</CardDescription>
+              </CardHeader>
+              <CardContent>Permbajtja kryesore e kartes.</CardContent>
+              <CardFooter><Button size="sm">Veprim</Button></CardFooter>
+            </Card>
+            <StatCard label="Donacione" value="EUR 12,480" change={{ value: "+8.2%", direction: "up" }} />
+            <CampaignGoalCard title="Shkolla ne Gjakove" raised={7200} goal={12000} />
+          </div>
+        </Section>
 
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">NewsletterSignup</p>
-                <NewsletterSignup onSubmit={(email) => alert(`Abonuar: ${email}`)} />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">ContactInfoCard</p>
-                <div className="grid gap-3 md:grid-cols-3">
-                  <ContactInfoCard icon={<MailIcon className="h-5 w-5" />}  title="Email"    value="info@unify.ks" href="mailto:info@unify.ks" />
-                  <ContactInfoCard icon={<PhoneIcon className="h-5 w-5" />} title="Telefoni" value="+383 44 000 000" />
-                  <ContactInfoCard icon={<MapPinIcon className="h-5 w-5" />} title="Adresa"  value="Prishtinë, Kosovë" />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">FAQAccordion</p>
-                <FAQAccordion
-                  items={[
-                    { question: "Si funksionon Unify?",           answer: "Krijon kampanjë, njerëzit dhurojnë direkt te ti." },
-                    { question: "A është i sigurt donacioni?",     answer: "Po — Stripe, standard ndërkombëtar PCI DSS." },
-                    { question: "Sa komisioner merr Unify?",       answer: "0% komision. Opsional tip 5% ose 10%." },
-                  ]}
-                />
-              </div>
-            </div>
-          </Section>
-
-          {/* ═══ 13. DASHBOARD CARDS ═══ */}
-          <Section id="dashboard" title="📊 Dashboard Components">
-            <div className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <CreatorCTA
-                  title="Bëhu Krijues"
-                  description="Krijo kampanjën tënde të parë dhe mblidh mbështetje."
-                  ctaLabel="Fillo tani"
-                  onCta={() => alert("CTA!")}
-                />
-                <StripeVerificationCard status="not-started" onStart={() => alert("Fillo verifikimin!")} />
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <StripeVerificationCard status="pending" />
-                <StripeVerificationCard status="verified" />
-              </div>
-
-              <PublicProfileHero
-                name="Arta Hoxha"
-                location="Prishtinë"
-                joined="Janar 2026"
-                bio="Aktiviste sociale dhe organizatore e komunitetit."
-                verified
-                stats={[
-                  { label: "Kampanja", value: "12" },
-                  { label: "Donatorë", value: "340" },
-                  { label: "Mbledhur", value: "€8.4K" },
-                ]}
-                primaryAction={{ label: "Dërgo Mesazh", onClick: () => alert("Mesazh!") }}
-              />
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="bg-card rounded-2xl border border-border p-5 space-y-1 divide-y divide-border">
-                  <p className="text-xs font-bold text-muted-foreground pb-3">ActivityLogItem</p>
-                  <ActivityLogItem
-                    actor={{ name: "Arta Hoxha" }}
-                    action="dhuron €25 për kampanjën"
-                    target="Shkolla në Gjakovë"
-                    timestamp="2 orë më parë"
-                    icon={<HeartIcon className="h-5 w-5" />}
-                  />
-                  <ActivityLogItem
-                    actor={{ name: "Blerim Krasniqi" }}
-                    action="krijoi kampanjën"
-                    target="Operacioni i Berit"
-                    timestamp="1 ditë më parë"
-                  />
-                  <ActivityLogItem
-                    actor={{ name: "Fiona Dema" }}
-                    action="aplikoi për"
-                    target="Libra falas"
-                    timestamp="3 ditë më parë"
-                    icon={<BookmarkIcon className="h-5 w-5" />}
-                  />
-                </div>
-
-                <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
-                  <p className="text-xs font-bold text-muted-foreground">MessageBubble</p>
-                  <MessageBubble
-                    content="Përshëndetje! A mund të ma tregoni më shumë?"
-                    time="10:24"
-                    self={false}
-                  />
-                  <MessageBubble
-                    content="Sigurisht! Fondet shkojnë direkt për materialet shkollore."
-                    time="10:26"
-                    self
-                  />
-                  <MessageBubble
-                    content="Shumë mirë, do dhurojmë sot! 🙏"
-                    time="10:28"
-                    self={false}
-                  />
-                </div>
-              </div>
-
-              <div className="bg-card rounded-2xl border border-border p-5">
-                <p className="text-xs font-bold text-muted-foreground mb-4">ApplicationCard</p>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <ApplicationCard
-                    title="Libra falas për studentë"
-                    organization="NGO Arsimi"
-                    status="pending"
-                    location="Prishtinë"
-                    date="18 Prill 2026"
-                    onClick={() => alert("Shiko aplikimin")}
-                  />
-                  <ApplicationCard
-                    title="Vegla pune falas"
-                    organization="Anonim"
-                    status="accepted"
-                    location="Prizren"
-                    date="15 Prill 2026"
-                  />
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* ═══ 14. AUTH COMPONENTS ═══ */}
-          <Section id="auth" title="🔐 Auth Components">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-card rounded-2xl border border-border p-6">
-                <p className="text-xs font-bold text-muted-foreground mb-4">ProfileSetupForm</p>
-                <ProfileSetupForm
-                  onSubmit={(d) => alert(JSON.stringify(d, null, 2))}
-                  submitLabel="Ruaj Profilin"
-                />
-              </div>
-
-              <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
-                <p className="text-xs font-bold text-muted-foreground">RoleSelectionCard</p>
-                <RoleSelectionCard
-                  title="Dhuroj Ndihmë"
-                  description="Dëshiroj të ndihmoj kampanjat dhe njerëzit në nevojë."
-                  icon={<HeartIcon className="h-8 w-8" />}
-                  selected={roleVal === "donor"}
-                  onClick={() => setRoleVal("donor")}
-                />
-                <RoleSelectionCard
-                  title="Kërkoj Ndihmë"
-                  description="Dëshiroj të krijoj kampanjë dhe të mblidh mbështetje."
-                  icon={<StarIcon className="h-8 w-8" />}
-                  selected={roleVal === "creator"}
-                  onClick={() => setRoleVal("creator")}
-                />
-              </div>
-
-              <div className="bg-card rounded-2xl border border-border p-6 md:col-span-2">
-                <p className="text-xs font-bold text-muted-foreground mb-4">InterestPicker — zgjedhur: [{interests.join(", ")}]</p>
-                <InterestPicker
-                  interests={[
-                    { id: "health",    label: "Shëndetësi",  icon: <HeartIcon className="h-4 w-4" /> },
-                    { id: "education", label: "Arsim",       icon: <StarIcon className="h-4 w-4" /> },
-                    { id: "emergency", label: "Emergjencë",  icon: <AlertCircleIcon className="h-4 w-4" /> },
-                    { id: "community", label: "Komunitet",   icon: <UsersIcon className="h-4 w-4" /> },
-                    { id: "sports",    label: "Sport",       icon: <TargetIcon className="h-4 w-4" /> },
-                    { id: "animals",   label: "Kafshë",      icon: <HeartIcon className="h-4 w-4" /> },
-                  ]}
-                  value={interests}
-                  onChange={setInterests}
-                  max={4}
-                />
-              </div>
-            </div>
-          </Section>
-
-          {/* ═══ 15. ADMIN COMPONENTS ═══ */}
-          <Section id="admin" title="🛡️ Admin Components">
-            <div className="space-y-6 bg-card rounded-2xl border border-border p-8">
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">ModerationActions</p>
-                <ModerationActions
-                  onApprove={() => alert("Aprovuar!")}
-                  onReject={() => alert("Refuzuar!")}
-                  onFlag={() => alert("Flaguar!")}
-                  onPause={() => alert("Pauzuar!")}
-                />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">AdminStatCard</p>
-                <div className="grid gap-4 md:grid-cols-4">
-                  <AdminStatCard
-                    label="Kampanja Aktive"
-                    value="142"
-                    icon={<HeartIcon className="h-5 w-5" />}
-                    change={{ value: "+12%", trend: "up" }}
-                  />
-                  <AdminStatCard
-                    label="Në Pritje"
-                    value="8"
-                    icon={<ClockIcon className="h-5 w-5" />}
-                    change={{ value: "-2", trend: "down" }}
-                  />
-                  <AdminStatCard
-                    label="Donacione Sot"
-                    value="€3,240"
-                    icon={<DollarSignIcon className="h-5 w-5" />}
-                  />
-                  <AdminStatCard
-                    label="Raportime"
-                    value="3"
-                    icon={<FlagIcon className="h-5 w-5" />}
-                    change={{ value: "+1", trend: "up" }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">AdminStatusBadge — të gjitha statuset</p>
-                <Row label="">
-                  <AdminStatusBadge status="active" />
-                  <AdminStatusBadge status="pending" />
-                  <AdminStatusBadge status="approved" />
-                  <AdminStatusBadge status="rejected" />
-                  <AdminStatusBadge status="suspended" />
-                  <AdminStatusBadge status="banned" />
-                  <AdminStatusBadge status="under-review" />
-                  <AdminStatusBadge status="verified" />
-                  <AdminStatusBadge status="flagged" />
-                  <AdminStatusBadge status="resolved" />
-                </Row>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">AdminFilterBar</p>
-                <AdminFilterBar
-                  searchPlaceholder="Kërko kampanjë..."
-                  onSearchChange={(v) => console.log("Kërko:", v)}
-                  filters={[
-                    {
-                      key: "status",
-                      label: "Statusi",
-                      options: [
-                        { label: "Të Gjitha", value: "all" },
-                        { label: "Në Pritje",  value: "pending" },
-                        { label: "Aktive",     value: "active" },
-                      ],
-                      onChange: (v) => console.log("Status:", v),
-                    },
-                  ]}
-                />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">ActionButtonGroup</p>
-                <ActionButtonGroup
-                  actions={[
-                    { label: "Aprovo",    variant: "default",     onClick: () => alert("Aprovuar!"), icon: <CheckIcon className="h-4 w-4" /> },
-                    { label: "Refuzo",    variant: "destructive", onClick: () => alert("Refuzuar!"), icon: <CloseIcon className="h-4 w-4" /> },
-                    { label: "Featured ⭐", variant: "default",   onClick: () => alert("Featured!") },
-                  ]}
-                />
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-3">AdminSettingsCard</p>
-                  <AdminSettingsCard
-                    title="Komisioni i Platformës"
-                    description="Cakto % default të komisionit."
-                    action={
-                      <Select>
-                        <SelectTrigger className="w-24"><SelectValue placeholder="0%" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">0%</SelectItem>
-                          <SelectItem value="5">5%</SelectItem>
-                          <SelectItem value="10">10%</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    }
-                  >
-                    <p className="text-sm text-muted-foreground">Ndryshimi aplikohet vetëm për kampanjat e reja pas kësaj date.</p>
-                  </AdminSettingsCard>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-3">AdminToggleSwitch</p>
-                  <AdminToggleSwitch
-                    label="Regjistrimet e reja"
-                    description="Lejo regjistrime të reja në platformë"
-                    checked={toggleAdmin}
-                    onCheckedChange={setToggleAdmin}
-                  />
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* ═══ 16. LAYOUT HELPERS ═══ */}
-          <Section id="layout" title="📐 Layout Helpers">
-            <div className="space-y-6 bg-card rounded-2xl border border-border p-8">
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">Breadcrumbs (layout)</p>
-                <Breadcrumbs
-                  items={[
-                    { label: "Kreu",       href: "/" },
-                    { label: "Kampanjat",  href: "/kampanjat" },
-                    { label: "Shkolla në Gjakovë" },
-                  ]}
-                />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">Breadcrumb (ui) — me home icon</p>
-                <Breadcrumb
-                  items={[
-                    { label: "Dashboard",        href: "/dashboard" },
-                    { label: "Kampanjat e Mia",  href: "/dashboard/kampanjat" },
-                    { label: "Statistikat" },
-                  ]}
-                />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">EmptyState</p>
-                <EmptyState
-                  icon={<HeartIcon className="h-8 w-8" />}
-                  title="Asnjë kampanjë ende"
-                  description="Fillo kampanjën tënde të parë dhe mblidh mbështetje."
-                  action={{ label: "Krijo Kampanjë", onClick: () => alert("Krijo!") }}
-                />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">
-                  Pagination — faqja {page} / 4 (total 48, 12/faqe)
-                </p>
-                <Pagination currentPage={page} totalPages={4} onPageChange={setPage} />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-3">Separator</p>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm">Majtas</span>
-                  <Separator orientation="vertical" className="h-6" />
-                  <span className="text-sm">Djathtas</span>
-                </div>
-                <Separator className="mt-3" />
-              </div>
-            </div>
-          </Section>
-
-          {/* ═══ 17. TABS ═══ */}
-          <Section id="tabs" title="📑 Tabs">
-            <div className="bg-card rounded-2xl border border-border p-8">
-              <Tabs defaultValue="donacione">
-                <TabsList>
-                  <TabsTrigger value="donacione">Donacione</TabsTrigger>
-                  <TabsTrigger value="vullnetare">Vullnetare</TabsTrigger>
-                  <TabsTrigger value="blog">Blog</TabsTrigger>
-                </TabsList>
-                <TabsContent value="donacione" className="mt-4">
-                  <p className="text-sm text-muted-foreground">Lista e kampanjave — 1,240 gjithsej.</p>
-                </TabsContent>
-                <TabsContent value="vullnetare" className="mt-4">
-                  <p className="text-sm text-muted-foreground">Asetet vullnetare — 320 aktive.</p>
-                </TabsContent>
-                <TabsContent value="blog" className="mt-4">
-                  <p className="text-sm text-muted-foreground">Artikujt blog — 48 publik.</p>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </Section>
-
-          {/* ═══ 18. TABLE ═══ */}
-          <Section id="table" title="📋 Table">
-            <div className="bg-card rounded-2xl border border-border overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Donatori</TableHead>
-                    <TableHead>Kampanja</TableHead>
-                    <TableHead>Shuma</TableHead>
-                    <TableHead>Data</TableHead>
-                    <TableHead>Statusi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {[
-                    { donor: "Arta Hoxha",  campaign: "Shkolla Gjakovë",    amount: "€100", date: "20 Pri", status: "active"    },
-                    { donor: "Anonim 🌟",   campaign: "Operacioni Berit",   amount: "€50",  date: "19 Pri", status: "approved"  },
-                    { donor: "Blerim K.",   campaign: "Libra për Studentë", amount: "€25",  date: "18 Pri", status: "pending"   },
-                    { donor: "Fiona Dema",  campaign: "Shkolla Gjakovë",    amount: "€200", date: "17 Pri", status: "verified"  },
-                    { donor: "Anonim 🌟",   campaign: "Spitali Pejë",       amount: "€500", date: "16 Pri", status: "flagged"   },
-                  ].map((row, i) => (
-                    <TableRow key={i}>
-                      <TableCell className="font-medium">{row.donor}</TableCell>
-                      <TableCell>{row.campaign}</TableCell>
-                      <TableCell className="font-bold text-unify-brown">{row.amount}</TableCell>
-                      <TableCell className="text-muted-foreground">{row.date}</TableCell>
-                      <TableCell><AdminStatusBadge status={row.status as any} /></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </Section>
-
-          {/* ═══ 19. ACCORDION ═══ */}
-          <Section id="accordion" title="📖 Accordion">
-            <div className="bg-card rounded-2xl border border-border p-8 max-w-2xl">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="q1">
-                  <AccordionTrigger>Si funksionon donacioni?</AccordionTrigger>
-                  <AccordionContent>Klikon "Dono Tani", zgjedh shumën dhe paguan me kartë. Stripe e dërgon direkt te krijuesi.</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="q2">
-                  <AccordionTrigger>A mund të dhurojë dikush pa llogari?</AccordionTrigger>
-                  <AccordionContent>Po — vizitorët mund të dhurojnë duke shkruar vetëm emrin. Nuk kërkohet regjistrim.</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="q3">
-                  <AccordionTrigger>Sa kohë zgjat verifikimi Stripe Identity?</AccordionTrigger>
-                  <AccordionContent>Zakonisht 1-5 minuta. Ndonjëherë deri 24 orë nëse rishikohet manualisht.</AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </Section>
-
-          {/* ═══ 20. OVERLAYS ═══ */}
-          <Section id="overlays" title="💬 Overlays — Dialog, Sheet, AlertDialog, Tooltip, Dropdown">
-            <div className="flex flex-wrap gap-3 bg-card rounded-2xl border border-border p-8">
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Hap Dialog</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Konfirmo Donacionin</DialogTitle>
-                    <DialogDescription>A dëshiron të dhurojë €25 për "Shkolla në Gjakovë"?</DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose asChild><Button variant="ghost">Anulo</Button></DialogClose>
-                    <Button onClick={() => alert("Konfirmuar!")}>Konfirmo €25</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline">Hap Sheet</Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Detajet e Donacionit</SheetTitle>
-                    <SheetDescription>Historiku i plotë i donacioneve.</SheetDescription>
-                  </SheetHeader>
-                  <div className="mt-4 space-y-3 text-sm">
-                    <p className="flex justify-between"><span>Shkolla Gjakovë</span><strong>€100</strong></p>
-                    <p className="flex justify-between"><span>Operacioni Berit</span><strong>€50</strong></p>
-                    <p className="flex justify-between"><span>Libra studentë</span><strong>€25</strong></p>
-                  </div>
-                </SheetContent>
-              </Sheet>
-
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Fshi Kampanjën</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Jeni të sigurt?</AlertDialogTitle>
-                    <AlertDialogDescription>Ky veprim nuk mund të kthehet. Kampanja fshihet përfundimisht.</AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Anulo</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => alert("Fshirë!")}>Po, fshi</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost"><InfoIcon className="h-5 w-5" /> Hover mbi mua</Button>
-                </TooltipTrigger>
-                <TooltipContent>Ky është një tooltip informues!</TooltipContent>
-              </Tooltip>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline"><MoreHorizontalIcon className="h-4 w-4" /> Veprime</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Veprimet</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => alert("Edito!")}><EditIcon className="h-4 w-4 mr-2" />Edito</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert("Ndaj!")}><ShareIcon className="h-4 w-4 mr-2" />Ndaj</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-destructive" onClick={() => alert("Fshi!")}><TrashIcon className="h-4 w-4 mr-2" />Fshi</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </Section>
-
-          {/* ═══ 21. CHECKLIST ═══ */}
-          <Section id="checklist" title="✅ Checklist — Gjithçka e testuar">
-            <div className="bg-card rounded-2xl border border-border p-8">
-              <p className="text-sm text-muted-foreground mb-4">
-                Nëse kjo faqe hapet pa gabime në browser, të gjitha komponentet funksionojnë.
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-3 md:grid-cols-4">
-                {[
-                  "Button ✅","Input ✅","Textarea ✅","Label ✅",
-                  "Badge ✅","TagBadge ✅","Select ✅","Checkbox ✅",
-                  "Switch ✅","RadioGroup ✅","FileUpload ✅","Progress ✅",
-                  "ProgressBar ✅","Spinner ✅","Skeleton ✅","Avatar ✅",
-                  "UserAvatarWithBadge ✅","SocialButton ✅","Stepper ✅","IconButton ✅",
-                  "Card ✅","Tabs ✅","Table ✅","Accordion ✅",
-                  "Dialog ✅","Sheet ✅","AlertDialog ✅","Tooltip ✅",
-                  "DropdownMenu ✅","Pagination ✅","Separator ✅","Breadcrumb (ui) ✅",
-                  "Breadcrumbs (layout) ✅","EmptyState ✅","CampaignCard ✅","VolunteerCard ✅",
-                  "BlogCard ✅","StatisticCard ✅","CategoryCard ✅","ValueCard ✅",
-                  "SearchBar ✅","FilterChips ✅","DonationAmountPicker ✅","StatsBar ✅",
-                  "ShareButtons ✅","BookmarkButton ✅","DonorList ✅","FAQAccordion ✅",
-                  "NewsletterSignup ✅","ContactInfoCard ✅","StatCard ✅","CampaignGoalCard ✅",
-                  "CreatorCTA ✅","PublicProfileHero ✅","StripeVerificationCard ✅","ActivityLogItem ✅",
-                  "ApplicationCard ✅","MessageBubble ✅","OnboardingStepper ✅","ProfileSetupForm ✅",
-                  "RoleSelectionCard ✅","InterestPicker ✅","ModerationActions ✅","AdminStatCard ✅",
-                  "AdminStatusBadge ✅","AdminFilterBar ✅","ActionButtonGroup ✅","AdminSettingsCard ✅",
-                  "AdminToggleSwitch ✅","Icons (70+) ✅",
-                ].map((c) => (
-                  <div key={c} className="rounded-lg bg-unify-cream px-3 py-1.5 font-mono text-unify-brown">{c}</div>
-                ))}
-              </div>
-            </div>
-          </Section>
-
-        </div>
-
-        <footer className="border-t border-border bg-card mt-20 py-6 text-center text-xs text-muted-foreground">
-          Unify Component Showcase — vetëm test lokal · nuk komitet në GitHub
-        </footer>
-
-      </main>
-    </TooltipProvider>
+        <Section title="Layout helpers">
+          <div className="space-y-4">
+            <Breadcrumbs items={[{ label: "Kreu", href: "/" }, { label: "Kampanjat", href: "/kampanjat" }, { label: "Detajet" }]} />
+            <EmptyState
+              title="Asgje ketu ende"
+              description="Provo te shtosh nje kampanje te re."
+              action={{ label: "Krijo kampanje", onClick: () => {} }}
+            />
+          </div>
+        </Section>
+      </div>
+    </main>
   );
 }
 

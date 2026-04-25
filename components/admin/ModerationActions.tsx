@@ -31,7 +31,7 @@ export function ModerationActions({ onApprove, onReject, onFlag, onPause, classN
       )}
       {onPause && (
         <Button variant="ghost" size="sm" onClick={onPause}>
-          <PauseIcon className="h-4 w-4" /> Pauzo
+          <PauseIcon className="h-4 w-4" /> Pauzo per hetim
         </Button>
       )}
     </div>
