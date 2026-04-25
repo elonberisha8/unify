@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/auth
@@ -7,20 +7,31 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import { ForgotPasswordForm } from "@/components/auth"
-import { AuthLayout } from "@/components/layout"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { ForgotPasswordForm } from "@/components/auth";
+import { AuthLayout } from "@/components/layout";
 
 export default function ForgotPasswordPage() {
+  const router = useRouter();
+
+  async function handleSubmit(email: string) {
+    await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+  }
+
   return (
     <AuthLayout
-      imageUrl="https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=1600"
-      title="Rivendos fjalëkalimin"
-      description="Do të dërgojmë një link sigurie në email-in tënd për të rivendosur fjalëkalimin."
+      title="Kthe fjalëkalimin"
+      description="Shkruaj email-in tënd dhe do të të dërgojmë udhëzime"
     >
       <ForgotPasswordForm
-        onSubmit={async () => {}}
-        onBackToLogin={() => { window.location.href = "/auth/login" }}
+        onSubmit={handleSubmit}
+        onBackToLogin={() => router.push("/auth/login")}
       />
     </AuthLayout>
-  )
+  );
 }
