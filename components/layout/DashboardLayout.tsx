@@ -1,10 +1,13 @@
 "use client";
+
 import * as React from "react";
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
 import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, BellIcon, FileIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
+import { apiFetch, type DashboardNotification } from "@/app/_lib/api";
 
 export interface DashboardNavItem {
   key: string;
@@ -15,16 +18,16 @@ export interface DashboardNavItem {
 }
 
 export const DEFAULT_DASHBOARD_NAV: DashboardNavItem[] = [
-  { key: "home",         label: "Dashboard",     icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
-  { key: "kampanjat",    label: "Kampanjat",      icon: <MegaphoneIcon className="h-4 w-4" />,       href: "/dashboard/kampanjat" },
-  { key: "shpalljet",    label: "Shpalljet",      icon: <HandHeartIcon className="h-4 w-4" />,        href: "/dashboard/shpalljet" },
-  { key: "inbox",        label: "Inbox",          icon: <InboxIcon className="h-4 w-4" />,            href: "/dashboard/inbox" },
-  { key: "te-ruajtura",  label: "Të ruajtura",    icon: <BookmarkIcon className="h-4 w-4" />,         href: "/dashboard/te-ruajtura" },
-  { key: "transaksionet",label: "Transaksionet",  icon: <WalletIcon className="h-4 w-4" />,           href: "/dashboard/transaksionet" },
-  { key: "aplikimet",    label: "Aplikimet",      icon: <ScrollTextIcon className="h-4 w-4" />,       href: "/dashboard/aplikimet" },
-  { key: "profili",      label: "Profili",        icon: <UserIcon className="h-4 w-4" />,             href: "/dashboard/profili" },
-  { key: "aktiviteti",   label: "Aktiviteti",     icon: <SettingsIcon className="h-4 w-4" />,         href: "/dashboard/aktiviteti" },
-  { key: "blog",         label: "Blog",           icon: <FileIcon className="h-4 w-4" />,             href: "/dashboard/blog" },
+  { key: "home", label: "Dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
+  { key: "kampanjat", label: "Kampanjat", icon: <MegaphoneIcon className="h-4 w-4" />, href: "/dashboard/kampanjat" },
+  { key: "shpalljet", label: "Shpalljet", icon: <HandHeartIcon className="h-4 w-4" />, href: "/dashboard/shpalljet" },
+  { key: "inbox", label: "Inbox", icon: <InboxIcon className="h-4 w-4" />, href: "/dashboard/inbox" },
+  { key: "te-ruajtura", label: "Te ruajtura", icon: <BookmarkIcon className="h-4 w-4" />, href: "/dashboard/te-ruajtura" },
+  { key: "transaksionet", label: "Transaksionet", icon: <WalletIcon className="h-4 w-4" />, href: "/dashboard/transaksionet" },
+  { key: "aplikimet", label: "Aplikimet", icon: <ScrollTextIcon className="h-4 w-4" />, href: "/dashboard/aplikimet" },
+  { key: "profili", label: "Profili", icon: <UserIcon className="h-4 w-4" />, href: "/dashboard/profili" },
+  { key: "aktiviteti", label: "Aktiviteti", icon: <SettingsIcon className="h-4 w-4" />, href: "/dashboard/aktiviteti" },
+  { key: "blog", label: "Blog", icon: <FileIcon className="h-4 w-4" />, href: "/dashboard/blog" },
 ];
 
 export interface DashboardLayoutProps {
@@ -37,26 +40,45 @@ export interface DashboardLayoutProps {
   className?: string;
 }
 
-const MOCK_NOTIFICATIONS = [
-  { id: "n1", text: "Arta Krasniqi aplikoi për 'Mësues anglisht'", time: "2 min", read: false },
-  { id: "n2", text: "Donacion i ri: €50 për 'Ndihmo familjet'",    time: "1 orë", read: false },
-  { id: "n3", text: "Besnik Hoxha aplikoi për 'Ndihmës social'",   time: "3 orë", read: false },
-  { id: "n4", text: "Kampanja 'Bursa 2025' arriti 60% të objektivit", time: "1 ditë", read: true },
-];
-
 export function DashboardLayout({
   children, navItems = DEFAULT_DASHBOARD_NAV, activeKey, onSelect,
   user, onLogout, className,
 }: DashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<DashboardNotification[]>([]);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  React.useEffect(() => {
+    async function loadNotifications() {
+      if (!isLoaded) return;
+      const hasLocalToken = typeof window !== "undefined" && Boolean(window.localStorage.getItem("authToken"));
+      if (!isSignedIn && !hasLocalToken) return;
+      try {
+        const token = isSignedIn ? await getToken() : null;
+        const data = await apiFetch<{ notifications: DashboardNotification[] }>("/notifications", { token });
+        setNotifications(data.notifications.map((notification) => ({
+          ...notification,
+          time: new Date(notification.createdAt).toLocaleString("sq-AL"),
+        })));
+      } catch {
+        setNotifications([]);
+      }
+    }
+    loadNotifications();
+  }, [getToken, isLoaded, isSignedIn]);
 
-  function markAllRead() {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const unreadCount = notifications.filter((n) => !n.readAt).length;
+
+  async function markAllRead() {
+    setNotifications((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? new Date().toISOString() })));
+    try {
+      const token = isSignedIn ? await getToken() : null;
+      await apiFetch("/notifications/read-all", { method: "PATCH", token });
+    } catch {
+      // Keep optimistic state when local auth/backend is unavailable.
+    }
   }
 
   function isActive(item: DashboardNavItem) {
@@ -67,10 +89,7 @@ export function DashboardLayout({
 
   return (
     <div className={cn("min-h-screen bg-background flex", className)}>
-      {/* Click-outside overlay */}
-      {notifOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
-      )}
+      {notifOpen && <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />}
 
       <aside className="w-64 shrink-0 bg-white border-r border-border flex flex-col">
         <div className="p-5 border-b border-border">
@@ -121,7 +140,6 @@ export function DashboardLayout({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Topbar */}
         <header className="h-14 shrink-0 bg-white border-b border-border flex items-center justify-end px-6 gap-3">
           <div className="relative">
             <button
@@ -143,18 +161,24 @@ export function DashboardLayout({
                   <span className="text-sm font-semibold text-gray-900">Njoftime</span>
                   {unreadCount > 0 && (
                     <button onClick={markAllRead} className="text-xs text-unify-blue hover:underline">
-                      Shëno si të lexuara
+                      Sheno si te lexuara
                     </button>
                   )}
                 </div>
                 <div className="divide-y divide-border max-h-72 overflow-y-auto">
+                  {notifications.length === 0 && (
+                    <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+                      Nuk ka njoftime ne databaze.
+                    </div>
+                  )}
                   {notifications.map((n) => (
-                    <div key={n.id} className={cn("px-4 py-3 text-sm cursor-default", !n.read && "bg-unify-blue/5")}>
+                    <div key={n.id} className={cn("px-4 py-3 text-sm cursor-default", !n.readAt && "bg-unify-blue/5")}>
                       <div className="flex items-start gap-2.5">
-                        <span className={cn("mt-1.5 w-2 h-2 rounded-full flex-shrink-0", !n.read ? "bg-unify-blue" : "bg-transparent")} />
+                        <span className={cn("mt-1.5 w-2 h-2 rounded-full flex-shrink-0", !n.readAt ? "bg-unify-blue" : "bg-transparent")} />
                         <div>
-                          <p className="text-gray-700 leading-snug text-[13px]">{n.text}</p>
-                          <p className="text-xs text-gray-400 mt-0.5">{n.time} më parë</p>
+                          <p className="text-gray-700 leading-snug text-[13px]">{n.title}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{n.message}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
                         </div>
                       </div>
                     </div>
@@ -165,7 +189,7 @@ export function DashboardLayout({
                     onClick={() => { router.push("/dashboard/aktiviteti"); setNotifOpen(false); }}
                     className="text-xs text-unify-blue hover:underline"
                   >
-                    Shiko të gjitha aktivitetet →
+                    Shiko te gjitha aktivitetet
                   </button>
                 </div>
               </div>

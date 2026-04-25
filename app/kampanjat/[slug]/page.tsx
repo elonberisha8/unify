@@ -9,6 +9,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useAuth } from "@clerk/nextjs"
 import { useParams } from "next/navigation"
 import { DonationModal, DonorList, ShareButtons, CampaignCard } from "@/components/public"
 import {
@@ -71,6 +72,7 @@ function PhotoGallery({ images, title }: { images: string[]; title: string }) {
 export default function CampaignDetailPage() {
   const params = useParams<{ slug: string }>()
   const slug = params?.slug ?? ""
+  const { isLoaded, isSignedIn, getToken } = useAuth()
 
   const [campaign, setCampaign] = React.useState<Campaign | null>(null)
   const [similar, setSimilar] = React.useState<Campaign[]>([])
@@ -79,6 +81,9 @@ export default function CampaignDetailPage() {
 
   const [showModal, setShowModal] = React.useState(false)
   const [comment, setComment] = React.useState("")
+  const [comments, setComments] = React.useState<Array<{ id: string; content: string; author?: { name: string } }>>([])
+  const [liked, setLiked] = React.useState(false)
+  const [messageSent, setMessageSent] = React.useState(false)
 
   React.useEffect(() => {
     async function load() {
@@ -87,6 +92,7 @@ export default function CampaignDetailPage() {
       try {
         const data = await apiFetch<Campaign>(`/campaigns/${slug}`)
         setCampaign(data)
+        setComments((data as Campaign & { comments?: Array<{ id: string; content: string; author?: { name: string } }> }).comments ?? [])
         // Fetch similar campaigns (same category, different id)
         try {
           const res = await apiFetch<{ campaigns: Campaign[] } | Campaign[]>(
@@ -147,6 +153,56 @@ export default function CampaignDetailPage() {
   const creatorAvatar = campaign.creator.image ?? ""
   const creatorUsername = campaign.creator.username ?? campaign.creator.id
 
+  const requireLogin = () => {
+    window.location.href = `/auth/login?redirect=${encodeURIComponent(`/kampanjat/${slug}`)}`
+  }
+
+  async function submitComment() {
+    if (!campaign) return
+    if (!isLoaded) return
+    if (!isSignedIn) {
+      requireLogin()
+      return
+    }
+    const token = await getToken()
+    const created = await apiFetch<{ id: string; content: string; author?: { name: string } }>(`/campaigns/${campaign.id}/comments`, {
+      method: "POST",
+      token,
+      body: JSON.stringify({ content: comment.trim() }),
+    })
+    setComments((prev) => [created, ...prev])
+    setComment("")
+  }
+
+  async function startDirectMessage() {
+    if (!campaign) return
+    if (!isLoaded) return
+    if (!isSignedIn) {
+      requireLogin()
+      return
+    }
+    if (!campaign.creator.username) return
+    const token = await getToken()
+    await apiFetch("/messages/start", {
+      method: "POST",
+      token,
+      body: JSON.stringify({
+        username: campaign.creator.username,
+        content: `Pershendetje, po ju shkruaj per kampanjen "${campaign.title}".`,
+      }),
+    })
+    setMessageSent(true)
+  }
+
+  function toggleReaction() {
+    if (!isLoaded) return
+    if (!isSignedIn) {
+      requireLogin()
+      return
+    }
+    setLiked((value) => !value)
+  }
+
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
@@ -179,12 +235,19 @@ export default function CampaignDetailPage() {
                 <p className="text-sm text-muted-foreground">{campaign.location}</p>
               </div>
               {!campaign.isAnonymous && (
-                <Button
-                  variant="outline"
-                  onClick={() => { window.location.href = `/profili/${creatorUsername}` }}
-                >
-                  Shiko Profilin
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => { window.location.href = `/profili/${creatorUsername}` }}
+                  >
+                    Shiko Profilin
+                  </Button>
+                  {campaign.creator.username && (
+                    <Button variant="secondary" onClick={startDirectMessage}>
+                      {messageSent ? "Mesazhi u dergua" : "Shkruaj"}
+                    </Button>
+                  )}
+                </div>
               )}
             </div>
 
@@ -229,10 +292,20 @@ export default function CampaignDetailPage() {
                     rows={3}
                   />
                   <div className="mt-3 flex justify-end">
-                    <Button disabled={comment.trim().length < 3}>Komento</Button>
+                    <Button onClick={submitComment} disabled={comment.trim().length < 3}>Komento</Button>
                   </div>
                 </div>
-                <div className="py-8 text-center text-sm text-muted-foreground">
+                {comments.length > 0 && (
+                  <div className="space-y-3">
+                    {comments.map((item) => (
+                      <div key={item.id} className="rounded-2xl border border-border bg-white p-4">
+                        <p className="text-sm font-bold text-unify-brown">{item.author?.name ?? "Perdorues"}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{item.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className={comments.length > 0 ? "hidden" : "py-8 text-center text-sm text-muted-foreground"}>
                   Nuk ka komente akoma. Bëhu i pari!
                 </div>
               </TabsContent>
@@ -306,6 +379,9 @@ export default function CampaignDetailPage() {
               <Button size="lg" className="w-full" onClick={() => setShowModal(true)}>
                 <HeartIcon className="h-5 w-5" />
                 Dhuro Tani
+              </Button>
+              <Button variant={liked ? "primary" : "outline"} className="w-full" onClick={toggleReaction}>
+                {liked ? "E pelqyer" : "Reago / Pelqe"}
               </Button>
 
               <div>

@@ -32,36 +32,13 @@ interface ReportRow {
   severity: Severity
 }
 
-const INITIAL_REPORTS: ReportRow[] = [
-  { id: "R-901", targetType: "Kampanje", targetName: "Emergjence familjare", targetOwner: "Linda Berisha", targetOwnerEmail: "linda@example.com", targetUrl: "/admin/kampanjat", reporter: "Anonim", reporterEmail: "anon@unify.local", reason: "Dokumente te paqarta", createdAt: "2026-04-25", status: "open", severity: "high" },
-  { id: "R-902", targetType: "Shpallje", targetName: "Laptop per student", targetOwner: "Bleon B.", targetOwnerEmail: "bleon@example.com", targetUrl: "/admin/vullnetare", reporter: "Raportues aktiv", reporterEmail: "reporter@example.com", reason: "Kontakt i dyshimte", createdAt: "2026-04-24", status: "investigating", severity: "medium" },
-  { id: "R-903", targetType: "Koment", targetName: "Mesazh publik", targetOwner: "Dardan G.", targetOwnerEmail: "dardan@example.com", targetUrl: "/admin/moderim", reporter: "Moderator", reporterEmail: "moderator@unify.local", reason: "Gjuhe fyese", createdAt: "2026-04-23", status: "resolved", severity: "low" },
-  { id: "R-904", targetType: "Kampanje", targetName: "Libra per nxenes", targetOwner: "Shoqata Edukimi", targetOwnerEmail: "edu@example.com", targetUrl: "/admin/kampanjat", reporter: "System risk", reporterEmail: "system@unify.local", reason: "Raportim i pavlefshem pas kontrollit", createdAt: "2026-04-22", status: "dismissed", severity: "low" },
-  { id: "R-905", targetType: "Profil", targetName: "Spam Bot", targetOwner: "Spam Bot", targetOwnerEmail: "spam@example.com", targetUrl: "/admin/perdoruesit/u-104", reporter: "Auto guard", reporterEmail: "guard@unify.local", reason: "3 llogari te dyshimta nga e njejta IP", createdAt: "2026-04-21", status: "open", severity: "high" },
-]
-
-const PLATFORM_STATS = [
-  { label: "Total usera", value: "12,842", change: "+8.2% kete muaj", trend: "up" as const },
-  { label: "Kampanja", value: "247", change: "38 ne review", trend: "up" as const },
-  { label: "Shpallje", value: "450", change: "21 te raportuara", trend: "flat" as const },
-  { label: "Raporte", value: "1,284", change: "14 hapur sot", trend: "down" as const },
-]
-
-const REPORTS_BY_DAY = [
-  { label: "Hene", value: 18 },
-  { label: "Marte", value: 25 },
-  { label: "Merkure", value: 14 },
-  { label: "Enjte", value: 31 },
-  { label: "Premte", value: 22 },
-  { label: "Sot", value: 9 },
-]
-
-const REPORTS_BY_TYPE = [
-  { label: "Kampanja", value: 42, tone: "primary" as const },
-  { label: "Shpallje", value: 31, tone: "warning" as const },
-  { label: "Komente", value: 18, tone: "secondary" as const },
-  { label: "Profile", value: 9, tone: "destructive" as const },
-]
+interface AdminStatsResponse {
+  totalUsers: number
+  totalCampaigns: number
+  pendingCampaigns: number
+  totalVolunteers?: number
+  openReports?: number
+}
 
 const statusVariant = {
   open: "destructive",
@@ -72,7 +49,8 @@ const statusVariant = {
 
 export default function AdminRaportimetPage() {
   const { getToken } = useAuth()
-  const [reports, setReports] = React.useState<ReportRow[]>(INITIAL_REPORTS)
+  const [reports, setReports] = React.useState<ReportRow[]>([])
+  const [adminStats, setAdminStats] = React.useState<AdminStatsResponse | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [query, setQuery] = React.useState("")
   const [status, setStatus] = React.useState("all")
@@ -83,11 +61,15 @@ export default function AdminRaportimetPage() {
       setLoading(true)
       try {
         const token = await getToken()
-        const res = await apiFetch<ReportRow[] | { reports: ReportRow[] }>("/admin/reports", { token })
+        const [res, stats] = await Promise.all([
+          apiFetch<ReportRow[] | { reports: ReportRow[] }>("/admin/reports", { token }),
+          apiFetch<AdminStatsResponse>("/admin/stats", { token }),
+        ])
         const data = Array.isArray(res) ? res : ((res as { reports?: ReportRow[] }).reports ?? [])
-        if (data.length > 0) setReports(data)
+        setReports(data)
+        setAdminStats(stats)
       } catch {
-        // keep INITIAL_REPORTS as fallback
+        setReports([])
       } finally {
         setLoading(false)
       }
@@ -95,14 +77,26 @@ export default function AdminRaportimetPage() {
     load()
   }, [getToken])
 
-  const patchReport = (id: string, patch: Partial<ReportRow>) => {
+  const patchReport = async (id: string, patch: Partial<ReportRow>) => {
     setReports((current) => current.map((report) => (report.id === id ? { ...report, ...patch } : report)))
     setSelected((current) => (current?.id === id ? { ...current, ...patch } : current))
+    try {
+      const token = await getToken()
+      await apiFetch(`/admin/reports/${id}`, {
+        method: "PATCH",
+        token,
+        body: JSON.stringify(patch),
+      })
+    } catch { /* keep optimistic update */ }
   }
 
-  const deleteReport = (id: string) => {
+  const deleteReport = async (id: string) => {
     setReports((current) => current.filter((report) => report.id !== id))
     setSelected((current) => (current?.id === id ? null : current))
+    try {
+      const token = await getToken()
+      await apiFetch(`/admin/reports/${id}`, { method: "DELETE", token })
+    } catch { /* keep optimistic removal */ }
   }
 
   const getReportActions = (report: ReportRow): AdminActionMenuItem[] => {
@@ -142,6 +136,31 @@ export default function AdminRaportimetPage() {
     return matchesSearch && matchesStatus
   })
 
+  const platformStats = [
+    { label: "Total usera", value: `${adminStats?.totalUsers ?? 0}`, change: "nga DB", trend: "up" as const },
+    { label: "Kampanja", value: `${adminStats?.totalCampaigns ?? 0}`, change: `${adminStats?.pendingCampaigns ?? 0} ne review`, trend: "flat" as const },
+    { label: "Shpallje", value: `${adminStats?.totalVolunteers ?? 0}`, change: "aktive/review nga DB", trend: "flat" as const },
+    { label: "Raporte", value: `${reports.length}`, change: `${reports.filter((r) => r.status === "open").length} hapur`, trend: "down" as const },
+  ]
+
+  const reportsByDay = Object.entries(
+    reports.reduce<Record<string, number>>((acc, report) => {
+      acc[report.createdAt] = (acc[report.createdAt] ?? 0) + 1
+      return acc
+    }, {})
+  ).slice(-6).map(([label, value]) => ({ label, value }))
+
+  const reportsByType = ([
+    ["Kampanja", "Kampanje", "primary"],
+    ["Shpallje", "Shpallje", "warning"],
+    ["Komente", "Koment", "secondary"],
+    ["Profile", "Profil", "destructive"],
+  ] as const).map(([label, type, tone]) => {
+    const count = reports.filter((report) => report.targetType === type).length
+    const value = reports.length ? Math.round((count / reports.length) * 100) : 0
+    return { label, value, tone }
+  })
+
   return (
     <AdminLayout
       sidebar={{ activeKey: "reports" }}
@@ -157,9 +176,13 @@ export default function AdminRaportimetPage() {
               setLoading(true)
               try {
                 const token = await getToken()
-                const res = await apiFetch<ReportRow[] | { reports: ReportRow[] }>("/admin/reports", { token })
+                const [res, stats] = await Promise.all([
+                  apiFetch<ReportRow[] | { reports: ReportRow[] }>("/admin/reports", { token }),
+                  apiFetch<AdminStatsResponse>("/admin/stats", { token }),
+                ])
                 const data = Array.isArray(res) ? res : ((res as { reports?: ReportRow[] }).reports ?? [])
-                if (data.length > 0) setReports(data)
+                setReports(data)
+                setAdminStats(stats)
               } catch { /* keep current */ } finally { setLoading(false) }
             }}
           >
@@ -169,19 +192,19 @@ export default function AdminRaportimetPage() {
       }}
     >
       <div className="space-y-6">
-        <AdminQuickStats stats={PLATFORM_STATS} />
+        <AdminQuickStats stats={platformStats} />
 
         <div className="grid gap-5 xl:grid-cols-2">
           <AdminChartCard title="Raporte sipas dites" subtitle="Volumi i raportimeve ne 6 ditet e fundit">
             <div className="space-y-3">
-              {REPORTS_BY_DAY.map((item) => (
-                <BarRow key={item.label} label={item.label} value={item.value} max={31} />
+              {(reportsByDay.length ? reportsByDay : [{ label: "Nuk ka", value: 0 }]).map((item) => (
+                <BarRow key={item.label} label={item.label} value={item.value} max={Math.max(1, ...reportsByDay.map((r) => r.value))} />
               ))}
             </div>
           </AdminChartCard>
           <AdminChartCard title="Breakdown sipas objektit" subtitle="Cfare po raportohet me se shumti">
             <div className="grid gap-3 sm:grid-cols-2">
-              {REPORTS_BY_TYPE.map((item) => (
+              {reportsByType.map((item) => (
                 <Card key={item.label}>
                   <CardContent className="p-4">
                     <Badge variant={item.tone}>{item.label}</Badge>

@@ -26,48 +26,6 @@ interface BlogPost extends BlogEditorData {
   reviewNote?: string
 }
 
-const INITIAL_POSTS: BlogPost[] = [
-  {
-    id: "B-201",
-    title: "Si me kriju kampanje te besueshme",
-    slug: "si-me-kriju-kampanje-te-besueshme",
-    excerpt: "Udhezim nga nje krijues per dokumente, foto dhe perditesime.",
-    content: "Ky artikull shpjegon si nje krijues duhet te ngarkoje dokumente, te shkruaje qarte dhe te perditesoje donatoret.",
-    tags: ["kampanja", "guide"],
-    author: "Arben Krasniqi",
-    authorEmail: "arben@example.com",
-    source: "user",
-    status: "pending",
-    submittedAt: "2026-04-25 10:42",
-  },
-  {
-    id: "B-202",
-    title: "Vullnetarizmi ne diaspora",
-    slug: "vullnetarizmi-ne-diaspora",
-    excerpt: "Si diaspora mund te ndihmoje me kohe, sherbime dhe pajisje.",
-    content: "Diaspora mund te kontribuoje jo vetem me donacione, por edhe me mentorim, transport, pajisje dhe kontakte.",
-    tags: ["vullnetare", "diaspora"],
-    author: "Linda Berisha",
-    authorEmail: "linda@example.com",
-    source: "user",
-    status: "pending",
-    submittedAt: "2026-04-24 18:20",
-  },
-  {
-    id: "B-101",
-    title: "Si funksionon Unify",
-    slug: "si-funksionon-unify",
-    excerpt: "Udhezues i shkurter per donatore dhe krijues.",
-    content: "Shkruaj ketu permbajtjen e artikullit...",
-    tags: ["unify", "guide"],
-    author: "Unify Admin",
-    authorEmail: "admin@unify.local",
-    source: "admin",
-    status: "draft",
-    submittedAt: "2026-04-23 12:00",
-  },
-]
-
 const statusVariant = {
   pending: "warning",
   draft: "secondary",
@@ -77,9 +35,9 @@ const statusVariant = {
 
 export default function AdminBlogPage() {
   const { getToken } = useAuth()
-  const [posts, setPosts] = React.useState<BlogPost[]>(INITIAL_POSTS)
+  const [posts, setPosts] = React.useState<BlogPost[]>([])
   const [loading, setLoading] = React.useState(true)
-  const [selectedId, setSelectedId] = React.useState(INITIAL_POSTS[0].id)
+  const [selectedId, setSelectedId] = React.useState("")
   const [status, setStatus] = React.useState("all")
   const [query, setQuery] = React.useState("")
 
@@ -87,14 +45,12 @@ export default function AdminBlogPage() {
     setLoading(true)
     try {
       const token = await getToken()
-      const res = await apiFetch<BlogPost[] | { posts: BlogPost[] }>("/admin/blog-posts", { token })
-      const data = Array.isArray(res) ? res : ((res as { posts?: BlogPost[] }).posts ?? [])
-      if (data.length > 0) {
-        setPosts(data)
-        setSelectedId(data[0].id)
-      }
+      const res = await apiFetch<{ posts: BlogPost[] }>("/admin/blog-posts", { token })
+      setPosts(res.posts)
+      setSelectedId((current) => res.posts.some((post) => post.id === current) ? current : res.posts[0]?.id ?? "")
     } catch {
-      // keep INITIAL_POSTS as fallback
+      setPosts([])
+      setSelectedId("")
     } finally {
       setLoading(false)
     }
@@ -102,10 +58,9 @@ export default function AdminBlogPage() {
 
   React.useEffect(() => { load() }, [load])
 
-  const selected = posts.find((post) => post.id === selectedId) ?? posts[0] ?? null
+  const selected = posts.find((post) => post.id === selectedId) ?? null
 
   const patchPost = async (id: string, patch: Partial<BlogPost>) => {
-    // optimistic update
     setPosts((current) => current.map((post) => (post.id === id ? { ...post, ...patch } : post)))
     try {
       const token = await getToken()
@@ -114,9 +69,28 @@ export default function AdminBlogPage() {
         token,
         body: JSON.stringify(patch),
       })
-    } catch {
-      // keep optimistic update — no rollback for UX smoothness
-    }
+      await load()
+    } catch { /* keep optimistic update */ }
+  }
+
+  const createPost = async () => {
+    try {
+      const token = await getToken()
+      const post = await apiFetch<BlogPost>("/admin/blog-posts", {
+        method: "POST",
+        token,
+        body: JSON.stringify({
+          title: "Postim i ri",
+          slug: `postim-i-ri-${Date.now()}`,
+          excerpt: "",
+          content: "",
+          tags: [],
+          status: "draft",
+        }),
+      })
+      await load()
+      setSelectedId(post.id)
+    } catch { /* keep current */ }
   }
 
   const removePost = async (id: string) => {
@@ -125,9 +99,7 @@ export default function AdminBlogPage() {
     try {
       const token = await getToken()
       await apiFetch(`/admin/blog-posts/${id}`, { method: "DELETE", token })
-    } catch {
-      // keep optimistic removal
-    }
+    } catch { /* keep optimistic removal */ }
   }
 
   const saveEditor = (data: BlogEditorData) => {
@@ -218,11 +190,7 @@ export default function AdminBlogPage() {
               ],
             },
           ]}
-          actions={<Button onClick={() => {
-            const id = `B-${Date.now()}`
-            setPosts((current) => [{ id, title: "", slug: "", excerpt: "", content: "", tags: [], author: "Unify Admin", authorEmail: "admin@unify.local", source: "admin", status: "draft", submittedAt: new Date().toLocaleString("sq-AL") }, ...current])
-            setSelectedId(id)
-          }}>Blog i ri</Button>}
+          actions={<Button onClick={createPost}>Blog i ri</Button>}
         />
 
         {loading && (
@@ -245,7 +213,7 @@ export default function AdminBlogPage() {
               { key: "submitted", label: "Derguar", render: (row) => row.submittedAt },
               { key: "actions", label: "", align: "right", render: (row) => <AdminActionMenu items={getPostActions(row)} /> },
             ]}
-            empty={<p className="text-sm text-muted-foreground">Nuk u gjet asnje blog me keto filtra.</p>}
+            empty={<p className="text-sm text-muted-foreground">Nuk ka blogje ne DB per keto filtra.</p>}
           />
 
           <div className="space-y-4">
@@ -272,7 +240,7 @@ export default function AdminBlogPage() {
               </>
             ) : (
               <Card>
-                <CardContent className="p-8 text-center text-sm text-muted-foreground">Zgjidh nje blog per review ose krijo nje te ri.</CardContent>
+                <CardContent className="p-8 text-center text-sm text-muted-foreground">Zgjidh nje blog nga DB ose krijo nje te ri.</CardContent>
               </Card>
             )}
           </div>

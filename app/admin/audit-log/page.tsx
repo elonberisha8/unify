@@ -14,15 +14,9 @@ import { AdminLayout } from "@/components/layout"
 import { Button, Skeleton } from "@/components/ui"
 import { apiFetch } from "@/app/_lib/api"
 
-const FALLBACK_ENTRIES: AuditLogEntry[] = [
-  { id: "a1", timestamp: "2026-04-25 10:42", actor: "admin@unify.local", action: "approved_campaign", target: "K-102", ip: "10.0.0.12", severity: "info" },
-  { id: "a2", timestamp: "2026-04-25 10:35", actor: "system", action: "webhook_received", target: "stripe", ip: "10.0.0.5", severity: "info" },
-  { id: "a3", timestamp: "2026-04-25 09:58", actor: "moderator", action: "flagged_user", target: "u-102", ip: "10.0.0.14", severity: "warning" },
-]
-
 export default function AdminAuditLogPage() {
   const { getToken } = useAuth()
-  const [entries, setEntries] = React.useState<AuditLogEntry[]>(FALLBACK_ENTRIES)
+  const [entries, setEntries] = React.useState<AuditLogEntry[]>([])
   const [loading, setLoading] = React.useState(true)
 
   const load = React.useCallback(async () => {
@@ -34,9 +28,9 @@ export default function AdminAuditLogPage() {
         { token }
       )
       const data = Array.isArray(res) ? res : ((res as { entries?: AuditLogEntry[] }).entries ?? [])
-      if (data.length > 0) setEntries(data)
+      setEntries(data)
     } catch {
-      // keep fallback entries
+      setEntries([])
     } finally {
       setLoading(false)
     }

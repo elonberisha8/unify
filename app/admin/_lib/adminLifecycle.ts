@@ -66,7 +66,7 @@ export function getAdminLifecycleActions(input: LifecycleActionInput): AdminActi
     onClick: input.remove,
     destructive: true,
     divider: true,
-    confirmLabel: `A je i sigurt qe do ta fshish ${input.noun}? Ky veprim eshte vetem demo per tani.`,
+    confirmLabel: `A je i sigurt qe do ta fshish ose arkivosh ${input.noun}? Ky veprim ruhet ne backend.`,
   })
 
   return actions

@@ -144,7 +144,7 @@ export default function ShpalljetPage() {
           : ((campaignRes as { campaigns?: Campaign[] }).campaigns ?? [])
         const volunteers = Array.isArray(volunteerRes)
           ? volunteerRes
-          : ((volunteerRes as { volunteers?: VolunteerListing[] }).volunteers ?? [])
+          : ((volunteerRes as { listings?: VolunteerListing[] }).listings ?? [])
         setItems([...campaigns.map(mapCampaign), ...volunteers.map(mapVolunteer)])
       } catch {
         setItems([])

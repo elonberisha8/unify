@@ -71,18 +71,20 @@ export default function AdminVullnetarePage() {
   React.useEffect(() => { load() }, [load])
 
   const mutate = React.useCallback(
-    async (path: string) => {
+    async (path: string, method = "PATCH", body?: Record<string, unknown>) => {
       const token = await getToken()
-      await apiFetch(path, { method: "PATCH", token })
+      await apiFetch(path, {
+        method,
+        token,
+        body: body ? JSON.stringify(body) : undefined,
+      })
       await load()
     },
     [getToken, load]
   )
 
-  const localPatch = (id: string, lifecycle: AdminLifecycleStatus) =>
-    setListings((cur) =>
-      cur.map((l) => (l.id === id ? { ...l, _lifecycle: lifecycle } : l))
-    )
+  const setListingStatus = (id: string, backendStatus: string, reason?: string) =>
+    mutate(`/admin/volunteers/${id}/status`, "PATCH", { status: backendStatus, reason })
 
   const filtered = listings.filter((l) => {
     const matchesSearch = `${l.title} ${l.owner.name} ${l.location}`.toLowerCase().includes(query.toLowerCase())
@@ -98,11 +100,11 @@ export default function AdminVullnetarePage() {
       preview: () => { window.location.href = `/vullnetare/${listing.id}` },
       owner: () => { window.location.href = `/admin/perdoruesit/${listing.owner.id}` },
       approve: () => mutate(`/admin/volunteers/${listing.id}/approve`),
-      pause: () => localPatch(listing.id, "paused"),
+      pause: () => setListingStatus(listing.id, "PAUSED", "Pauzuar nga admin."),
       resume: () => mutate(`/admin/volunteers/${listing.id}/approve`),
-      review: () => localPatch(listing.id, "review"),
-      reject: () => localPatch(listing.id, "rejected"),
-      remove: () => setListings((cur) => cur.filter((x) => x.id !== listing.id)),
+      review: () => setListingStatus(listing.id, "PENDING", "Kthyer ne review."),
+      reject: () => mutate(`/admin/volunteers/${listing.id}/reject`),
+      remove: () => setListingStatus(listing.id, "REJECTED", "Arkivuar nga admin."),
     })
 
   return (
@@ -228,12 +230,12 @@ export default function AdminVullnetarePage() {
                   </Button>
                 )}
                 {editing._lifecycle === "active" && (
-                  <Button variant="outline" onClick={() => { localPatch(editing.id, "paused"); setEditing(null) }}>
+                  <Button variant="outline" onClick={() => { setListingStatus(editing.id, "PAUSED", "Pauzuar nga admin."); setEditing(null) }}>
                     Pauzo shpalljen
                   </Button>
                 )}
                 {editing._lifecycle !== "rejected" && (
-                  <Button variant="destructive" onClick={() => { localPatch(editing.id, "rejected"); setEditing(null) }}>
+                  <Button variant="destructive" onClick={() => { mutate(`/admin/volunteers/${editing.id}/reject`); setEditing(null) }}>
                     Refuzo
                   </Button>
                 )}

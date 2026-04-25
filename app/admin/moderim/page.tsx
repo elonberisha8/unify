@@ -19,7 +19,7 @@ type DecisionStatus = "approved" | "rejected" | "paused"
 
 interface ModerationItem {
   id: string
-  type: "Kampanje" | "Shpallje"
+  type: "Kampanje" | "Shpallje" | "Request"
   title: string
   owner: string
   ownerId: string
@@ -32,6 +32,22 @@ interface ModerationItem {
   ownerUrl: string
   details: { label: string; value: string }[]
   evidence: string[]
+}
+
+interface AdminApplicationReview {
+  id: string
+  reason: string
+  status: string
+  updatedAt: string
+  applicant: { id: string; name: string; email: string }
+  listing: {
+    id: string
+    title: string
+    kind: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
+    category: string
+    location: string
+    owner: { id: string; name: string; email: string }
+  }
 }
 
 interface DecisionLog {
@@ -103,24 +119,51 @@ function volunteerToItem(v: AdminVolunteer): ModerationItem {
   }
 }
 
+function applicationToItem(a: AdminApplicationReview): ModerationItem {
+  return {
+    id: a.id,
+    type: "Request",
+    title: `${a.listing.title} — ${a.applicant.name}`,
+    owner: a.listing.owner.name,
+    ownerId: a.listing.owner.id,
+    ownerEmail: a.listing.owner.email,
+    submittedAt: new Date(a.updatedAt).toLocaleDateString("sq-AL"),
+    category: a.listing.kind === "SUPPORT_REQUEST" ? "Kërkesë për Mbështetje" : "Kontribut Vullnetar",
+    location: a.listing.location,
+    risk: "medium",
+    objectUrl: `/admin/vullnetare`,
+    ownerUrl: `/admin/perdoruesit/${a.listing.owner.id}`,
+    details: [
+      { label: "Shpallja", value: a.listing.title },
+      { label: "Aplikuesi", value: `${a.applicant.name} — ${a.applicant.email}` },
+      { label: "Status", value: a.status },
+      { label: "Rrjedha", value: "Pronari e pranoi dhe pret aprovim final nga admini" },
+    ],
+    evidence: [
+      `Arsyeja e aplikuesit: ${a.reason}`,
+      `Pronari: ${a.listing.owner.email}`,
+      `Aplikuesi: ${a.applicant.email}`,
+    ],
+  }
+}
+
 export default function AdminModerimPage() {
   const { getToken } = useAuth()
   const [queue, setQueue] = React.useState<ModerationItem[]>([])
   const [loading, setLoading] = React.useState(true)
   const [decisions, setDecisions] = React.useState<DecisionLog[]>([])
-  const [blocklist, setBlocklist] = React.useState<BlockListItem[]>([
-    { id: "BL-01", type: "email", value: "spam@example.com", reason: "3+ raportime", expires: "permanent" },
-    { id: "BL-02", type: "ip", value: "185.22.91.10", reason: "rate limit", expires: "2026-05-02" },
-  ])
+  const [blocklist, setBlocklist] = React.useState<BlockListItem[]>([])
   const [blockValue, setBlockValue] = React.useState("")
 
   const load = React.useCallback(async () => {
     setLoading(true)
     try {
       const token = await getToken()
-      const [campaignRes, volunteerRes] = await Promise.all([
+      const [campaignRes, volunteerRes, applicationRes, blocklistRes] = await Promise.all([
         apiFetch<{ campaigns: AdminCampaign[] } | AdminCampaign[]>("/admin/campaigns", { token }),
         apiFetch<AdminVolunteer[]>("/admin/volunteers", { token }),
+        apiFetch<{ applications: AdminApplicationReview[] }>("/admin/applications/review", { token }),
+        apiFetch<{ items: BlockListItem[] }>("/admin/blocklist", { token }),
       ])
       const campaigns = Array.isArray(campaignRes)
         ? campaignRes
@@ -133,8 +176,10 @@ export default function AdminModerimPage() {
       const pendingVolunteers = volunteers
         .filter((v) => v.status === "PENDING")
         .map(volunteerToItem)
+      const pendingApplications = applicationRes.applications.map(applicationToItem)
 
-      setQueue([...pendingCampaigns, ...pendingVolunteers])
+      setQueue([...pendingCampaigns, ...pendingVolunteers, ...pendingApplications])
+      setBlocklist(blocklistRes.items)
     } catch {
       setQueue([])
     } finally {
@@ -149,7 +194,9 @@ export default function AdminModerimPage() {
       const token = await getToken()
       const path = item.type === "Kampanje"
         ? `/admin/campaigns/${item.id}/approve`
-        : `/admin/volunteers/${item.id}/approve`
+        : item.type === "Shpallje"
+          ? `/admin/volunteers/${item.id}/approve`
+          : `/admin/applications/${item.id}/approve`
       await apiFetch(path, { method: "PATCH", token })
     } catch { /* continue anyway */ }
     recordDecision(item, "approved", "")
@@ -165,13 +212,37 @@ export default function AdminModerimPage() {
           token,
           body: JSON.stringify({ reason: note || "Refuzuar nga admin." }),
         })
+      } else if (item.type === "Shpallje") {
+        await apiFetch(`/admin/volunteers/${item.id}/reject`, {
+          method: "PATCH",
+          token,
+          body: JSON.stringify({ reason: note || "Refuzuar nga admin." }),
+        })
+      } else if (item.type === "Request") {
+        await apiFetch(`/admin/applications/${item.id}/reject`, { method: "PATCH", token })
       }
     } catch { /* continue anyway */ }
     recordDecision(item, "rejected", note)
     setQueue((cur) => cur.filter((e) => e.id !== item.id))
   }
 
-  const pause = (item: ModerationItem, note: string) => {
+  const pause = async (item: ModerationItem, note: string) => {
+    try {
+      const token = await getToken()
+      if (item.type === "Kampanje") {
+        await apiFetch(`/admin/campaigns/${item.id}/status`, {
+          method: "PATCH",
+          token,
+          body: JSON.stringify({ status: "PAUSED", reason: note || "Pauzuar nga moderimi." }),
+        })
+      } else if (item.type === "Shpallje") {
+        await apiFetch(`/admin/volunteers/${item.id}/status`, {
+          method: "PATCH",
+          token,
+          body: JSON.stringify({ status: "PAUSED", reason: note || "Pauzuar nga moderimi." }),
+        })
+      }
+    } catch { /* continue anyway */ }
     recordDecision(item, "paused", note)
     setQueue((cur) => cur.filter((e) => e.id !== item.id))
   }
@@ -189,14 +260,28 @@ export default function AdminModerimPage() {
     ])
   }
 
-  const addBlock = (type: BlockListItem["type"], value: string, reason = "Shtuar nga moderimi") => {
+  const addBlock = async (type: BlockListItem["type"], value: string, reason = "Shtuar nga moderimi") => {
     const clean = value.trim()
     if (!clean) return
-    setBlocklist((cur) => [
-      { id: `BL-${Date.now()}`, type, value: clean, reason, expires: "permanent" },
-      ...cur,
-    ])
-    setBlockValue("")
+    try {
+      const token = await getToken()
+      await apiFetch("/admin/blocklist", {
+        method: "POST",
+        token,
+        body: JSON.stringify({ type, value: clean, reason }),
+      })
+      const res = await apiFetch<{ items: BlockListItem[] }>("/admin/blocklist", { token })
+      setBlocklist(res.items)
+      setBlockValue("")
+    } catch { /* keep current */ }
+  }
+
+  const removeBlock = async (id: string) => {
+    setBlocklist((cur) => cur.filter((b) => b.id !== id))
+    try {
+      const token = await getToken()
+      await apiFetch(`/admin/blocklist/${id}`, { method: "DELETE", token })
+    } catch { /* keep optimistic removal */ }
   }
 
   const highRisk = queue.filter((i) => i.risk === "high").length
@@ -309,7 +394,7 @@ export default function AdminModerimPage() {
               {
                 key: "actions", label: "", align: "right",
                 render: (row) => (
-                  <Button size="sm" variant="ghost" onClick={() => setBlocklist((cur) => cur.filter((b) => b.id !== row.id))}>
+                  <Button size="sm" variant="ghost" onClick={() => removeBlock(row.id)}>
                     Hiq
                   </Button>
                 ),

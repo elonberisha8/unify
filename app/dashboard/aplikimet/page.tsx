@@ -1,203 +1,195 @@
 "use client";
 
 // ============================================================
-// BRANCH: feat/dashboard-campaigns
-// Aplikimet e marra — kreatori sheh kush ka aplikuar për shpalljet e tij
+// Aplikimet — VETËM aplikimet e MIA për shpalljet e të tjerëve
 // ============================================================
 
 import * as React from "react";
-import { useState } from "react";
-import { CheckIcon, CloseIcon, CalendarIcon, MapPinIcon, UsersIcon } from "@/components/icons";
-import { Badge, Button } from "@/components/ui";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { CalendarIcon, MapPinIcon, FileTextIcon, EyeIcon, CloseIcon } from "@/components/icons";
+import { Button, Skeleton, Badge } from "@/components/ui";
 import { EmptyState, DashboardLayout } from "@/components/layout";
+import { apiFetch, type MyApplication } from "@/app/_lib/api";
 
-type AppStatus = "pending" | "accepted" | "rejected";
-
-interface Applicant {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  date: string;
-  status: AppStatus;
-  listing: string;
-  location?: string;
-  message?: string;
-}
-
-const INITIAL_APPLICANTS: Applicant[] = [
-  { id: "a1", name: "Arta Krasniqi",    email: "arta@email.com",    avatar: "AK", date: "22 Pri 2026", status: "pending",  listing: "Mësues vullnetar i gjuhës angleze", location: "Prishtinë", message: "Jam mësuese e certifikuar me 5 vjet përvojë." },
-  { id: "a2", name: "Besnik Hoxha",     email: "besnik@email.com",  avatar: "BH", date: "21 Pri 2026", status: "pending",  listing: "Mësues vullnetar i gjuhës angleze", location: "Prishtinë", message: "E dua mësimdhënien dhe dua të ndihmoj komunitetin." },
-  { id: "a3", name: "Drita Morina",     email: "drita@email.com",   avatar: "DM", date: "20 Pri 2026", status: "accepted", listing: "Koordinator ngjarjesh kulturore",    location: "Prizren",    message: "Kam organizuar 10+ ngjarje kulturore." },
-  { id: "a4", name: "Kujtim Fazliu",    email: "kujtim@email.com",  avatar: "KF", date: "19 Pri 2026", status: "pending",  listing: "Ndihmës social",                   location: "Ferizaj",    message: "Punoj si punonjës social." },
-  { id: "a5", name: "Lirije Gashi",     email: "lirije@email.com",  avatar: "LG", date: "18 Pri 2026", status: "rejected", listing: "Ndihmës social",                   location: "Pejë",       message: "Jam e interesuar për punë sociale." },
-  { id: "a6", name: "Agron Bajrami",    email: "agron@email.com",   avatar: "AB", date: "17 Pri 2026", status: "pending",  listing: "Koordinator ngjarjesh kulturore",   location: "Prizren",    message: "Kam përvojë si koordinator." },
-];
+type AppStatus = MyApplication["status"];
 
 const STATUS_LABELS: Record<AppStatus, string> = {
-  pending:  "Në pritje",
-  accepted: "Pranuar",
-  rejected: "Refuzuar",
+  PENDING: "Në pritje",
+  ACCEPTED: "Pranuar",
+  REJECTED: "Refuzuar",
+  WITHDRAWN: "Tërhequr",
 };
 
 const STATUS_COLORS: Record<AppStatus, string> = {
-  pending:  "bg-yellow-100 text-yellow-800",
-  accepted: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
+  PENDING: "bg-yellow-100 text-yellow-800",
+  ACCEPTED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
+  WITHDRAWN: "bg-gray-100 text-gray-700",
 };
 
-const LISTINGS = ["Të gjitha", "Mësues vullnetar i gjuhës angleze", "Koordinator ngjarjesh kulturore", "Ndihmës social"];
 const TABS: { label: string; value: AppStatus | "all" }[] = [
-  { label: "Të gjitha",  value: "all"      },
-  { label: "Në pritje",  value: "pending"  },
-  { label: "Pranuar",    value: "accepted" },
-  { label: "Refuzuar",   value: "rejected" },
+  { label: "Të gjitha", value: "all" },
+  { label: "Në pritje", value: "PENDING" },
+  { label: "Pranuar", value: "ACCEPTED" },
+  { label: "Refuzuar", value: "REJECTED" },
+  { label: "Tërhequr", value: "WITHDRAWN" },
 ];
 
-export default function AplikiметPage() {
-  const [applicants, setApplicants] = useState<Applicant[]>(INITIAL_APPLICANTS);
-  const [activeTab, setActiveTab] = useState<AppStatus | "all">("all");
-  const [activeListing, setActiveListing] = useState("Të gjitha");
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString("sq-AL", { year: "numeric", month: "short", day: "numeric" });
+}
 
-  function updateStatus(id: string, status: AppStatus) {
-    setApplicants((prev) => prev.map((a) => a.id === id ? { ...a, status } : a));
+export default function AplikimetPage() {
+  const router = useRouter();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const [applications, setApplications] = React.useState<MyApplication[]>([]);
+  const [activeTab, setActiveTab] = React.useState<AppStatus | "all">("all");
+  const [loading, setLoading] = React.useState(true);
+
+  const load = React.useCallback(async () => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      router.push(`/auth/login?redirect=${encodeURIComponent("/dashboard/aplikimet")}`);
+      return;
+    }
+    setLoading(true);
+    try {
+      const token = await getToken();
+      const data = await apiFetch<MyApplication[] | { applications: MyApplication[] }>("/applications/mine", { token });
+      const list = Array.isArray(data) ? data : data.applications;
+      setApplications(Array.isArray(list) ? list : []);
+    } catch {
+      setApplications([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [getToken, isLoaded, isSignedIn, router]);
+
+  React.useEffect(() => { load(); }, [load]);
+
+  async function withdraw(id: string) {
+    if (!confirm("A je i sigurt që do ta tërheqësh këtë aplikim?")) return;
+    try {
+      const token = await getToken();
+      await apiFetch(`/applications/${id}/withdraw`, { method: "PATCH", token });
+      await load();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Gabim gjatë tërheqjes së aplikimit.");
+    }
   }
 
-  const filtered = applicants.filter((a) => {
-    const tabOk = activeTab === "all" || a.status === activeTab;
-    const listingOk = activeListing === "Të gjitha" || a.listing === activeListing;
-    return tabOk && listingOk;
-  });
+  const filtered = applications.filter((a) => activeTab === "all" || a.status === activeTab);
 
   const counts = {
-    all:      applicants.length,
-    pending:  applicants.filter((a) => a.status === "pending").length,
-    accepted: applicants.filter((a) => a.status === "accepted").length,
-    rejected: applicants.filter((a) => a.status === "rejected").length,
+    all: applications.length,
+    PENDING: applications.filter((a) => a.status === "PENDING").length,
+    ACCEPTED: applications.filter((a) => a.status === "ACCEPTED").length,
+    REJECTED: applications.filter((a) => a.status === "REJECTED").length,
+    WITHDRAWN: applications.filter((a) => a.status === "WITHDRAWN").length,
   };
 
   return (
     <DashboardLayout activeKey="aplikimet">
       <div className="space-y-6">
-
-        {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Aplikimet e marra</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              {counts.pending > 0
-                ? `${counts.pending} aplikim${counts.pending > 1 ? "e" : ""} në pritje për rishikim`
-                : "Asnjë aplikim i ri në pritje"}
+            <h1 className="text-2xl font-bold text-gray-900">Aplikimet e mia</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Aplikimet që ti ke dërguar për shpalljet e të tjerëve. Aplikimet që marrin shpalljet e tua i gjen tek <a href="/dashboard/shpalljet" className="text-unify-blue hover:underline">Shpalljet e mia</a>.
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-unify-blue/10 text-unify-blue rounded-xl px-4 py-2">
-            <UsersIcon className="h-4 w-4" />
-            <span className="text-sm font-bold">{counts.all} gjithsej</span>
+          <div className="flex items-center gap-2 rounded-xl bg-unify-blue/10 px-4 py-2 text-unify-blue">
+            <FileTextIcon className="h-4 w-4" />
+            <span className="text-sm font-bold">{counts.all} aplikime</span>
           </div>
         </div>
 
-        {/* Filter by listing */}
-        <div className="flex gap-2 flex-wrap">
-          {LISTINGS.map((l) => (
-            <button
-              key={l}
-              onClick={() => setActiveListing(l)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                activeListing === l
-                  ? "bg-unify-brown text-white border-unify-brown"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-
-        {/* Status tabs */}
         <div className="flex gap-1 border-b border-gray-200">
-          {TABS.map((t) => (
+          {TABS.map((tab) => (
             <button
-              key={t.value}
-              onClick={() => setActiveTab(t.value)}
-              className={`pb-3 px-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 ${
-                activeTab === t.value
+              key={tab.value}
+              onClick={() => setActiveTab(tab.value)}
+              className={`flex items-center gap-1.5 border-b-2 px-3 pb-3 text-sm font-medium transition-colors ${
+                activeTab === tab.value
                   ? "border-unify-blue text-unify-blue"
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
-              {t.label}
-              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                activeTab === t.value ? "bg-unify-blue text-white" : "bg-gray-100 text-gray-500"
+              {tab.label}
+              <span className={`rounded-full px-1.5 py-0.5 text-xs font-bold ${
+                activeTab === tab.value ? "bg-unify-blue text-white" : "bg-gray-100 text-gray-500"
               }`}>
-                {counts[t.value]}
+                {counts[tab.value]}
               </span>
             </button>
           ))}
         </div>
 
-        {/* Applicant list */}
-        {filtered.length === 0 ? (
-          <EmptyState title="Asnjë aplikim" description="Nuk ka aplikime për këtë filtër." />
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)}
+          </div>
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            title="Asnjë aplikim këtu"
+            description={activeTab === "all" ? "Nuk ke aplikuar ende për asnjë shpallje." : `Nuk ke aplikime me statusin "${STATUS_LABELS[activeTab as AppStatus]}".`}
+            action={{ label: "Shfleto shpalljet", onClick: () => router.push("/shpalljet") }}
+          />
         ) : (
           <div className="space-y-3">
-            {filtered.map((a) => (
-              <div key={a.id} className="bg-white border border-gray-200 rounded-xl p-4 flex items-start gap-4">
-                {/* Avatar */}
-                <div className="w-10 h-10 rounded-full bg-unify-blue/10 text-unify-blue font-bold text-sm flex items-center justify-center flex-shrink-0">
-                  {a.avatar}
-                </div>
+            {filtered.map((app) => (
+              <article key={app.id} className="rounded-xl border border-gray-200 bg-white p-5 hover:border-unify-blue/40 transition">
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div className="flex gap-4 min-w-0 flex-1">
+                    {app.listing.image && (
+                      <img src={app.listing.image} alt="" className="h-20 w-20 rounded-lg object-cover flex-shrink-0" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_COLORS[app.status]}`}>
+                          {STATUS_LABELS[app.status]}
+                        </span>
+                        <Badge variant="outline" className="text-xs">{app.listing.subtype}</Badge>
+                        <Badge variant="outline" className="text-xs">{app.listing.category}</Badge>
+                      </div>
+                      <h3 className="font-bold text-gray-900 mb-1">
+                        <a href={`/vullnetare/${app.listing.id}`} className="hover:text-unify-blue hover:underline">
+                          {app.listing.title}
+                        </a>
+                      </h3>
+                      <div className="flex flex-wrap gap-3 text-xs text-gray-500 mb-2">
+                        <span className="inline-flex items-center gap-1">
+                          <MapPinIcon className="h-3 w-3" /> {app.listing.location}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarIcon className="h-3 w-3" /> Aplikuar {formatDate(app.createdAt)}
+                        </span>
+                        <span>
+                          Pronari:{" "}
+                          <a href={`/profili/${app.listing.owner.username}`} className="text-unify-blue hover:underline">
+                            @{app.listing.owner.username}
+                          </a>
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-2 italic">
+                        &ldquo;{app.reason}&rdquo;
+                      </p>
+                    </div>
+                  </div>
 
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-gray-900 text-sm">{a.name}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${STATUS_COLORS[a.status]}`}>
-                      {STATUS_LABELS[a.status]}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-0.5">{a.email}</p>
-                  <p className="text-xs text-unify-blue font-medium mt-1">📋 {a.listing}</p>
-                  {a.message && (
-                    <p className="text-xs text-gray-600 mt-1 italic">"{a.message}"</p>
-                  )}
-                  <div className="flex gap-3 mt-2 text-xs text-gray-400">
-                    {a.location && <span className="flex items-center gap-1"><MapPinIcon className="h-3 w-3" />{a.location}</span>}
-                    <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" />{a.date}</span>
+                  <div className="flex flex-col gap-2 md:w-44 flex-shrink-0">
+                    <Button variant="outline" size="sm" onClick={() => router.push(`/vullnetare/${app.listing.id}`)} className="gap-2">
+                      <EyeIcon className="h-4 w-4" /> Shiko shpalljen
+                    </Button>
+                    {app.status === "PENDING" && (
+                      <Button variant="outline" size="sm" onClick={() => withdraw(app.id)} className="gap-2 text-red-600 hover:bg-red-50 border-red-200">
+                        <CloseIcon className="h-4 w-4" /> Tërhiq aplikimin
+                      </Button>
+                    )}
                   </div>
                 </div>
-
-                {/* Actions */}
-                {a.status === "pending" && (
-                  <div className="flex gap-2 flex-shrink-0">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-green-500 text-green-700 hover:bg-green-50 h-8 px-3"
-                      onClick={() => updateStatus(a.id, "accepted")}
-                    >
-                      <CheckIcon className="h-3 w-3 mr-1" /> Prano
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-red-400 text-red-600 hover:bg-red-50 h-8 px-3"
-                      onClick={() => updateStatus(a.id, "rejected")}
-                    >
-                      <CloseIcon className="h-3 w-3 mr-1" /> Refuzo
-                    </Button>
-                  </div>
-                )}
-                {a.status === "accepted" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-gray-300 text-gray-500 h-8 px-3 flex-shrink-0"
-                    onClick={() => updateStatus(a.id, "rejected")}
-                  >
-                    Anulo
-                  </Button>
-                )}
-              </div>
+              </article>
             ))}
           </div>
         )}

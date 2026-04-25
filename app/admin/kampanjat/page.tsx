@@ -44,6 +44,7 @@ function toLifecycle(s: string): AdminLifecycleStatus {
     PAUSED: "paused",
     REJECTED: "rejected",
     COMPLETED: "active",
+    SUSPENDED: "paused",
   }
   return map[s] ?? "review"
 }
@@ -103,11 +104,8 @@ export default function AdminKampanjatPage() {
   const reject = (id: string) => mutate(`/admin/campaigns/${id}/reject`, "PATCH", { reason: note || "Refuzuar nga admin." })
   const toggleFeatured = (id: string) => mutate(`/admin/campaigns/${id}/featured`)
 
-  // Local-only transitions (no dedicated endpoints yet)
-  const localPatch = (id: string, lifecycle: AdminLifecycleStatus) =>
-    setCampaigns((cur) =>
-      cur.map((c) => (c.id === id ? { ...c, _lifecycle: lifecycle } : c))
-    )
+  const setCampaignStatus = (id: string, backendStatus: string, reason?: string) =>
+    mutate(`/admin/campaigns/${id}/status`, "PATCH", { status: backendStatus, reason })
 
   const getCampaignActions = (c: CampaignRow) =>
     getAdminLifecycleActions({
@@ -117,12 +115,12 @@ export default function AdminKampanjatPage() {
       preview: () => { window.location.href = `/kampanjat/${c.slug}` },
       owner: () => { window.location.href = `/admin/perdoruesit/${c.creator.id}` },
       approve: () => approve(c.id),
-      pause: () => localPatch(c.id, "paused"),
-      resume: () => localPatch(c.id, "active"),
-      review: () => localPatch(c.id, "review"),
+      pause: () => setCampaignStatus(c.id, "PAUSED", "Pauzuar nga admin."),
+      resume: () => setCampaignStatus(c.id, "ACTIVE", "Riaktivizuar nga admin."),
+      review: () => setCampaignStatus(c.id, "PENDING", "Kthyer ne review."),
       reject: () => reject(c.id),
-      requestDocuments: () => localPatch(c.id, "review"),
-      remove: () => setCampaigns((cur) => cur.filter((x) => x.id !== c.id)),
+      requestDocuments: () => setCampaignStatus(c.id, "PENDING", "Kerkohet dokumentacion shtese."),
+      remove: () => setCampaignStatus(c.id, "REJECTED", "Arkivuar nga admin."),
     })
 
   return (
@@ -295,7 +293,7 @@ export default function AdminKampanjatPage() {
                   </>
                 )}
                 {editing._lifecycle === "active" && (
-                  <Button variant="outline" onClick={() => { localPatch(editing.id, "paused"); setEditing(null) }}>
+                  <Button variant="outline" onClick={() => { setCampaignStatus(editing.id, "PAUSED", "Pauzuar nga admin."); setEditing(null) }}>
                     Pauzo kampanjen
                   </Button>
                 )}

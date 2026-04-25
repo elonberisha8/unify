@@ -15,13 +15,6 @@ import { Badge, Button, Card, CardContent, Skeleton } from "@/components/ui"
 import { AlertTriangleIcon, HandHeartIcon, MegaphoneIcon, UsersIcon } from "@/components/icons"
 import { apiFetch, type AdminStats } from "@/app/_lib/api"
 
-const HEALTH = [
-  { label: "API status", value: "Online", change: "Latency 84ms", trend: "up" as const },
-  { label: "Stripe webhook", value: "OK", change: "Last event 2 min ago", trend: "up" as const },
-  { label: "Cloudinary", value: "OK", change: "Uploads enabled", trend: "up" as const },
-  { label: "Admin access", value: "Internal", change: "VPN/IP allowlist later", trend: "flat" as const },
-]
-
 interface RecentEvent {
   id: string
   area: string
@@ -73,6 +66,13 @@ export default function AdminDashPage() {
       ]
     : []
 
+  const healthStats = [
+    { label: "API status", value: stats ? "Online" : "Offline", change: stats ? "admin/stats OK" : "pa pergjigje", trend: stats ? "up" as const : "down" as const },
+    { label: "Audit log", value: `${recentEvents.length}`, change: "ngjarje nga DB", trend: recentEvents.length ? "up" as const : "flat" as const },
+    { label: "Review queue", value: `${stats?.pendingCampaigns ?? 0}`, change: "kampanja pending", trend: (stats?.pendingCampaigns ?? 0) ? "down" as const : "up" as const },
+    { label: "Admin access", value: "Internal", change: "kontrollo settings/network rules", trend: "flat" as const },
+  ]
+
   return (
     <AdminLayout
       sidebar={{ activeKey: "dashboard" }}
@@ -113,7 +113,7 @@ export default function AdminDashPage() {
           </div>
         )}
 
-        <AdminQuickStats stats={HEALTH} />
+        <AdminQuickStats stats={healthStats} />
 
         <AdminTable
           rows={recentEvents}

@@ -27,11 +27,14 @@ export async function apiFetch<T>(
   options?: RequestInit & { token?: string | null }
 ): Promise<T> {
   const { token, headers: extraHeaders, ...rest } = options ?? {}
+  const localToken =
+    typeof window !== "undefined" ? window.localStorage.getItem("authToken") : null
+  const authToken = token ?? localToken
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(extraHeaders as Record<string, string>),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
   }
 
   const res = await fetch(`${BASE}/api${path}`, { ...rest, headers })
@@ -85,13 +88,73 @@ export interface AdminUser {
 export interface AdminVolunteer {
   id: string
   title: string
+  description?: string
+  kind?: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
   status: string
+  subtype?: string
   category: string
   location: string
+  organization?: string | null
+  valueLabel?: string | null
+  remote?: boolean
+  fulfilledAt?: string | null
   isAnonymous: boolean
   createdAt: string
   owner: { id: string; name: string; email: string }
   _count: { applications: number }
+}
+
+export interface DashboardNotification {
+  id: string
+  text?: string
+  time?: string
+  read?: boolean
+  title: string
+  message: string
+  type: string
+  targetType: string | null
+  targetId: string | null
+  readAt: string | null
+  createdAt: string
+}
+
+export interface DashboardSupportLedgerEntry {
+  id: string
+  sourceId: string
+  domain: "support" | "volunteer" | "financial"
+  flow: "incoming" | "outgoing"
+  date: string
+  title: string
+  counterparty: string
+  description: string
+  valueLabel: string
+  status: "pending" | "admin_review" | "completed" | "rejected" | "failed" | "refunded"
+  targetType: string
+  targetId: string
+}
+
+export interface DashboardApplication {
+  id: string
+  reason: string
+  isAnonymous: boolean
+  status: "PENDING" | "ADMIN_REVIEW" | "ACCEPTED" | "REJECTED" | "WITHDRAWN"
+  createdAt: string
+  updatedAt: string
+  applicant?: {
+    id: string
+    name: string
+    email?: string
+    image: string | null
+    username: string | null
+    location?: string | null
+  }
+  listing: VolunteerListing & {
+    kind?: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
+    organization?: string | null
+    valueLabel?: string | null
+    remote?: boolean
+    owner?: { id: string; name: string; email?: string; image?: string | null; username?: string | null }
+  }
 }
 
 export interface Campaign {
@@ -125,9 +188,13 @@ export interface VolunteerListing {
   id: string
   title: string
   description: string
+  kind?: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
   subtype: string
   category: string
   location: string
+  organization?: string | null
+  valueLabel?: string | null
+  remote?: boolean
   images: string[]
   status: string
   isAnonymous: boolean
@@ -196,4 +263,136 @@ export interface AuditEntry {
   target: string
   ip: string
   severity: "info" | "warning" | "critical"
+  category?: "ACCOUNT" | "FINANCE" | "CAMPAIGN" | "SOCIAL" | "SYSTEM"
+  device?: string
+  diff?: { before?: unknown; after?: unknown } | null
+}
+
+// ─── User Search (GET /users/search?q=username) ──────────────────────────────
+export interface UserSearchResult {
+  id: string
+  username: string
+  name: string
+  image: string | null
+  isVerified: boolean
+}
+
+// ─── Public Profile (GET /users/profile/@username) ───────────────────────────
+export interface PublicProfile {
+  id: string
+  username: string
+  name: string
+  image: string | null
+  bio: string | null
+  location: string | null
+  isVerified: boolean
+  createdAt: string
+  stats: {
+    campaigns: number
+    donations: number
+    totalDonated: number
+    volunteerListings: number
+  }
+}
+
+// ─── Messaging ───────────────────────────────────────────────────────────────
+export type ConversationType = "DIRECT" | "GROUP"
+
+export interface ConversationParticipant {
+  id: string
+  username: string
+  name: string
+  image: string | null
+}
+
+export interface Conversation {
+  id: string
+  type: ConversationType
+  name: string | null
+  image: string | null
+  participants: ConversationParticipant[]
+  lastMessage: {
+    id: string
+    content: string
+    senderId: string
+    senderUsername: string
+    createdAt: string
+  } | null
+  unreadCount: number
+  updatedAt: string
+}
+
+export interface Message {
+  id: string
+  conversationId: string
+  senderId: string
+  senderUsername: string
+  senderName: string
+  senderImage: string | null
+  content: string
+  createdAt: string
+  readBy: string[]
+}
+
+// ─── Transactions split (donations OUT vs IN, tips, withdrawals) ─────────────
+export type TransactionKind = "DONATION_OUT" | "DONATION_IN" | "TIP" | "WITHDRAWAL"
+
+export interface DashboardTransaction {
+  id: string
+  kind: TransactionKind
+  amount: number
+  currency: string
+  campaignId: string | null
+  campaignTitle: string | null
+  counterparty: string
+  status: "SUCCEEDED" | "PENDING" | "FAILED"
+  method: string
+  createdAt: string
+}
+
+// ─── My Applications (GET /applications/mine) ────────────────────────────────
+export interface MyApplication {
+  id: string
+  reason: string
+  status: "PENDING" | "ACCEPTED" | "REJECTED" | "WITHDRAWN"
+  isAnonymous: boolean
+  createdAt: string
+  listing: {
+    id: string
+    title: string
+    subtype: string
+    category: string
+    location: string
+    image: string | null
+    owner: { id: string; username: string; name: string }
+  }
+}
+
+// ─── Email Center (admin) ────────────────────────────────────────────────────
+export interface EmailTemplate {
+  id: string
+  name: string
+  subject: string
+  body: string
+  category: "CAMPAIGN" | "DONATION" | "APPLICATION" | "BROADCAST" | "SYSTEM"
+  updatedAt: string
+}
+
+export interface EmailLog {
+  id: string
+  subject: string
+  recipients: number
+  status: "SENT" | "QUEUED" | "FAILED"
+  sentAt: string
+  sentBy: string
+  templateId: string | null
+}
+
+export interface ScheduledEmail {
+  id: string
+  name: string
+  trigger: "CAMPAIGN_DEADLINE" | "WELCOME" | "REENGAGEMENT" | "MONTHLY_STATS"
+  delayDays: number
+  templateId: string
+  active: boolean
 }

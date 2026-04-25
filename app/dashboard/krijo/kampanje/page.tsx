@@ -11,6 +11,7 @@
 
 import * as React from "react";
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ImageUploadZone } from "@/components/dashboard";
 import {
@@ -19,10 +20,19 @@ import {
 } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";
 import { CheckIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
+import { apiFetch } from "@/app/_lib/api";
 
 // ── Constants ────────────────────────────────────────────────
 
-const CATEGORIES = ["Humanitare", "Arsim", "Shëndetësi", "Mjedis", "Kulturë", "Sport", "Teknologji"];
+const CATEGORIES = [
+  { label: "Humanitare", value: "COMMUNITY" },
+  { label: "Arsim", value: "EDUCATION" },
+  { label: "Shendetesia", value: "MEDICAL" },
+  { label: "Mjedis", value: "ENVIRONMENT" },
+  { label: "Sport", value: "SPORTS" },
+  { label: "Teknologji", value: "TECHNOLOGY" },
+  { label: "Emergjence", value: "EMERGENCY" },
+];
 const LOCATIONS = ["Prishtinë", "Prizren", "Mitrovicë", "Pejë", "Ferizaj", "Gjakovë", "Gjilan", "Vushtrri", "Podujevë", "Online"];
 
 const STEP_LABELS = ["Detajet", "Fotot", "Financiare", "Preview"];
@@ -83,6 +93,7 @@ function WizardStepper({ current }: { current: number }) {
 
 export default function KrijoKampanjePage() {
   const router = useRouter();
+  const { isSignedIn, getToken } = useAuth();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
@@ -119,10 +130,25 @@ export default function KrijoKampanjePage() {
 
   async function handleSubmit() {
     try {
-      await fetch("/api/campaigns", {
+      const token = isSignedIn ? await getToken() : null;
+      await apiFetch("/campaigns", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, goal: Number(form.goal), milestones }),
+        token,
+        body: JSON.stringify({
+          title: form.title,
+          description: form.description,
+          shortDescription: form.description.slice(0, 180),
+          images: form.imageUrl && !form.imageUrl.startsWith("blob:") ? [form.imageUrl] : [],
+          targetAmount: Number(form.goal),
+          category: form.category,
+          location: form.location,
+          isUrgent: Boolean(form.urgent),
+          endsAt: form.endDate ? new Date(form.endDate).toISOString() : undefined,
+          milestones: milestones.map((milestone) => ({
+            title: milestone.name,
+            amount: Number(milestone.target),
+          })),
+        }),
       });
     } catch {}
     router.push("/dashboard/kampanjat");
@@ -187,7 +213,7 @@ export default function KrijoKampanjePage() {
                       </SelectTrigger>
                       <SelectContent>
                         {CATEGORIES.map((c) => (
-                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                          <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>

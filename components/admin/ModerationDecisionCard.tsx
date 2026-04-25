@@ -15,7 +15,7 @@ export interface ModerationDecisionCardProps {
   submittedBy: string;
   submittedAt: string;
   reason?: string;
-  targetType?: "Kampanje" | "Shpallje" | "Koment" | "Profil";
+  targetType?: "Kampanje" | "Shpallje" | "Request" | "Koment" | "Profil";
   targetId?: string;
   targetTitle?: string;
   targetStatus?: string;

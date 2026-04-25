@@ -70,10 +70,19 @@ export default function LoginPage() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-bold text-gray-700">Email Adresa</span>
+            <span className="mb-2 block text-sm font-bold text-gray-700">Email ose @username</span>
             <span className="relative block">
               <MailIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input required type="email" placeholder="emri@shembull.com" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+              <Input
+                required
+                type="text"
+                name="identifier"
+                placeholder="emri@shembull.com ose @bleon"
+                className="h-14 rounded-[14px] bg-gray-50 pl-12"
+              />
+            </span>
+            <span className="mt-1 block text-xs text-muted-foreground">
+              Mund të kyçesh me email-in tënd ose me @username unik.
             </span>
           </label>
 
