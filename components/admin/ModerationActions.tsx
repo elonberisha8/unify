@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CheckIcon, CloseIcon, FlagIcon, PauseIcon } from "@/components/icons";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface ModerationActionsProps {
@@ -31,7 +31,7 @@ export function ModerationActions({ onApprove, onReject, onFlag, onPause, classN
       )}
       {onPause && (
         <Button variant="ghost" size="sm" onClick={onPause}>
-          <PauseIcon className="h-4 w-4" /> Pauzo
+          <PauseIcon className="h-4 w-4" /> Pauzo per hetim
         </Button>
       )}
     </div>

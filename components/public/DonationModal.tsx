@@ -1,12 +1,18 @@
 "use client";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/Dialog";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
-import { Label } from "../ui/Label";
-import { Textarea } from "../ui/Textarea";
-import { Checkbox } from "../ui/Checkbox";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+  Textarea,
+} from "@/components/ui";
 
 export interface DonationModalProps {
   open: boolean;
@@ -35,7 +41,7 @@ export function DonationModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Dono për këtë kampanjë</DialogTitle>
+          <DialogTitle>Dhuro për këtë kampanjë</DialogTitle>
           <DialogDescription className="line-clamp-2">{campaignTitle}</DialogDescription>
         </DialogHeader>
 
@@ -81,11 +87,11 @@ export function DonationModal({
 
           <label className="flex items-center gap-2 cursor-pointer">
             <Checkbox checked={anonymous} onCheckedChange={(v) => setAnonymous(Boolean(v))} />
-            <span className="text-sm">Dono anonimisht</span>
+            <span className="text-sm">Dhuro anonimisht</span>
           </label>
 
           <Button type="submit" className="w-full" size="lg">
-            Dono {currency}{amount || 0}
+            Dhuro {currency}{amount || 0}
           </Button>
         </form>
       </DialogContent>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Badge, type BadgeProps } from "../ui/Badge";
+import { Badge, type BadgeProps } from "@/components/ui";
 
 export type AdminStatus =
   | "active" | "inactive" | "pending" | "verified" | "unverified"

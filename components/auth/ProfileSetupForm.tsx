@@ -1,9 +1,6 @@
 "use client";
 import * as React from "react";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
+import { Button, Input, Label, Textarea } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface ProfileSetupData {

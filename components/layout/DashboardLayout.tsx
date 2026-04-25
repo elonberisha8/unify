@@ -1,8 +1,8 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon } from "@/components/icons";
+import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, FileTextIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
 
 export interface DashboardNavItem {
   key: string;
@@ -13,15 +13,16 @@ export interface DashboardNavItem {
 }
 
 export const DEFAULT_DASHBOARD_NAV: DashboardNavItem[] = [
-  { key: "home", label: "Dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" /> },
-  { key: "campaigns", label: "Kampanjat", icon: <MegaphoneIcon className="h-4 w-4" /> },
-  { key: "volunteer", label: "Shpalljet", icon: <HandHeartIcon className="h-4 w-4" /> },
-  { key: "inbox", label: "InboxIcon", icon: <InboxIcon className="h-4 w-4" /> },
-  { key: "bookmarks", label: "Ruajtura", icon: <BookmarkIcon className="h-4 w-4" /> },
-  { key: "transactions", label: "Transaksionet", icon: <WalletIcon className="h-4 w-4" /> },
-  { key: "applications", label: "Aplikimet", icon: <ScrollTextIcon className="h-4 w-4" /> },
-  { key: "profile", label: "Profili", icon: <UserIcon className="h-4 w-4" /> },
-  { key: "settings", label: "Cilësimet", icon: <SettingsIcon className="h-4 w-4" /> },
+  { key: "home", label: "Dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
+  { key: "campaigns", label: "Kampanjat", icon: <MegaphoneIcon className="h-4 w-4" />, href: "/dashboard/kampanjat" },
+  { key: "volunteer", label: "Shpalljet", icon: <HandHeartIcon className="h-4 w-4" />, href: "/dashboard/shpalljet" },
+  { key: "blog", label: "Blog", icon: <FileTextIcon className="h-4 w-4" />, href: "/blog" },
+  { key: "inbox", label: "Inbox", icon: <InboxIcon className="h-4 w-4" />, href: "/dashboard/inbox" },
+  { key: "bookmarks", label: "Ruajtura", icon: <BookmarkIcon className="h-4 w-4" />, href: "/dashboard/te-ruajtura" },
+  { key: "transactions", label: "Transaksionet", icon: <WalletIcon className="h-4 w-4" />, href: "/dashboard/transaksionet" },
+  { key: "applications", label: "Aplikimet", icon: <ScrollTextIcon className="h-4 w-4" />, href: "/dashboard/aplikimet" },
+  { key: "profile", label: "Profili", icon: <UserIcon className="h-4 w-4" />, href: "/dashboard/profili" },
+  { key: "settings", label: "Cilësimet", icon: <SettingsIcon className="h-4 w-4" />, href: "/dashboard/profili" },
 ];
 
 export interface DashboardLayoutProps {
@@ -48,7 +49,10 @@ export function DashboardLayout({
           {navItems.map((it) => (
             <button
               key={it.key}
-              onClick={() => onSelect?.(it.key)}
+              onClick={() => {
+                onSelect?.(it.key);
+                if (it.href) window.location.href = it.href;
+              }}
               className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
                 activeKey === it.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
               )}

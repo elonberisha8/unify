@@ -65,8 +65,8 @@ export function RegisterForm({ onSubmit, onGoogleSignup, onLogin, error, classNa
           <label className="flex items-start gap-2 cursor-pointer">
             <Checkbox checked={terms} onCheckedChange={(v) => setTerms(Boolean(v))} />
             <span className="text-sm text-muted-foreground">
-              Pranoj <a href="/terms" className="text-unify-blue hover:underline">Kushtet e Përdorimit</a> dhe{" "}
-              <a href="/privacy" className="text-unify-blue hover:underline">Politikën e Privatësisë</a>
+              Pranoj <a href="/kushtet" className="text-unify-blue hover:underline">Kushtet e Përdorimit</a> dhe{" "}
+              <a href="/privatesia" className="text-unify-blue hover:underline">Politikën e Privatësisë</a>
             </span>
           </label>
           {error && <p className="text-sm text-destructive">{error}</p>}
