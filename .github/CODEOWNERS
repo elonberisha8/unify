@@ -4,96 +4,79 @@
 # Si funksionon:
 #   Kur developer bën PR që prek një file,
 #   GitHub automatikisht kërkon review nga owner-i i atij file.
-#   PR nuk mund të merge pa aprovimin e DEVELOPER-it + LEAD-it.
+#   PR nuk mund të merge pa aprovimin e owner-it.
 #
-# ⚠️  TODO: Zëvendëso placeholder-in e mbetur kur devi pranon ftesën:
-#       @GITHUB_USERNAME_LEART   → Leart Ibrahimi (leart3.ibrahimi@universitetiaab.com)
+# TODO: Zëvendëso @placeholder me GitHub username-in real.
+#       Shko te: github.com/USERNAME — aty e gjen username-in.
 # ============================================================
 
-# ── LEAD — zona e mbrojtur (askush nuk prek pa aprovim) ──────
+# ── LEAD DEV (ti) — zona e mbrojtur ─────────────────────────
+# Askush nuk prek këto pa aprovimin tënd
 components/                           @elonberisha8
 tailwind.config.ts                    @elonberisha8
 next.config.js                        @elonberisha8
 package.json                          @elonberisha8
 .eslintrc.json                        @elonberisha8
 .github/                              @elonberisha8
-app/api/                              @elonberisha8
-app/test-stripe/                      @elonberisha8
-app/showcase/                         @elonberisha8
+DEVELOPER_GUIDE.md                    @elonberisha8
 
-# ══════════════════════════════════════════════════════════════
-# 🌐 PUBLIC (5 devs)
-# ══════════════════════════════════════════════════════════════
+# ── Dev 1 — feat/homepage ────────────────────────────────────
+app/page.tsx                          @dev1-username
 
-# ── Alketa Citaku (alketacitakuu@gmail.com) — feat/homepage ──
-app/page.tsx                          @alketac @elonberisha8
-app/layout.tsx                        @alketac @elonberisha8
-components/layout/Navbar.tsx          @alketac @elonberisha8
-components/layout/Footer.tsx          @alketac @elonberisha8
+# ── Dev 2 — feat/static-pages ───────────────────────────────
+app/rreth-nesh/                       @dev2-username
+app/kontakt/                          @dev2-username
+app/blog/                             @dev2-username
+app/kushtet/                          @dev2-username
+app/privatesia/                       @dev2-username
+app/not-found.tsx                     @dev2-username
+app/sherbimet/                        @dev2-username
 
-# ── Idonjeta (idonjeta8@gmail.com) — feat/listings ───────────
-app/shpalljet/                        @donjetaibrahimi @elonberisha8
-app/kampanjat/page.tsx                @donjetaibrahimi @elonberisha8
+# ── Dev 3 — feat/listings ────────────────────────────────────
+app/shpalljet/                        @dev3-username
+app/kampanjat/page.tsx                @dev3-username
 
-# ── Floart Tahiri (tahirifloart@gmail.com) — feat/campaign-detail ──
-app/kampanjat/[slug]/                 @Floart1 @elonberisha8
-app/sukses/                           @Floart1 @elonberisha8
+# ── Dev 4 — feat/campaign-detail ────────────────────────────
+app/kampanjat/[slug]/                 @dev4-username
+app/sukses/                           @dev4-username
 
-# ── Albert Aliu (albert2.aliu@universitetiaab.com) — feat/volunteer-detail ──
-app/vullnetare/                       @albert2aliu-alt @elonberisha8
+# ── Dev 5 — feat/volunteer-detail ───────────────────────────
+app/vullnetare/                       @dev5-username
 
-# ── Genti (gentiib098@gmail.com) — feat/static-pages ─────────
-app/rreth-nesh/                       @Genti10-A @elonberisha8
-app/kontakt/                          @Genti10-A @elonberisha8
-app/blog/                             @Genti10-A @elonberisha8
-app/kushtet/                          @Genti10-A @elonberisha8
-app/privatesia/                       @Genti10-A @elonberisha8
-app/sherbimet/                        @Genti10-A @elonberisha8
-app/not-found.tsx                     @Genti10-A @elonberisha8
+# ── Dev 6 — feat/auth ────────────────────────────────────────
+app/auth/                             @dev6-username
+app/onboarding/                       @dev6-username
 
-# ══════════════════════════════════════════════════════════════
-# 📊 DASHBOARD + AUTH (5 devs)
-# ══════════════════════════════════════════════════════════════
+# ── Dev 7 — feat/dashboard-home ─────────────────────────────
+app/dashboard/page.tsx                @dev7-username
+app/dashboard/transaksionet/          @dev7-username
+app/dashboard/te-ruajtura/            @dev7-username
+app/dashboard/aktiviteti/             @dev7-username
 
-# ── Rilind Krasniqi (rkrasniqi693@gmail.com) — feat/dashboard-home + feat/auth ──
-app/dashboard/page.tsx                @Lindii118 @elonberisha8
-app/dashboard/transaksionet/          @Lindii118 @elonberisha8
-app/dashboard/te-ruajtura/            @Lindii118 @elonberisha8
-app/dashboard/aktiviteti/             @Lindii118 @elonberisha8
-app/auth/                             @Lindii118 @elonberisha8
-app/onboarding/                       @Lindii118 @elonberisha8
-app/sso-callback/                     @Lindii118 @elonberisha8
+# ── Dev 8 — feat/dashboard-campaigns ────────────────────────
+app/dashboard/kampanjat/              @dev8-username
+app/dashboard/shpalljet/              @dev8-username
+app/dashboard/aplikimet/              @dev8-username
+app/dashboard/behu-krijues/           @dev8-username
+app/dashboard/krijo/                  @dev8-username
 
-# ── Florian Qestaj (florian.qestaj@universitetiaab.com) — feat/dashboard-profile ──
-app/dashboard/profili/                @Florian138 @elonberisha8
-app/dashboard/verifikimi/             @Florian138 @elonberisha8
-app/dashboard/behu-krijues/           @Florian138 @elonberisha8
-app/profili/                          @Florian138 @elonberisha8
+# ── Dev 9 — feat/dashboard-inbox ────────────────────────────
+app/dashboard/inbox/                  @dev9-username
 
-# ── Zenel Kastrati (zenel.kastrati@universitetiaab.com) — feat/dashboard-campaigns ──
-app/dashboard/kampanjat/              @Zenel @elonberisha8
-app/dashboard/shpalljet/              @Zenel @elonberisha8
-app/dashboard/aplikimet/              @Zenel @elonberisha8
-app/dashboard/krijo/                  @Zenel @elonberisha8
+# ── Dev 10 — feat/dashboard-profile ─────────────────────────
+app/dashboard/profili/                @dev10-username
+app/dashboard/verifikimi/             @dev10-username
+app/profili/                          @dev10-username
 
-# ── Leart Ibrahimi (leart3.ibrahimi@universitetiaab.com) — feat/dashboard-inbox ──
-app/dashboard/inbox/                  @GITHUB_USERNAME_LEART @elonberisha8
+# ── Dev 11 — feat/admin-core ─────────────────────────────────
+app/admin/page.tsx                    @dev11-username
+app/admin/kampanjat/                  @dev11-username
+app/admin/vullnetare/                 @dev11-username
+app/admin/cilesimet/                  @dev11-username
 
-# ══════════════════════════════════════════════════════════════
-# 🛡️ ADMIN (3 devs)
-# ══════════════════════════════════════════════════════════════
-
-# ── Ajet Matoshi (ajet.matoshi@universitetiaab.com) — feat/admin-core ──
-app/admin/page.tsx                    @AjetMatoshi @elonberisha8
-app/admin/kampanjat/                  @AjetMatoshi @elonberisha8
-app/admin/vullnetare/                 @AjetMatoshi @elonberisha8
-
-# ── Eriona Ramadani (erionaramadani9@gmail.com) — feat/admin-moderation ──
-app/admin/perdoruesit/                @ErionaRamadani @elonberisha8
-app/admin/raportimet/                 @ErionaRamadani @elonberisha8
-app/admin/moderim/                    @ErionaRamadani @elonberisha8
-
-# ── Erin Laci (erin.laci@universitetiaab.com) — feat/admin-settings ──
-app/admin/cilesimet/                  @erinlaci-ai @elonberisha8
-app/admin/blog/                       @erinlaci-ai @elonberisha8
-app/admin/audit-log/                  @erinlaci-ai @elonberisha8
+# ── Dev 12 — feat/admin-moderation ──────────────────────────
+app/admin/perdoruesit/                @dev12-username
+app/admin/raportimet/                 @dev12-username
+app/admin/moderim/                    @dev12-username
+app/admin/blog/                       @dev12-username
+app/admin/audit-log/                  @dev12-username

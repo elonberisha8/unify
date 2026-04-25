@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MapPinIcon, CalendarIcon, BadgeCheckIcon } from "@/components/icons";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 export interface PublicProfileHeroProps {
