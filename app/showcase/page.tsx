@@ -1,21 +1,15 @@
 "use client";
 
 import {
-  // primitives
   Button, Input, Textarea, Label, Badge, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
   Checkbox, Switch, Avatar, AvatarFallback, Separator, Spinner, Skeleton, Progress, ProgressBar,
   TagBadge, IconButton, SocialButton, Stepper,
-  // layout
   EmptyState, Breadcrumbs,
-  // public
   CampaignCard, VolunteerCard, BlogCard, StatisticCard, CategoryCard, ValueCard,
-  // dashboard
   StatCard, CampaignGoalCard, CreatorCTA,
-  // icons (sample)
   HeartIcon, SearchIcon, BellIcon, UserIcon, ShareIcon, BookmarkIcon, CalendarIcon, MapPinIcon,
   CheckCircleIcon, AlertCircleIcon, TrendingUpIcon, DollarSignIcon, SettingsIcon, HomeIcon,
   InboxIcon, LogInIcon, UploadIcon, StarIcon, FlagIcon, GlobeIcon,
-  // tokens
   colors,
 } from "@/components";
 
@@ -27,8 +21,8 @@ export default function Showcase() {
           <p className="font-display text-sm uppercase tracking-widest text-unify-blue">Unify</p>
           <h1 className="font-display text-5xl">Component Library Showcase</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Të gjitha komponentet janë të disponueshme nga <code className="rounded bg-muted px-1.5 py-0.5">@/components</code>.
-            Frontend-zhvilluesit kompozojnë faqe nga këto komponente dhe nuk shkruajnë stile jashtë library-së.
+            Te gjitha komponentet jane te disponueshme nga <code className="rounded bg-muted px-1.5 py-0.5">@/components</code>.
+            Frontend-zhvilluesit kompozojne faqe nga keto komponente dhe nuk shkruajne stile jashte library-se.
           </p>
         </div>
       </header>
@@ -50,11 +44,11 @@ export default function Showcase() {
 
         <Section title="Typography">
           <div className="space-y-2">
-            <h1 className="font-display text-5xl">Rowdies — Display 5xl</h1>
-            <h2 className="font-display text-3xl">Rowdies — Display 3xl</h2>
-            <h3 className="font-display text-xl">Rowdies — Display xl</h3>
-            <p className="text-base">Arimo — Body base. Lorem ipsum dolor sit amet.</p>
-            <p className="text-sm text-muted-foreground">Arimo — Body small muted.</p>
+            <h1 className="font-display text-5xl">Rowdies - Display 5xl</h1>
+            <h2 className="font-display text-3xl">Rowdies - Display 3xl</h2>
+            <h3 className="font-display text-xl">Rowdies - Display xl</h3>
+            <p className="text-base">Arimo - Body base. Lorem ipsum dolor sit amet.</p>
+            <p className="text-sm text-muted-foreground">Arimo - Body small muted.</p>
           </div>
         </Section>
 
@@ -85,16 +79,16 @@ export default function Showcase() {
             <Badge variant="secondary">Secondary</Badge>
             <Badge variant="outline">Outline</Badge>
             <Badge variant="destructive">Destructive</Badge>
-            <TagBadge>Shëndetësi</TagBadge>
-            <TagBadge>Arsim</TagBadge>
+            <TagBadge label="Shendetesi" />
+            <TagBadge label="Arsim" />
           </div>
         </Section>
 
         <Section title="Progress & feedback">
           <div className="max-w-md space-y-4">
             <Progress value={62} />
-            <ProgressBar value={62} label="Kampanja" />
-            <div className="flex items-center gap-3"><Spinner /> Duke ngarkuar…</div>
+            <ProgressBar value={62} showLabel />
+            <div className="flex items-center gap-3"><Spinner /> Duke ngarkuar...</div>
             <Skeleton className="h-6 w-full" />
           </div>
         </Section>
@@ -103,7 +97,7 @@ export default function Showcase() {
           <div className="flex flex-wrap items-center gap-6">
             <Avatar><AvatarFallback>AB</AvatarFallback></Avatar>
             <SocialButton provider="google">Vazhdo me Google</SocialButton>
-            <div className="w-80"><Stepper steps={["Llogaria", "Profili", "Interesat", "Përfundo"]} current={1} /></div>
+            <div className="w-80"><Stepper steps={["Llogaria", "Profili", "Interesat", "Perfundo"]} current={1} /></div>
           </div>
         </Section>
 
@@ -131,20 +125,24 @@ export default function Showcase() {
             <Card>
               <CardHeader>
                 <CardTitle>Card title</CardTitle>
-                <CardDescription>Një përshkrim i shkurtër.</CardDescription>
+                <CardDescription>Nje pershkrim i shkurter.</CardDescription>
               </CardHeader>
-              <CardContent>Përmbajtja kryesore e kartës.</CardContent>
+              <CardContent>Permbajtja kryesore e kartes.</CardContent>
               <CardFooter><Button size="sm">Veprim</Button></CardFooter>
             </Card>
-            <StatCard label="Donacione" value="€12,480" trend={+8.2} />
-            <CampaignGoalCard title="Shkolla në Gjakovë" raised={7200} goal={12000} />
+            <StatCard label="Donacione" value="EUR 12,480" change={{ value: "+8.2%", direction: "up" }} />
+            <CampaignGoalCard title="Shkolla ne Gjakove" raised={7200} goal={12000} />
           </div>
         </Section>
 
         <Section title="Layout helpers">
           <div className="space-y-4">
             <Breadcrumbs items={[{ label: "Kreu", href: "/" }, { label: "Kampanjat", href: "/kampanjat" }, { label: "Detajet" }]} />
-            <EmptyState title="Asgjë këtu ende" description="Provo të shtosh një kampanjë të re." action={<Button>Krijo kampanjë</Button>} />
+            <EmptyState
+              title="Asgje ketu ende"
+              description="Provo te shtosh nje kampanje te re."
+              action={{ label: "Krijo kampanje", onClick: () => {} }}
+            />
           </div>
         </Section>
       </div>

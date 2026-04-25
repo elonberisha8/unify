@@ -1,3 +1,4 @@
+// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 

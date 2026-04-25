@@ -1,0 +1,82 @@
+# ============================================================
+# UNIFY FRONTEND — CODEOWNERS
+# ============================================================
+# Si funksionon:
+#   Kur developer bën PR që prek një file,
+#   GitHub automatikisht kërkon review nga owner-i i atij file.
+#   PR nuk mund të merge pa aprovimin e owner-it.
+#
+# TODO: Zëvendëso @placeholder me GitHub username-in real.
+#       Shko te: github.com/USERNAME — aty e gjen username-in.
+# ============================================================
+
+# ── LEAD DEV (ti) — zona e mbrojtur ─────────────────────────
+# Askush nuk prek këto pa aprovimin tënd
+components/                           @elonberisha8
+tailwind.config.ts                    @elonberisha8
+next.config.js                        @elonberisha8
+package.json                          @elonberisha8
+.eslintrc.json                        @elonberisha8
+.github/                              @elonberisha8
+DEVELOPER_GUIDE.md                    @elonberisha8
+
+# ── Dev 1 — feat/homepage ────────────────────────────────────
+app/page.tsx                          @dev1-username
+
+# ── Dev 2 — feat/static-pages ───────────────────────────────
+app/rreth-nesh/                       @dev2-username
+app/kontakt/                          @dev2-username
+app/blog/                             @dev2-username
+app/kushtet/                          @dev2-username
+app/privatesia/                       @dev2-username
+app/not-found.tsx                     @dev2-username
+app/sherbimet/                        @dev2-username
+
+# ── Dev 3 — feat/listings ────────────────────────────────────
+app/shpalljet/                        @dev3-username
+app/kampanjat/page.tsx                @dev3-username
+
+# ── Dev 4 — feat/campaign-detail ────────────────────────────
+app/kampanjat/[slug]/                 @dev4-username
+app/sukses/                           @dev4-username
+
+# ── Dev 5 — feat/volunteer-detail ───────────────────────────
+app/vullnetare/                       @dev5-username
+
+# ── Dev 6 — feat/auth ────────────────────────────────────────
+app/auth/                             @dev6-username
+app/onboarding/                       @dev6-username
+
+# ── Dev 7 — feat/dashboard-home ─────────────────────────────
+app/dashboard/page.tsx                @dev7-username
+app/dashboard/transaksionet/          @dev7-username
+app/dashboard/te-ruajtura/            @dev7-username
+app/dashboard/aktiviteti/             @dev7-username
+
+# ── Dev 8 — feat/dashboard-campaigns ────────────────────────
+app/dashboard/kampanjat/              @dev8-username
+app/dashboard/shpalljet/              @dev8-username
+app/dashboard/aplikimet/              @dev8-username
+app/dashboard/behu-krijues/           @dev8-username
+app/dashboard/krijo/                  @dev8-username
+
+# ── Dev 9 — feat/dashboard-inbox ────────────────────────────
+app/dashboard/inbox/                  @dev9-username
+
+# ── Dev 10 — feat/dashboard-profile ─────────────────────────
+app/dashboard/profili/                @dev10-username
+app/dashboard/verifikimi/             @dev10-username
+app/profili/                          @dev10-username
+
+# ── Dev 11 — feat/admin-core ─────────────────────────────────
+app/admin/page.tsx                    @dev11-username
+app/admin/kampanjat/                  @dev11-username
+app/admin/vullnetare/                 @dev11-username
+app/admin/cilesimet/                  @dev11-username
+
+# ── Dev 12 — feat/admin-moderation ──────────────────────────
+app/admin/perdoruesit/                @dev12-username
+app/admin/raportimet/                 @dev12-username
+app/admin/moderim/                    @dev12-username
+app/admin/blog/                       @dev12-username
+app/admin/audit-log/                  @dev12-username

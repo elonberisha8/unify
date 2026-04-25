@@ -2,9 +2,7 @@
 import * as React from "react";
 import { MapPinIcon, ClockIcon, UsersIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "../ui/Card";
-import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
+import { Badge, Button, Card, CardContent } from "@/components/ui";
 
 export interface VolunteerCardProps {
   title: string;
@@ -27,14 +25,25 @@ export function VolunteerCard({
 }: VolunteerCardProps) {
   return (
     <Card className={cn("overflow-hidden group hover:shadow-lg transition-shadow", className)}>
-      <button onClick={onClick} className="relative w-full aspect-video overflow-hidden bg-muted block">
+      <div
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (onClick && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        className="relative w-full aspect-video overflow-hidden bg-muted block cursor-pointer"
+      >
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="w-full h-full bg-unify-cream" />
         )}
         {category && <Badge variant="secondary" className="absolute top-3 left-3">{category}</Badge>}
-      </button>
+      </div>
 
       <CardContent className="p-5 space-y-3">
         <button onClick={onClick} className="text-left w-full">
