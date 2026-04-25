@@ -1,0 +1,494 @@
+ ⚠ Found a change in next.config.js. Restarting the server to apply the changes...
+ ⚠ Invalid next.config.js options detected: 
+ ⚠     Unrecognized key(s) in object: 'serverExternalPackages'
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+ ⚠ Found a change in next.config.js. Restarting the server to apply the changes...
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\server-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\server-development\0.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\1.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\1.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⨯ Error: useUser can only be used within the <ClerkProvider /> component.
+
+Possible fixes:
+1. Ensure that the <ClerkProvider /> is correctly wrapping your application where this component is used.
+2. Check for multiple versions of the `@clerk/shared` package in your project. Use a tool like `npm ls @clerk/shared` to identify multiple versions, and update your dependencies to only rely on one.
+
+Learn more: https://clerk.com/docs/components/clerk-provider
+    at VolunteerDetailPage (./app/vullnetare/[id]/page.tsx:36:82)
+digest: "664273086"
+ ⨯ Error: useUser can only be used within the <ClerkProvider /> component.
+
+Possible fixes:
+1. Ensure that the <ClerkProvider /> is correctly wrapping your application where this component is used.
+2. Check for multiple versions of the `@clerk/shared` package in your project. Use a tool like `npm ls @clerk/shared` to identify multiple versions, and update your dependencies to only rely on one.
+
+Learn more: https://clerk.com/docs/components/clerk-provider
+    at VolunteerDetailPage (./app/vullnetare/[id]/page.tsx:36:82)
+digest: "664273086"
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ ./app/sukses/donacion/page.tsx
+Attempted import error: 'HashIcon' is not exported from '@/components/icons' (imported as 'HashIcon').
+
+Import trace for requested module:
+./app/sukses/donacion/page.tsx
+
+./app/sukses/donacion/page.tsx
+Attempted import error: 'HashIcon' is not exported from '@/components/icons' (imported as 'HashIcon').
+
+Import trace for requested module:
+./app/sukses/donacion/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+    at SuksesPage
+    at ClientPageRoot (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/client-page.js:14:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at body
+    at html
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at ReactDevOverlay (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
+    at HotReload (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:322:11)
+    at Router (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:202:11)
+    at ErrorBoundaryHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:112:9)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at AppRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:564:13)
+    at Lazy
+    at r7 (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:19155)
+    at r7 (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:19155)
+    at ServerInsertedHTMLProvider (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:24939)
+ ⨯ Internal error: Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:46775)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at ab (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:11808)
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:44769)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at ab (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:11808)
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:44769)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+digest: "292363779"
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+    at SuksesPage
+    at ClientPageRoot (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/client-page.js:14:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at InnerLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:242:11)
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at NotFoundErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
+    at NotFoundBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:347:11)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at Lazy
+    at OuterLayoutRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/layout-router.js:367:11)
+    at Lazy
+    at body
+    at html
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:73:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:81:11)
+    at ReactDevOverlay (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
+    at HotReload (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:322:11)
+    at Router (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:202:11)
+    at ErrorBoundaryHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:112:9)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:158:11)
+    at AppRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:564:13)
+    at Lazy
+    at r7 (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:19155)
+    at r7 (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:19155)
+    at ServerInsertedHTMLProvider (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:24939)
+ ⨯ Internal error: Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:46775)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at ab (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:11808)
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:44769)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at ab (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:11808)
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:44769)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at aC (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:52874)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:50095)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+    at a_ (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:49776)
+    at aj (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:53793)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42336
+    at aw (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:42822)
+digest: "292363779"
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Failed to generate static paths for /kampanjat/[slug]:
+Error [PageNotFoundError]: Cannot find module for page: /kampanjat/[slug]/page
+    at getPagePath (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\require.js:94:15)
+    at requirePage (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\require.js:99:22)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\load-components.js:103:84
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async loadComponentsImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\load-components.js:103:26)
+    at async Object.loadStaticPaths (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\dev\static-paths-worker.js:23:24) {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz'
+ ⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+digest: "1239179537"
+ ⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+digest: "3228219665"
+ ⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+digest: "1239179537"
+ ⨯ Failed to generate static paths for /vullnetare/[id]:
+Error [PageNotFoundError]: Cannot find module for page: /vullnetare/[id]/page
+    at getPagePath (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\require.js:94:15)
+    at requirePage (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\require.js:99:22)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\load-components.js:103:26)
+    at async Object.loadStaticPaths (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\dev\static-paths-worker.js:23:24) {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ TypeError: Cannot read properties of undefined (reading 'run')
+    at Object.wrap (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:36:16929)
+    at nt (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:543)
+    at lazyRenderAppPage (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\future\route-modules\app-page\module.render.js:16:16)
+    at DevServer.renderHTMLImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:631:60)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:619:105
+    at NextTracerImpl.trace (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderHTML (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:619:41)
+    at doRender (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1439:37)
+    at cacheEntry.responseCache.get.routeKind (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1496:53) {
+  page: '/sherbimet'
+}
+ ⨯ TypeError: Cannot read properties of undefined (reading 'run')
+    at Object.wrap (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:36:16929)
+    at nt (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:543)
+    at lazyRenderAppPage (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\future\route-modules\app-page\module.render.js:16:16)
+    at DevServer.renderHTMLImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:631:60)
+    at C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:619:105
+    at NextTracerImpl.trace (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderHTML (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\next-server.js:619:41)
+    at doRender (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1439:37)
+    at cacheEntry.responseCache.get.routeKind (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Projects\Unify\unify\unify-platform\node_modules\next\dist\server\base-server.js:1496:53) {
+  page: '/sherbimet'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\server-development\4.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\server-development\4.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Projects\Unify\unify\unify-platform\.next\cache\webpack\client-development\0.pack.gz'

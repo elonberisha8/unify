@@ -1,10 +1,10 @@
 // NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 "use client";
 import * as React from "react";
-import { MenuIcon, CloseIcon, SearchIcon } from "@/components/icons";
+import { usePathname } from "next/navigation";
+import { MenuIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/Button";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/Sheet";
+import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
 
 export interface NavLink {
   label: string;
@@ -26,14 +26,55 @@ export function Navbar({
   logo, links = [], onLogin, onRegister, onSearch,
   isAuthenticated, userMenu, className,
 }: NavbarProps) {
+  const pathname = usePathname();
+  const [detectedAuth, setDetectedAuth] = React.useState(false);
+  const effectiveAuthenticated = isAuthenticated ?? detectedAuth;
+  const goToLogin = onLogin ?? (() => { window.location.href = "/auth/login"; });
+  const goToRegister = onRegister ?? (() => { window.location.href = "/auth/register"; });
+  const goToDashboard = () => { window.location.href = "/dashboard"; };
+
+  React.useEffect(() => {
+    const hasAuthCookie = /(^|;\s*)(__session|__client|jwt|token|session)=/.test(document.cookie);
+    const hasAuthStorage = ["__session", "jwt", "token", "authToken", "clerk-db-jwt"].some((key) => {
+      try {
+        return Boolean(window.localStorage.getItem(key) || window.sessionStorage.getItem(key));
+      } catch {
+        return false;
+      }
+    });
+
+    setDetectedAuth(hasAuthCookie || hasAuthStorage);
+  }, []);
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   return (
     <header className={cn("sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border", className)}>
       <div className="max-w-7xl mx-auto flex items-center gap-6 px-4 md:px-6 h-16">
-        <div className="font-display text-2xl text-unify-brown">{logo ?? "Unify"}</div>
+        <a
+          href="/"
+          className="font-display text-2xl text-unify-brown transition-colors hover:text-unify-blue"
+          aria-label="Unify - Kryefaqja"
+        >
+          {logo ?? "Unify"}
+        </a>
 
         <nav className="hidden md:flex items-center gap-1 flex-1">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="px-3 py-2 text-sm font-bold text-unify-brown hover:text-unify-blue transition-colors rounded-full">
+            <a
+              key={l.href}
+              href={l.href}
+              className={cn(
+                "px-3 py-2 text-sm font-bold transition-colors rounded-full",
+                isActive(l.href)
+                  ? "bg-unify-blue text-white shadow-sm"
+                  : "text-unify-brown hover:text-unify-blue hover:bg-unify-blue/5"
+              )}
+              aria-current={isActive(l.href) ? "page" : undefined}
+            >
               {l.label}
             </a>
           ))}
@@ -45,10 +86,12 @@ export function Navbar({
               <SearchIcon className="h-4 w-4" />
             </button>
           )}
-          {isAuthenticated ? userMenu : (
+          {effectiveAuthenticated ? (
+            userMenu ?? <Button onClick={goToDashboard}>Dashboard</Button>
+          ) : (
             <>
-              {onLogin && <Button variant="ghost" onClick={onLogin}>Hyr</Button>}
-              {onRegister && <Button onClick={onRegister}>Regjistrohu</Button>}
+              <Button variant="ghost" onClick={goToLogin}>Hyr</Button>
+              <Button onClick={goToRegister}>Regjistrohu</Button>
             </>
           )}
         </div>
@@ -62,13 +105,29 @@ export function Navbar({
           <SheetContent side="right" className="w-[280px]">
             <nav className="flex flex-col gap-1 mt-6">
               {links.map((l) => (
-                <a key={l.href} href={l.href} className="px-3 py-3 text-base font-bold text-unify-brown hover:bg-muted rounded-xl">
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className={cn(
+                    "px-3 py-3 text-base font-bold rounded-xl transition-colors",
+                    isActive(l.href)
+                      ? "bg-unify-blue text-white"
+                      : "text-unify-brown hover:bg-muted"
+                  )}
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                >
                   {l.label}
                 </a>
               ))}
               <div className="mt-4 flex flex-col gap-2">
-                {onLogin && <Button variant="outline" onClick={onLogin} className="w-full">Hyr</Button>}
-                {onRegister && <Button onClick={onRegister} className="w-full">Regjistrohu</Button>}
+                {effectiveAuthenticated ? (
+                  <Button onClick={goToDashboard} className="w-full">Dashboard</Button>
+                ) : (
+                  <>
+                    <Button variant="outline" onClick={goToLogin} className="w-full">Hyr</Button>
+                    <Button onClick={goToRegister} className="w-full">Regjistrohu</Button>
+                  </>
+                )}
               </div>
             </nav>
           </SheetContent>
