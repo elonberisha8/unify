@@ -1,26 +1,73 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "../ui/Card";
-import { Button } from "../ui/Button";
 
 export interface AuthLayoutProps {
   children: React.ReactNode;
-  imageUrl?: string;
+  variant?: "login" | "register";
+  className?: string;
+  // kept for backward compat (unused)
   title?: string;
   description?: string;
-  className?: string;
+  imageUrl?: string;
 }
 
-export function AuthLayout({ children, imageUrl, title, description, className }: AuthLayoutProps) {
+export function AuthLayout({ children, variant = "login", className }: AuthLayoutProps) {
+  const isLogin = variant === "login";
+
   return (
-    <div className={cn("min-h-screen bg-background grid lg:grid-cols-2", className)}>
-      <div className="flex items-center justify-center p-6 md:p-10">{children}</div>
-      <div className="hidden lg:block relative bg-unify-brown overflow-hidden">
-        {imageUrl && <img src={imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80" />}
-        <div className="absolute inset-0 bg-gradient-to-br from-unify-brown/60 to-unify-brown/90" />
-        <div className="relative z-10 h-full flex flex-col justify-end p-12 text-white">
-          {title && <h2 className="font-display text-4xl max-w-md">{title}</h2>}
-          {description && <p className="mt-4 max-w-md opacity-90">{description}</p>}
+    <div className={cn("min-h-screen bg-[#faf7f2] flex flex-col lg:grid lg:grid-cols-[560px_1fr]", className)}>
+
+      {/* ── LEFT — blue gradient panel ─────────────────────── */}
+      <div
+        className="hidden lg:flex flex-col justify-between relative overflow-hidden"
+        style={{ background: "linear-gradient(127.5deg, #009eff 0%, #1e3fa8 100%)" }}
+      >
+        {/* decorative circle */}
+        <div className="absolute rounded-full bg-white/5"
+          style={isLogin
+            ? { width: 400, height: 400, left: 260, top: 429 }
+            : { width: 500, height: 500, left: -125, top: 354 }}
+        />
+
+        {/* main text */}
+        <div className="relative px-16 pt-20 flex-1 flex flex-col justify-center">
+          <p className="font-display font-light text-white leading-tight"
+            style={{ fontSize: 48, lineHeight: "60px" }}>
+            {isLogin
+              ? <><span>Unite, Ignite,</span><br /><span>Make it Right</span></>
+              : <><span>Bashkohu me</span><br /><span>mijëra shqiptarë</span><br /><span>që ndihmojnë!</span></>}
+          </p>
+          <p className="mt-6 text-[#bedbff] text-base leading-relaxed">
+            {isLogin
+              ? <><span>Platforma e parë shqiptare</span><br /><span>e crowdfunding dhe ndihmës vullnetare.</span></>
+              : <><span>Krijo llogarinë tënde falas dhe</span><br /><span>fillo të bësh ndryshim sot.</span></>}
+          </p>
+        </div>
+
+        {/* stats (login only) */}
+        {isLogin && (
+          <div className="relative px-16 pb-16 flex gap-10">
+            {[
+              { icon: "👥", value: "1,240+", label: "Dhurues" },
+              { icon: "📢", value: "89",     label: "Kampanja" },
+              { icon: "📈", value: "€124K",  label: "Mbledhur" },
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{s.icon}</span>
+                  <span className="font-display font-light text-white text-3xl">{s.value}</span>
+                </div>
+                <p className="text-[#bedbff] text-sm mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── RIGHT — cream form panel ───────────────────────── */}
+      <div className="flex items-center justify-center p-8 bg-[#faf7f2]">
+        <div className="w-full max-w-[448px]">
+          {children}
         </div>
       </div>
     </div>
