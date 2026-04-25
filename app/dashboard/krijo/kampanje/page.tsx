@@ -1,87 +1,72 @@
 "use client";
 
 // ============================================================
-// BRANCH: feat/dashboard-campaigns
-// FIGMA:
-//   • Hapi 1 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=58-2
-//   • Hapi 2 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=142-2
-//   • Hapi 3 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=143-2
-//   • Hapi 4 → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=144-2
+// Wizard 6-hapësh — Kampanjë Donacionesh (e avancuar)
+//   Hapi 1: Problemi
+//   Hapi 2: Storyja + Multimedia
+//   Hapi 3: Plani i Zgjidhjes
+//   Hapi 4: Buxheti
+//   Hapi 5: FAQ + Transparency
+//   Hapi 6: Preview + Publikim
 // ============================================================
 
 import * as React from "react";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { ImageUploadZone } from "@/components/dashboard";
+import { MultiImageUpload } from "@/components/dashboard";
 import {
-  Button, Input, Textarea, Label,
+  Button, Input, Textarea, Label, Badge,
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
 } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";
-import { CheckIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
+import { CheckIcon, TrashIcon, PlusIcon } from "@/components/icons";
 import { apiFetch } from "@/app/_lib/api";
 
-// ── Constants ────────────────────────────────────────────────
-
 const CATEGORIES = [
-  { label: "Humanitare", value: "COMMUNITY" },
+  { label: "Mjekësore", value: "MEDICAL" },
   { label: "Arsim", value: "EDUCATION" },
-  { label: "Shendetesia", value: "MEDICAL" },
-  { label: "Mjedis", value: "ENVIRONMENT" },
+  { label: "Emergjencë", value: "EMERGENCY" },
+  { label: "Komunitare", value: "COMMUNITY" },
   { label: "Sport", value: "SPORTS" },
+  { label: "Mjedis", value: "ENVIRONMENT" },
+  { label: "Kafshët", value: "ANIMALS" },
   { label: "Teknologji", value: "TECHNOLOGY" },
-  { label: "Emergjence", value: "EMERGENCY" },
+  { label: "Kreative", value: "CREATIVE" },
+  { label: "Tjera", value: "OTHER" },
 ];
-const LOCATIONS = ["Prishtinë", "Prizren", "Mitrovicë", "Pejë", "Ferizaj", "Gjakovë", "Gjilan", "Vushtrri", "Podujevë", "Online"];
 
-const STEP_LABELS = ["Detajet", "Fotot", "Financiare", "Preview"];
+const LOCATIONS = ["Prishtinë", "Prizren", "Mitrovicë", "Pejë", "Ferizaj", "Gjakovë", "Gjilan", "Tiranë", "Tetovë", "Shkup", "Diasporë", "Online"];
 
-interface Milestone {
-  id: string;
-  name: string;
-  target: string;
-}
+const STEP_LABELS = ["Problemi", "Storyja", "Plani", "Buxheti", "FAQ", "Preview"];
 
-// ── Custom Stepper ────────────────────────────────────────────
+interface Milestone { id: string; name: string; target: string; deadline: string }
+interface BudgetItem { id: string; label: string; amount: string }
+interface FaqItem { id: string; q: string; a: string }
+interface BudgetBreakdown { id: string; label: string; pct: string }
 
 function WizardStepper({ current }: { current: number }) {
   return (
-    <div className="flex items-center justify-between w-full">
+    <div className="flex items-center justify-between w-full overflow-x-auto pb-2">
       {STEP_LABELS.map((label, i) => {
         const done = i < current;
         const active = i === current;
         const isLast = i === STEP_LABELS.length - 1;
-
         return (
           <React.Fragment key={label}>
             <div className="flex flex-col items-center gap-2 shrink-0">
               <div
-                className={`w-11 h-11 rounded-full flex items-center justify-center font-display text-base transition-colors ${
-                  done
-                    ? "bg-green-600 text-white"
-                    : active
-                    ? "bg-unify-blue text-white"
-                    : "bg-[#dbe0eb] text-gray-500"
+                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition ${
+                  done ? "bg-green-600 text-white" : active ? "bg-unify-blue text-white" : "bg-gray-200 text-gray-500"
                 }`}
               >
-                {done ? <CheckIcon className="w-5 h-5" /> : i + 1}
+                {done ? <CheckIcon className="w-4 h-4" /> : i + 1}
               </div>
-              <span
-                className={`text-xs font-semibold whitespace-nowrap ${
-                  done ? "text-green-600" : active ? "text-unify-blue" : "text-gray-400"
-                }`}
-              >
-                {label}
-              </span>
+              <span className={`text-xs font-medium whitespace-nowrap ${
+                done ? "text-green-600" : active ? "text-unify-blue" : "text-gray-400"
+              }`}>{label}</span>
             </div>
-            {!isLast && (
-              <div
-                className={`flex-1 h-0.5 mx-2 mb-4 transition-colors ${
-                  i < current ? "bg-green-600" : "bg-[#dbe0eb]"
-                }`}
-              />
-            )}
+            {!isLast && <div className={`flex-1 h-0.5 mx-2 mb-4 transition ${i < current ? "bg-green-600" : "bg-gray-200"}`} />}
           </React.Fragment>
         );
       })}
@@ -89,43 +74,55 @@ function WizardStepper({ current }: { current: number }) {
   );
 }
 
-// ── Main component ────────────────────────────────────────────
-
 export default function KrijoKampanjePage() {
   const router = useRouter();
   const { isSignedIn, getToken } = useAuth();
-
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    category: "",
-    location: "",
-    urgent: false,
-    imageUrl: undefined as string | undefined,
-    goal: "",
-    endDate: "",
-    tip: "5",
-  });
+
+  // Hapi 1
+  const [title, setTitle] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [location, setLocation] = useState("");
+  const [problemStatement, setProblemStatement] = useState("");
+  const [targetGroup, setTargetGroup] = useState("");
+  const [urgency, setUrgency] = useState(5);
+
+  // Hapi 2
+  const [background, setBackground] = useState("");
+  const [timeline, setTimeline] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
+
+  // Hapi 3
+  const [solutionPlan, setSolutionPlan] = useState("");
+  const [breakdown, setBreakdown] = useState<BudgetBreakdown[]>([]);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const [newMilestone, setNewMilestone] = useState({ name: "", target: "" });
-  const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(null);
+  const [expectedOutcome, setExpectedOutcome] = useState("");
+  const [verificationPlan, setVerificationPlan] = useState("");
 
-  function update(field: string, value: string | boolean | undefined) {
-    setForm((f) => ({ ...f, [field]: value }));
+  // Hapi 4
+  const [targetAmount, setTargetAmount] = useState("");
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
+  const [tip, setTip] = useState("5");
+  const [endDate, setEndDate] = useState("");
+
+  // Hapi 5
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [supportingDocs, setSupportingDocs] = useState<string[]>([]);
+  const [partners, setPartners] = useState("");
+
+  function addBreakdown() {
+    setBreakdown((p) => [...p, { id: `b${Date.now()}`, label: "", pct: "" }]);
   }
-
   function addMilestone() {
-    if (!newMilestone.name.trim() || !newMilestone.target.trim()) return;
-    setMilestones((prev) => [
-      ...prev,
-      { id: `m${Date.now()}`, name: newMilestone.name, target: newMilestone.target },
-    ]);
-    setNewMilestone({ name: "", target: "" });
+    setMilestones((p) => [...p, { id: `m${Date.now()}`, name: "", target: "", deadline: "" }]);
   }
-
-  function removeMilestone(id: string) {
-    setMilestones((prev) => prev.filter((m) => m.id !== id));
+  function addBudgetItem() {
+    setBudgetItems((p) => [...p, { id: `bi${Date.now()}`, label: "", amount: "" }]);
+  }
+  function addFaq() {
+    setFaqs((p) => [...p, { id: `f${Date.now()}`, q: "", a: "" }]);
   }
 
   async function handleSubmit() {
@@ -135,420 +132,326 @@ export default function KrijoKampanjePage() {
         method: "POST",
         token,
         body: JSON.stringify({
-          title: form.title,
-          description: form.description,
-          shortDescription: form.description.slice(0, 180),
-          images: form.imageUrl && !form.imageUrl.startsWith("blob:") ? [form.imageUrl] : [],
-          targetAmount: Number(form.goal),
-          category: form.category,
-          location: form.location,
-          isUrgent: Boolean(form.urgent),
-          endsAt: form.endDate ? new Date(form.endDate).toISOString() : undefined,
-          milestones: milestones.map((milestone) => ({
-            title: milestone.name,
-            amount: Number(milestone.target),
-          })),
+          title, shortDescription,
+          description: `${problemStatement}\n\n## Storyja\n${background}\n\n## Timeline\n${timeline}\n\n## Plani\n${solutionPlan}\n\n## Rezultati i pritur\n${expectedOutcome}`,
+          category, location,
+          problemStatement, targetGroup, urgency,
+          images, videoUrl,
+          breakdown, milestones, budgetItems,
+          targetAmount: Number(targetAmount),
+          endsAt: endDate ? new Date(endDate).toISOString() : undefined,
+          tipPercent: Number(tip),
+          faqs, supportingDocs, partners,
+          isUrgent: urgency >= 8,
+          verificationPlan, expectedOutcome,
         }),
       });
-    } catch {}
-    router.push("/dashboard/kampanjat");
+      router.push("/dashboard/kampanjat?created=1");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Gabim gjatë krijimit");
+    }
   }
 
   const canProceed = [
-    form.title.trim() && form.category && form.location && form.description.trim(),
+    title.trim() && category && location && problemStatement.trim().length >= 50 && targetGroup.trim(),
+    background.trim().length >= 50 && images.length > 0,
+    solutionPlan.trim().length >= 50 && milestones.length > 0,
+    Number(targetAmount) >= 50 && budgetItems.length > 0 && endDate,
     true,
-    form.goal.trim(),
     true,
   ][step];
 
   return (
     <DashboardLayout activeKey="kampanjat">
       <div className="max-w-4xl space-y-6">
-
-        {/* Page heading */}
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Krijo Kampanjë</p>
-          <h1 className="text-xl font-display font-light text-gray-900">
-            Hapi {step + 1} nga {STEP_LABELS.length}
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Hapi {step + 1} nga {STEP_LABELS.length} — {STEP_LABELS[step]}</h1>
+          <p className="text-sm text-gray-500 mt-1">Kampanja është një projekt serioz që zgjidh problem të madh — kushtoji kohë çdo hapi.</p>
         </div>
 
-        {/* Stepper */}
         <WizardStepper current={step} />
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl p-8 space-y-6">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
 
-          {/* ── STEP 0: Detajet ─────────────────────────────── */}
+          {/* ── HAPI 1: Problemi ─────────────────────────── */}
           {step === 0 && (
             <>
-              <div>
-                <h2 className="font-display font-light text-lg text-gray-900">Informacioni Bazë</h2>
-                <div className="border-t border-gray-200 mt-3" />
-              </div>
-
-              <div className="space-y-5">
-                {/* Title */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    Titulli i Kampanjës *
-                  </Label>
-                  <Input
-                    className="bg-[#f7f7f7] border-gray-200 rounded-[14px] h-11"
-                    placeholder="Titull i qartë dhe tërheqës — p.sh. 'Ujë i Pastër për Lipjan'"
-                    value={form.title}
-                    onChange={(e) => update("title", e.target.value)}
-                  />
-                </div>
-
-                {/* Category + Location */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Kategoria *
-                    </Label>
-                    <Select value={form.category} onValueChange={(v) => update("category", v)}>
-                      <SelectTrigger className="bg-[#f7f7f7] border-gray-200 rounded-[14px] h-11">
-                        <SelectValue placeholder="Zgjidh kategorinë" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES.map((c) => (
-                          <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Lokacioni *
-                    </Label>
-                    <Select value={form.location} onValueChange={(v) => update("location", v)}>
-                      <SelectTrigger className="bg-[#f7f7f7] border-gray-200 rounded-[14px] h-11">
-                        <SelectValue placeholder="Zgjidh lokacionin" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {LOCATIONS.map((l) => (
-                          <SelectItem key={l} value={l}>{l}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    Përshkrimi i Shkurtër *
-                  </Label>
-                  <Textarea
-                    className="bg-[#f7f7f7] border-gray-200 rounded-[14px]"
-                    rows={4}
-                    placeholder="Shkruaj përshkrim të shkurtër që shpjegon qëllimin e kampanjës..."
-                    value={form.description}
-                    onChange={(e) => update("description", e.target.value)}
-                  />
-                </div>
-
-                {/* Urgent checkbox */}
-                <label className="flex items-center gap-3 bg-amber-50 rounded-[14px] px-4 py-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.urgent}
-                    onChange={(e) => update("urgent", e.target.checked)}
-                    className="w-5 h-5 rounded accent-amber-500 cursor-pointer"
-                  />
-                  <span className="text-sm font-semibold text-amber-600">🔴 Kampanja është URGJENTE</span>
-                </label>
-              </div>
-            </>
-          )}
-
-          {/* ── STEP 1: Fotot ───────────────────────────────── */}
-          {step === 1 && (
-            <>
-              <div>
-                <h2 className="font-display font-light text-lg text-gray-900">Ngarko Fotot e Fushatës</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Fotoja e parë do të jetë imazhi kryesor. Tërhiq dhe lësho skedarët ose kliko për të zgjedhur.
-                </p>
-                <div className="border-t border-gray-200 mt-3" />
-              </div>
+              <h2 className="font-bold text-lg text-gray-900">Identifikimi i Problemit</h2>
+              <p className="text-sm text-gray-500">Çfarë problem po zgjidhin? Kush preken? Sa urgjente?</p>
 
               <div className="space-y-4">
-                <ImageUploadZone
-                  value={form.imageUrl}
-                  onChange={(file) => update("imageUrl", file ? URL.createObjectURL(file) : undefined)}
-                  label="Tërhiq skedarët këtu ose klikoni për të zgjedhur"
-                  hint="PNG, JPG, WEBP · Max 5MB për foto · Max 5 foto"
-                  aspect="wide"
-                />
-
-                <div className="bg-amber-50 rounded-[14px] px-4 py-3">
-                  <p className="text-sm text-amber-600">
-                    💡 Këshillë: Fotot me dritë të mirë dhe të qarta marrin 40% më shumë donacione. Shmangi fotot e turbullta.
-                  </p>
+                <div className="space-y-1.5">
+                  <Label>Titulli i Kampanjës *</Label>
+                  <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="p.sh. Operacion urgjent për Arianitin (5 vjeç)" />
                 </div>
-              </div>
-            </>
-          )}
 
-          {/* ── STEP 2: Financiare ──────────────────────────── */}
-          {step === 2 && (
-            <>
-              <div>
-                <h2 className="font-display font-light text-lg text-gray-900">Informacioni Financiar</h2>
-                <div className="border-t border-gray-200 mt-3" />
-              </div>
+                <div className="space-y-1.5">
+                  <Label>Përshkrim i shkurtër (max 200 karaktere) *</Label>
+                  <Textarea value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} maxLength={200} rows={2} placeholder="Një fjali që përmbledh kampanjën — për kartat e listimit dhe SEO." />
+                  <span className="text-xs text-gray-400">{shortDescription.length}/200</span>
+                </div>
 
-              <div className="space-y-6">
-                {/* Goal + End date */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Shuma Target (EUR) *
-                    </Label>
-                    <Input
-                      className="bg-[#f7f7f7] border-gray-200 rounded-[10px] h-12 text-2xl font-bold text-unify-blue"
-                      type="number"
-                      placeholder="10000"
-                      value={form.goal}
-                      onChange={(e) => update("goal", e.target.value)}
-                    />
-                    <p className="text-xs text-gray-400">Min: €50 · Nuk ka maksimum</p>
+                    <Label>Kategoria *</Label>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger><SelectValue placeholder="Zgjidh" /></SelectTrigger>
+                      <SelectContent>{CATEGORIES.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Data e Përfundimit
-                    </Label>
-                    <Input
-                      className="bg-[#f7f7f7] border-gray-200 rounded-[10px] h-12"
-                      type="date"
-                      value={form.endDate}
-                      onChange={(e) => update("endDate", e.target.value)}
-                    />
-                    <p className="text-xs text-gray-400">Lër bosh nëse nuk ka afat (Pa Afat)</p>
+                    <Label>Lokacioni *</Label>
+                    <Select value={location} onValueChange={setLocation}>
+                      <SelectTrigger><SelectValue placeholder="Zgjidh qytetin" /></SelectTrigger>
+                      <SelectContent>{LOCATIONS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
+                    </Select>
                   </div>
                 </div>
 
-                {/* Tip selector */}
-                <div className="space-y-3">
-                  <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    Tip opsional për Unify (% nga çdo donacion):
-                  </Label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { value: "0", label: "0%", sub: "Asgjë" },
-                      { value: "5", label: "5%", sub: "Rekomanduar" },
-                      { value: "10", label: "10%", sub: "Shumë falë!" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => update("tip", opt.value)}
-                        className={`rounded-[14px] border-2 py-3 flex flex-col items-center transition-colors ${
-                          form.tip === opt.value
-                            ? "border-unify-blue bg-blue-50"
-                            : "border-gray-200 bg-gray-50 hover:border-gray-300"
-                        }`}
-                      >
-                        <span className={`font-display text-xl ${form.tip === opt.value ? "text-unify-blue" : "text-gray-900"}`}>
-                          {opt.label}
-                        </span>
-                        <span className="text-xs text-gray-500 mt-0.5">{opt.sub}</span>
-                      </button>
-                    ))}
-                  </div>
+                <div className="space-y-1.5">
+                  <Label>Cila është problema? * (min 50 karaktere)</Label>
+                  <Textarea value={problemStatement} onChange={(e) => setProblemStatement(e.target.value)} rows={5} placeholder="Përshkruaj qartë problemin që duhet zgjidhur. Çfarë pasoja ka? Sa kohë ka që ekziston?" />
+                  <span className="text-xs text-gray-400">{problemStatement.length} karaktere</span>
                 </div>
 
-                <div className="border-t border-gray-200" />
+                <div className="space-y-1.5">
+                  <Label>Kush preken? *</Label>
+                  <Input value={targetGroup} onChange={(e) => setTargetGroup(e.target.value)} placeholder="p.sh. Familjet me të ardhura të ulëta në komunën e Lipjanit" />
+                </div>
 
-                {/* Milestones */}
-                <div className="space-y-3">
-                  <div>
-                    <h3 className="font-display font-bold text-base text-gray-900">Milestones (opsionale)</h3>
-                    <p className="text-sm text-gray-500 mt-0.5">Ndaj kampanjën në faza me qëllime të ndërmjetme.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {milestones.map((m, i) => (
-                      <div
-                        key={m.id}
-                        className="flex items-center justify-between bg-gray-50 border-l-4 border-green-600 rounded-[10px] pl-5 pr-4 py-4"
-                      >
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Faza {i + 1} — {m.name}</p>
-                          <p className="text-xs text-gray-500">Target: €{m.target}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => removeMilestone(m.id)}
-                            className="text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded px-2 py-1 transition-colors"
-                          >
-                            Hiq Fazën
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Add milestone inline */}
-                  <div className="flex gap-2 items-end">
-                    <div className="flex-1 space-y-1">
-                      <Label className="text-xs text-gray-500">Emri i fazës</Label>
-                      <Input
-                        className="bg-gray-50 border-gray-200 rounded-[10px] h-9 text-sm"
-                        placeholder="p.sh. Materiale filtrimi"
-                        value={newMilestone.name}
-                        onChange={(e) => setNewMilestone((p) => ({ ...p, name: e.target.value }))}
-                      />
-                    </div>
-                    <div className="w-36 space-y-1">
-                      <Label className="text-xs text-gray-500">Target (€)</Label>
-                      <Input
-                        className="bg-gray-50 border-gray-200 rounded-[10px] h-9 text-sm"
-                        type="number"
-                        placeholder="3000"
-                        value={newMilestone.target}
-                        onChange={(e) => setNewMilestone((p) => ({ ...p, target: e.target.value }))}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-9 text-unify-blue border-unify-blue/30 hover:bg-blue-50 text-xs font-semibold"
-                      onClick={addMilestone}
-                      disabled={!newMilestone.name.trim() || !newMilestone.target.trim()}
-                    >
-                      <PlusIcon className="h-3.5 w-3.5 mr-1" />
-                      Shto
-                    </Button>
+                <div className="space-y-1.5">
+                  <Label>Urgjenca: <span className="font-bold text-unify-blue">{urgency}/10</span></Label>
+                  <input type="range" min={1} max={10} value={urgency} onChange={(e) => setUrgency(Number(e.target.value))} className="w-full accent-unify-blue" />
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>1 — Mund të presë</span>
+                    <span>10 — Emergjencë absolute</span>
                   </div>
                 </div>
               </div>
             </>
           )}
 
-          {/* ── STEP 3: Preview ─────────────────────────────── */}
+          {/* ── HAPI 2: Storyja ─────────────────────────── */}
+          {step === 1 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Storyja & Multimedia</h2>
+              <p className="text-sm text-gray-500">Trego sfondin, çfarë ka ndodhur, dhe sill provat. Foto/video ndihmojnë shumë.</p>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label>Sfondi i situatës * (min 50 karaktere)</Label>
+                  <Textarea value={background} onChange={(e) => setBackground(e.target.value)} rows={6} placeholder="Trego storyn — kush janë njerëzit, çfarë i ka çuar në këtë situatë, çfarë kanë provuar deri tani..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Timeline i ngjarjeve (opsionale)</Label>
+                  <Textarea value={timeline} onChange={(e) => setTimeline(e.target.value)} rows={4} placeholder="Janar 2025: Diagnostikim&#10;Mars 2025: Operacioni i parë&#10;Qershor 2025: Komplikime..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Foto * (min 1, max 10) — sa më shumë, aq më besueshme</Label>
+                  <MultiImageUpload
+                    images={images}
+                    onChange={setImages}
+                    max={10}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Video URL (YouTube/Vimeo, opsionale)</Label>
+                  <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..." />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 3: Plani ─────────────────────────── */}
+          {step === 2 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Plani i Zgjidhjes</h2>
+              <p className="text-sm text-gray-500">Si do të përdoren paratë? Çfarë rezultati pritet?</p>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label>Si do të zgjidhet problemi? * (min 50 karaktere)</Label>
+                  <Textarea value={solutionPlan} onChange={(e) => setSolutionPlan(e.target.value)} rows={5} placeholder="Trego planin konkret — hapat, kush do ta bëjë, kur..." />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Si shpërndahen paratë (% breakdown)</Label>
+                    <Button size="sm" variant="outline" onClick={addBreakdown}><PlusIcon className="h-3 w-3 mr-1" /> Shto rresht</Button>
+                  </div>
+                  {breakdown.map((b, i) => (
+                    <div key={b.id} className="flex gap-2 items-center">
+                      <Input className="flex-1" placeholder="Etiketa (p.sh. Materiale)" value={b.label} onChange={(e) => setBreakdown((p) => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))} />
+                      <Input className="w-24" type="number" placeholder="%" value={b.pct} onChange={(e) => setBreakdown((p) => p.map((x, j) => j === i ? { ...x, pct: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setBreakdown((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                  {breakdown.length > 0 && (
+                    <p className="text-xs text-gray-500">Total: {breakdown.reduce((s, x) => s + (Number(x.pct) || 0), 0)}% (duhet 100%)</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Milestones * (faza me shuma + deadline)</Label>
+                    <Button size="sm" variant="outline" onClick={addMilestone}><PlusIcon className="h-3 w-3 mr-1" /> Shto milestone</Button>
+                  </div>
+                  {milestones.map((m, i) => (
+                    <div key={m.id} className="grid grid-cols-12 gap-2 items-center">
+                      <Input className="col-span-5" placeholder="Emri i fazës" value={m.name} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, name: e.target.value } : x))} />
+                      <Input className="col-span-3" type="number" placeholder="€" value={m.target} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, target: e.target.value } : x))} />
+                      <Input className="col-span-3" type="date" value={m.deadline} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, deadline: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" className="col-span-1" onClick={() => setMilestones((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Çfarë rezultati pritet? *</Label>
+                  <Textarea value={expectedOutcome} onChange={(e) => setExpectedOutcome(e.target.value)} rows={3} placeholder="Pas 6 muajsh, X persona do të kenë akses në..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Plan verifikimi (si do të dëshmosh që paratë u përdorën mirë)</Label>
+                  <Textarea value={verificationPlan} onChange={(e) => setVerificationPlan(e.target.value)} rows={3} placeholder="Foto/video çdo muaj, raporte progresi, faturat e shpenzimeve..." />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 4: Buxheti ─────────────────────────── */}
           {step === 3 && (
             <>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-bold text-amber-600 bg-amber-100 rounded px-2 py-0.5">DRAFT</span>
-                  <h2 className="font-display font-bold text-xl text-unify-blue">Preview — Kampanja Jote</h2>
-                </div>
-                <div className="border-t border-gray-200 mt-3" />
-              </div>
+              <h2 className="font-bold text-lg text-gray-900">Buxheti i Plotë</h2>
+              <p className="text-sm text-gray-500">Sa duhen gjithsej? Detajet me shumë.</p>
 
-              <div className="space-y-6">
-                {/* Campaign preview card */}
-                <div className="flex gap-6">
-                  {/* Image placeholder */}
-                  <div
-                    className="w-72 h-48 rounded-[14px] flex-shrink-0 flex items-end p-3 overflow-hidden"
-                    style={{ background: form.imageUrl ? `url(${form.imageUrl}) center/cover` : "linear-gradient(152deg, #1e408b 0%, #009eff 100%)" }}
-                  >
-                    <span className="text-xs text-blue-200">
-                      {form.imageUrl ? "Foto kryesore" : "Foto 1 / 0"}
-                    </span>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label>Shuma totale (€) *</Label>
+                    <Input type="number" min={50} value={targetAmount} onChange={(e) => setTargetAmount(e.target.value)} placeholder="5000" />
                   </div>
-
-                  {/* Campaign info */}
-                  <div className="flex-1 space-y-2">
-                    <h3 className="font-display text-xl text-gray-900">
-                      {form.title || "Titulli i kampanjës..."}
-                    </h3>
-                    <div className="flex gap-2">
-                      {form.category && (
-                        <span className="text-xs bg-blue-50 text-unify-blue rounded-full px-2 py-0.5">{form.category}</span>
-                      )}
-                      {form.location && (
-                        <span className="text-xs bg-gray-50 text-gray-500 rounded-full px-2 py-0.5">{form.location}</span>
-                      )}
-                      {form.urgent && (
-                        <span className="text-xs bg-red-50 text-red-600 rounded-full px-2 py-0.5">🔴 Urgjente</span>
-                      )}
-                    </div>
-                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-unify-blue rounded-full" style={{ width: "0%" }} />
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>€0 / €{form.goal || "10,000"}</span>
-                      <span>{form.endDate || "Pa afat"}</span>
-                    </div>
-                    <button
-                      disabled
-                      className="w-full bg-unify-blue text-white rounded-[14px] py-2.5 text-sm font-bold opacity-70 cursor-not-allowed"
-                    >
-                      DONO TANI (i bllokuar deri në aprovim)
-                    </button>
+                  <div className="space-y-1.5">
+                    <Label>Data e përfundimit *</Label>
+                    <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200" />
-
-                {/* Pre-publish checklist */}
-                <div className="space-y-3">
-                  <h4 className="font-display font-bold text-sm text-gray-900">Lista kontrollit përpara publikimit:</h4>
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                    {[
-                      { label: "Titulli i kompletuar", done: !!form.title.trim() },
-                      { label: `Foto e ngarkuar (${form.imageUrl ? "1" : "0"} foto)`, done: !!form.imageUrl },
-                      { label: `Shuma target: €${form.goal || "—"}`, done: !!form.goal.trim() },
-                      { label: `Milestone ${milestones.length} ${milestones.length === 1 ? "fazë" : "faza"}`, done: true },
-                      { label: "Identiteti i verifikuar", done: true },
-                      { label: "Llogaria bankare e lidhur (Stripe)", done: true },
-                    ].map((item) => (
-                      <div key={item.label} className="flex items-center gap-2">
-                        <div
-                          className={`w-[18px] h-[18px] rounded flex items-center justify-center flex-shrink-0 ${
-                            item.done ? "bg-green-600" : "bg-gray-200"
-                          }`}
-                        >
-                          {item.done && <CheckIcon className="w-3 h-3 text-white" />}
-                        </div>
-                        <span className="text-sm text-gray-800">{item.label}</span>
-                      </div>
-                    ))}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Items të buxhetit *</Label>
+                    <Button size="sm" variant="outline" onClick={addBudgetItem}><PlusIcon className="h-3 w-3 mr-1" /> Shto item</Button>
                   </div>
+                  {budgetItems.map((it, i) => (
+                    <div key={it.id} className="flex gap-2 items-center">
+                      <Input className="flex-1" placeholder="p.sh. Operacioni mjekësor" value={it.label} onChange={(e) => setBudgetItems((p) => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))} />
+                      <Input className="w-32" type="number" placeholder="€" value={it.amount} onChange={(e) => setBudgetItems((p) => p.map((x, j) => j === i ? { ...x, amount: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setBudgetItems((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                  {budgetItems.length > 0 && (
+                    <p className="text-xs text-gray-500">Total items: €{budgetItems.reduce((s, x) => s + (Number(x.amount) || 0), 0).toFixed(2)} / Target: €{Number(targetAmount).toFixed(2)}</p>
+                  )}
                 </div>
 
-                <div className="bg-amber-50 rounded-[14px] px-4 py-3">
-                  <p className="text-sm text-amber-600">
-                    ⚠️ Pasi të klikoni "Publiko", kampanja shkon PENDING dhe ekipi i Unify e shqyrton brenda 24 orësh.
-                  </p>
+                <div className="space-y-1.5">
+                  <Label>Tip për Unify (opsionale)</Label>
+                  <Select value={tip} onValueChange={setTip}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">0% — Pa tip</SelectItem>
+                      <SelectItem value="5">5% — Standardi</SelectItem>
+                      <SelectItem value="10">10% — Mbështetës i Unify</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </>
           )}
-        </div>
 
-        {/* Footer buttons */}
-        <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            className="bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
-            onClick={() => step === 0 ? router.push("/dashboard/kampanjat") : setStep((s) => s - 1)}
-          >
-            {step === 0 ? "← Anullo" : "← Kthehu"}
-          </Button>
+          {/* ── HAPI 5: FAQ + Transparency ─────────────────────────── */}
+          {step === 4 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">FAQ + Dokumente Mbështetëse</h2>
+              <p className="text-sm text-gray-500">Pyetje të shpeshta + dokumente që rrisin besueshmërinë.</p>
 
-          {step < 3 ? (
-            <Button
-              className="bg-unify-blue hover:bg-unify-blue/90 text-white"
-              onClick={() => setStep((s) => s + 1)}
-            >
-              Vazhdo: {STEP_LABELS[step + 1]} →
-            </Button>
-          ) : (
-            <Button
-              className="bg-green-600 hover:bg-green-700 text-white px-6"
-              onClick={handleSubmit}
-            >
-              ✓ Publiko Kampanjën — Dërgo për Aprovim
-            </Button>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Pyetjet e shpeshta</Label>
+                    <Button size="sm" variant="outline" onClick={addFaq}><PlusIcon className="h-3 w-3 mr-1" /> Shto FAQ</Button>
+                  </div>
+                  {faqs.map((f, i) => (
+                    <div key={f.id} className="border border-gray-200 rounded-lg p-3 space-y-2">
+                      <Input placeholder="Pyetja" value={f.q} onChange={(e) => setFaqs((p) => p.map((x, j) => j === i ? { ...x, q: e.target.value } : x))} />
+                      <Textarea placeholder="Përgjigja" rows={2} value={f.a} onChange={(e) => setFaqs((p) => p.map((x, j) => j === i ? { ...x, a: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setFaqs((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /> Hiq</Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Dokumente mbështetëse (medical reports, ID, etj.)</Label>
+                  <MultiImageUpload images={supportingDocs} onChange={setSupportingDocs} max={5} />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Bashkëpunëtorë / Organizatë (opsionale)</Label>
+                  <Input value={partners} onChange={(e) => setPartners(e.target.value)} placeholder="p.sh. Caritas Kosova, Spitali UCCK..." />
+                </div>
+              </div>
+            </>
           )}
+
+          {/* ── HAPI 6: Preview ─────────────────────────── */}
+          {step === 5 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Preview & Publikim</h2>
+
+              <div className="rounded-xl border border-gray-200 overflow-hidden">
+                {images[0] && <img src={images[0]} alt="" className="w-full h-56 object-cover" />}
+                <div className="p-5 space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>{CATEGORIES.find((c) => c.value === category)?.label ?? "—"}</Badge>
+                    <Badge variant="outline">{location}</Badge>
+                    {urgency >= 8 && <Badge variant="destructive">URGJENTE ({urgency}/10)</Badge>}
+                  </div>
+                  <h3 className="text-2xl font-bold">{title || "—"}</h3>
+                  <p className="text-sm text-gray-600">{shortDescription}</p>
+                  <div className="grid grid-cols-3 gap-3 text-xs">
+                    <div><span className="text-gray-500">Target:</span> <strong>€{Number(targetAmount).toFixed(2)}</strong></div>
+                    <div><span className="text-gray-500">Items:</span> <strong>{budgetItems.length}</strong></div>
+                    <div><span className="text-gray-500">Milestones:</span> <strong>{milestones.length}</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-900">
+                ⚠️ Pas publikimit, kampanja shkon në statusin <strong>PENDING</strong> dhe pret aprovim nga admini.
+              </div>
+            </>
+          )}
+
+          {/* Footer nav */}
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+            <Button variant="outline" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}>
+              ← Mbrapa
+            </Button>
+            <div className="text-xs text-gray-400">{step + 1} / {STEP_LABELS.length}</div>
+            {step < STEP_LABELS.length - 1 ? (
+              <Button disabled={!canProceed} onClick={() => setStep((s) => s + 1)}>
+                Vazhdo →
+              </Button>
+            ) : (
+              <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
+                Publiko Kampanjën
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </DashboardLayout>
