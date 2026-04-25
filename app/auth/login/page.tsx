@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/auth
@@ -7,22 +7,42 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import { LoginForm } from "@/components/auth"
-import { AuthLayout } from "@/components/layout"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { LoginForm } from "@/components/auth";
+import { AuthLayout } from "@/components/layout";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [error, setError] = React.useState<string | undefined>();
+
+  async function handleSubmit(data: { email: string; password: string }) {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(body.message ?? "Email ose fjalëkalimi i gabuar.");
+        return;
+      }
+      router.push("/dashboard");
+    } catch {
+      setError("Ndodhi një gabim. Provo përsëri.");
+    }
+  }
+
   return (
-    <AuthLayout
-      imageUrl="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1600"
-      title="Mirë se u ktheve në Unify"
-      description="Platforma e parë për crowdfunding dhe ndihmë vullnetare për të gjithë shqiptarët."
-    >
+    <AuthLayout variant="login">
       <LoginForm
-        onSubmit={async () => { window.location.href = "/dashboard" }}
-        onGoogleLogin={() => { window.location.href = "/sso-callback" }}
-        onForgotPassword={() => { window.location.href = "/auth/forgot-password" }}
-        onRegister={() => { window.location.href = "/auth/register" }}
+        onSubmit={handleSubmit}
+        onGoogleLogin={() => router.push("/api/auth/google")}
+        onForgotPassword={() => router.push("/auth/forgot-password")}
+        onRegister={() => router.push("/auth/register")}
+        error={error}
       />
     </AuthLayout>
-  )
+  );
 }

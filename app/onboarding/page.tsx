@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/auth
@@ -10,147 +10,105 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import * as React from "react"
-import { OnboardingSteps, InterestPicker, RoleSelectionCard } from "@/components/auth"
-import { Button, Input, Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui"
-import { AuthLayout } from "@/components/layout"
-import { HandHeartIcon, HeartIcon, GiftIcon, HomeIcon, BookmarkIcon, ShieldIcon } from "@/components/icons"
+import * as React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { OnboardingSteps, InterestPicker, RoleSelectionCard, ProfileSetupForm } from "@/components/auth";
+import { AuthLayout } from "@/components/layout";
 
 const INTERESTS = [
-  { id: "medical", label: "Mjekësore", icon: <HeartIcon className="h-4 w-4" /> },
-  { id: "education", label: "Arsim", icon: <BookmarkIcon className="h-4 w-4" /> },
-  { id: "emergency", label: "Emergjencë", icon: <ShieldIcon className="h-4 w-4" /> },
-  { id: "community", label: "Komunitet", icon: <HomeIcon className="h-4 w-4" /> },
-  { id: "sports", label: "Sport", icon: <GiftIcon className="h-4 w-4" /> },
-  { id: "animals", label: "Kafshë", icon: <HeartIcon className="h-4 w-4" /> },
-  { id: "environment", label: "Mjedis", icon: <HandHeartIcon className="h-4 w-4" /> },
-]
-
-const CITIES = [
-  "Prishtinë", "Tiranë", "Prizren", "Pejë", "Gjakovë", "Ferizaj", "Mitrovicë",
-  "Gjilan", "Shkodër", "Durrës", "Elbasan", "Vlorë", "Shkup", "Tetovë",
-  "Gostivar", "Ulqin", "Podgoricë", "Diaspora (SHBA)", "Diaspora (BE)", "Diaspora (Zvicër)",
-]
+  { id: "arsim", label: "Arsim" },
+  { id: "shendetesi", label: "Shëndetësi" },
+  { id: "mjedis", label: "Mjedis" },
+  { id: "kulture", label: "Kulturë" },
+  { id: "sport", label: "Sport" },
+  { id: "teknologji", label: "Teknologji" },
+  { id: "art", label: "Art" },
+  { id: "humanitare", label: "Humanitare" },
+  { id: "rinore", label: "Rinore" },
+  { id: "femijore", label: "Fëmijëri" },
+];
 
 export default function OnboardingPage() {
-  const [step, setStep] = React.useState(0)
-  const [city, setCity] = React.useState("")
-  const [interests, setInterests] = React.useState<string[]>([])
-  const [role, setRole] = React.useState<"donor" | "creator" | "both" | "">("")
-  const [age, setAge] = React.useState("")
+  const router = useRouter();
+  const [role, setRole] = useState<"donor" | "creator" | null>(null);
+  const [interests, setInterests] = useState<string[]>([]);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
     {
-      title: "Nga je?",
-      description: "Na trego lokacionin tënd që të sugjerojmë kampanja afër teje.",
+      title: "Çfarë do të bësh në Unify?",
+      description: "Zgjedh rolin tënd kryesor",
       content: (
-        <div>
-          <Label htmlFor="city">Qyteti / Rajoni</Label>
-          <Select value={city} onValueChange={setCity}>
-            <SelectTrigger id="city" className="mt-2">
-              <SelectValue placeholder="Zgjidh qytetin tënd..." />
-            </SelectTrigger>
-            <SelectContent>
-              {CITIES.map((c) => (
-                <SelectItem key={c} value={c}>{c}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          <RoleSelectionCard
+            icon="🤝"
+            title="Donator / Vullnetar"
+            description="Mbështes kampanja dhe merr pjesë si vullnetar"
+            selected={role === "donor"}
+            onClick={() => setRole("donor")}
+          />
+          <RoleSelectionCard
+            icon="🚀"
+            title="Krijues / OJQ"
+            description="Krijo kampanja dhe shpallje për vullnetarë"
+            selected={role === "creator"}
+            onClick={() => setRole("creator")}
+          />
         </div>
       ),
     },
     {
-      title: "Çfarë të intereson?",
-      description: "Zgjidh deri në 5 kategori për të personalizuar feed-in tënd.",
+      title: "Cilat fusha të interesojnë?",
+      description: "Zgjedh deri në 5 fusha",
       content: (
         <InterestPicker
           interests={INTERESTS}
           value={interests}
           onChange={setInterests}
           max={5}
+          className="mt-4"
         />
       ),
     },
     {
-      title: "Çfarë planifikon të bësh?",
-      description: "Mund ta ndryshosh më vonë në profilin tënd.",
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <RoleSelectionCard
-            icon={<HandHeartIcon className="h-6 w-6" />}
-            title="Dhuroj ndihmë"
-            description="Dua të ndihmoj nëpërmjet donacioneve ose vullnetarizmit."
-            selected={role === "donor"}
-            onClick={() => setRole("donor")}
-          />
-          <RoleSelectionCard
-            icon={<HeartIcon className="h-6 w-6" />}
-            title="Kërkoj ndihmë"
-            description="Do të postoj kampanjë ose do aplikoj për ndihmë."
-            selected={role === "creator"}
-            onClick={() => setRole("creator")}
-          />
-          <RoleSelectionCard
-            icon={<GiftIcon className="h-6 w-6" />}
-            title="Të dyja"
-            description="Dua të ndihmoj dhe të marr ndihmë kur kam nevojë."
-            selected={role === "both"}
-            onClick={() => setRole("both")}
-          />
-        </div>
-      ),
+      title: "Plotëso profilin tënd",
+      description: "Na trego pak për veten",
+      content: <ProfileSetupForm className="mt-4" />,
     },
     {
-      title: "Pak më shumë për ty",
-      description: "Opsionale — na ndihmon për të sugjeruar kampanja më të përshtatshme.",
+      title: "Je gati!",
+      description: "Llogaria jote është konfiguruar",
       content: (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="age">Mosha (opsionale)</Label>
-            <Input
-              id="age"
-              type="number"
-              min={13}
-              max={120}
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              placeholder="P.sh. 28"
-              className="mt-2"
-            />
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Të dhënat e tua janë private dhe mbahen sipas GDPR.
-          </p>
+        <div className="mt-6 text-center space-y-3">
+          <div className="text-5xl">🎉</div>
+          <p className="text-gray-600">Mirë se erdhe në Unify! Mund të fillosh të eksplorosh kampanjat ose të krijosh të parën tënden.</p>
         </div>
       ),
     },
-  ]
+  ];
 
-  const handleNext = () => setStep((s) => Math.min(steps.length - 1, s + 1))
-  const handleBack = () => setStep((s) => Math.max(0, s - 1))
-  const handleComplete = () => { window.location.href = "/dashboard" }
-  const handleSkip = () => { window.location.href = "/dashboard" }
+  async function handleComplete() {
+    await fetch("/api/onboarding", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role, interests }),
+    });
+    router.push("/dashboard");
+  }
 
   return (
-    <AuthLayout
-      imageUrl="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600"
-      title="Le të fillojmë"
-      description="4 hapa të shpejtë për të personalizuar përvojën tënde në Unify."
-    >
-      <div className="w-full max-w-xl space-y-4">
-        <OnboardingSteps
-          steps={steps}
-          currentStep={step}
-          onNext={handleNext}
-          onBack={handleBack}
-          onComplete={handleComplete}
-        />
-        <div className="text-center">
-          <Button variant="ghost" onClick={handleSkip}>
-            Kalo për momentin
-          </Button>
-        </div>
-      </div>
+    <AuthLayout title="Konfiguro llogarinë">
+      <OnboardingSteps
+        steps={steps}
+        currentStep={currentStep}
+        onNext={() => setCurrentStep((s) => Math.min(s + 1, steps.length - 1))}
+        onBack={() => setCurrentStep((s) => Math.max(s - 1, 0))}
+        onComplete={handleComplete}
+        nextLabel="Vazhdo"
+        backLabel="Kthehu"
+        completeLabel="Fillo"
+      />
     </AuthLayout>
-  )
+  );
 }

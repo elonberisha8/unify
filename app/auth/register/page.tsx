@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/auth
@@ -7,21 +7,41 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import { RegisterForm } from "@/components/auth"
-import { AuthLayout } from "@/components/layout"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { RegisterForm } from "@/components/auth";
+import { AuthLayout } from "@/components/layout";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [error, setError] = React.useState<string | undefined>();
+
+  async function handleSubmit(data: { name: string; email: string; password: string }) {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(body.message ?? "Nuk u krijua llogaria. Provo përsëri.");
+        return;
+      }
+      router.push("/onboarding");
+    } catch {
+      setError("Ndodhi një gabim. Provo përsëri.");
+    }
+  }
+
   return (
-    <AuthLayout
-      imageUrl="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1600"
-      title="Bashkohu me Unify"
-      description="Krijo llogarinë dhe fillo të ndihmosh komunitetin ose të mbledhësh fonde për shkakun tënd."
-    >
+    <AuthLayout variant="register">
       <RegisterForm
-        onSubmit={async () => { window.location.href = "/onboarding" }}
-        onGoogleSignup={() => { window.location.href = "/sso-callback" }}
-        onLogin={() => { window.location.href = "/auth/login" }}
+        onSubmit={handleSubmit}
+        onGoogleSignup={() => router.push("/api/auth/google")}
+        onLogin={() => router.push("/auth/login")}
+        error={error}
       />
     </AuthLayout>
-  )
+  );
 }
