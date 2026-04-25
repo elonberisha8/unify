@@ -1,0 +1,40 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/components/ui/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/ui'"
+          },
+          {
+            "group": ["@/components/public/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/public'"
+          },
+          {
+            "group": ["@/components/dashboard/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/dashboard'"
+          },
+          {
+            "group": ["@/components/admin/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/admin'"
+          },
+          {
+            "group": ["@/components/auth/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/auth'"
+          },
+          {
+            "group": ["@/components/layout/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/layout'"
+          },
+          {
+            "group": ["@/components/icons/*"],
+            "message": "❌ GABIM IMPORTI: Mos importo nga skedari direkt. Përdor: import { ... } from '@/components/icons'"
+          }
+        ]
+      }
+    ]
+  }
+}

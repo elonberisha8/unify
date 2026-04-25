@@ -1,8 +1,11 @@
+"use client"
+
 // ============================================================
-// BRANCH: feat/homepage
+// BRANCH: feat/volunteer-detail
 // FIGMA:
-//   • Landing Page → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-1175
-// NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
+//   • Vullnetar — Detail → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=49-2
+//   • Vullnetar — Forma Aplikimit → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=200-2
+// NOTION: https://www.notion.so/34874891227e81f29f6fe850f597bd61
 // ============================================================
 // RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
 //   ✅ import { ... } from "@/components/ui"
@@ -14,10 +17,10 @@
 // Use ONLY components from @/components/* — never create new ones.
 // ============================================================
 
-// import { HeroSection, StatsBar, CampaignCard, CategoryCard, FAQAccordion, CallToActionSection, NewsletterSignup } from "@/components/public"
-// import { Button } from "@/components/ui"
+// import { BookmarkButton, ShareButtons, StatisticCard } from "@/components/public"
+// import { Badge, Card, CardContent, Button, Textarea } from "@/components/ui"
 // import { PublicLayout } from "@/components/layout"
 
-export default function HomePage() {
+export default function VolunteerDetailPage() {
   return null
 }
