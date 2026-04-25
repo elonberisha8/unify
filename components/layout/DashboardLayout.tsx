@@ -1,6 +1,8 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon } from "@/components/icons";
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, BellIcon, FileIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 
@@ -13,15 +15,16 @@ export interface DashboardNavItem {
 }
 
 export const DEFAULT_DASHBOARD_NAV: DashboardNavItem[] = [
-  { key: "home", label: "Dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" /> },
-  { key: "campaigns", label: "Kampanjat", icon: <MegaphoneIcon className="h-4 w-4" /> },
-  { key: "volunteer", label: "Shpalljet", icon: <HandHeartIcon className="h-4 w-4" /> },
-  { key: "inbox", label: "InboxIcon", icon: <InboxIcon className="h-4 w-4" /> },
-  { key: "bookmarks", label: "Ruajtura", icon: <BookmarkIcon className="h-4 w-4" /> },
-  { key: "transactions", label: "Transaksionet", icon: <WalletIcon className="h-4 w-4" /> },
-  { key: "applications", label: "Aplikimet", icon: <ScrollTextIcon className="h-4 w-4" /> },
-  { key: "profile", label: "Profili", icon: <UserIcon className="h-4 w-4" /> },
-  { key: "settings", label: "Cilësimet", icon: <SettingsIcon className="h-4 w-4" /> },
+  { key: "home",         label: "Dashboard",     icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
+  { key: "kampanjat",    label: "Kampanjat",      icon: <MegaphoneIcon className="h-4 w-4" />,       href: "/dashboard/kampanjat" },
+  { key: "shpalljet",    label: "Shpalljet",      icon: <HandHeartIcon className="h-4 w-4" />,        href: "/dashboard/shpalljet" },
+  { key: "inbox",        label: "Inbox",          icon: <InboxIcon className="h-4 w-4" />,            href: "/dashboard/inbox" },
+  { key: "te-ruajtura",  label: "Të ruajtura",    icon: <BookmarkIcon className="h-4 w-4" />,         href: "/dashboard/te-ruajtura" },
+  { key: "transaksionet",label: "Transaksionet",  icon: <WalletIcon className="h-4 w-4" />,           href: "/dashboard/transaksionet" },
+  { key: "aplikimet",    label: "Aplikimet",      icon: <ScrollTextIcon className="h-4 w-4" />,       href: "/dashboard/aplikimet" },
+  { key: "profili",      label: "Profili",        icon: <UserIcon className="h-4 w-4" />,             href: "/dashboard/profili" },
+  { key: "aktiviteti",   label: "Aktiviteti",     icon: <SettingsIcon className="h-4 w-4" />,         href: "/dashboard/aktiviteti" },
+  { key: "blog",         label: "Blog",           icon: <FileIcon className="h-4 w-4" />,             href: "/dashboard/blog" },
 ];
 
 export interface DashboardLayoutProps {
@@ -34,12 +37,41 @@ export interface DashboardLayoutProps {
   className?: string;
 }
 
+const MOCK_NOTIFICATIONS = [
+  { id: "n1", text: "Arta Krasniqi aplikoi për 'Mësues anglisht'", time: "2 min", read: false },
+  { id: "n2", text: "Donacion i ri: €50 për 'Ndihmo familjet'",    time: "1 orë", read: false },
+  { id: "n3", text: "Besnik Hoxha aplikoi për 'Ndihmës social'",   time: "3 orë", read: false },
+  { id: "n4", text: "Kampanja 'Bursa 2025' arriti 60% të objektivit", time: "1 ditë", read: true },
+];
+
 export function DashboardLayout({
   children, navItems = DEFAULT_DASHBOARD_NAV, activeKey, onSelect,
   user, onLogout, className,
 }: DashboardLayoutProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  function markAllRead() {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  }
+
+  function isActive(item: DashboardNavItem) {
+    if (activeKey) return activeKey === item.key;
+    if (item.href) return pathname === item.href;
+    return false;
+  }
+
   return (
     <div className={cn("min-h-screen bg-background flex", className)}>
+      {/* Click-outside overlay */}
+      {notifOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
+      )}
+
       <aside className="w-64 shrink-0 bg-white border-r border-border flex flex-col">
         <div className="p-5 border-b border-border">
           <p className="font-display text-2xl text-unify-brown">Unify</p>
@@ -48,9 +80,12 @@ export function DashboardLayout({
           {navItems.map((it) => (
             <button
               key={it.key}
-              onClick={() => onSelect?.(it.key)}
+              onClick={() => {
+                onSelect?.(it.key);
+                if (it.href) router.push(it.href);
+              }}
               className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
-                activeKey === it.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+                isActive(it) ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
               )}
             >
               {it.icon}
@@ -86,6 +121,58 @@ export function DashboardLayout({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Topbar */}
+        <header className="h-14 shrink-0 bg-white border-b border-border flex items-center justify-end px-6 gap-3">
+          <div className="relative">
+            <button
+              onClick={() => setNotifOpen((o) => !o)}
+              className="relative w-9 h-9 rounded-full hover:bg-muted flex items-center justify-center transition-colors"
+              aria-label="Njoftime"
+            >
+              <BellIcon className="h-5 w-5 text-unify-brown" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-unify-blue text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {notifOpen && (
+              <div className="absolute right-0 top-12 w-80 bg-white border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                  <span className="text-sm font-semibold text-gray-900">Njoftime</span>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllRead} className="text-xs text-unify-blue hover:underline">
+                      Shëno si të lexuara
+                    </button>
+                  )}
+                </div>
+                <div className="divide-y divide-border max-h-72 overflow-y-auto">
+                  {notifications.map((n) => (
+                    <div key={n.id} className={cn("px-4 py-3 text-sm cursor-default", !n.read && "bg-unify-blue/5")}>
+                      <div className="flex items-start gap-2.5">
+                        <span className={cn("mt-1.5 w-2 h-2 rounded-full flex-shrink-0", !n.read ? "bg-unify-blue" : "bg-transparent")} />
+                        <div>
+                          <p className="text-gray-700 leading-snug text-[13px]">{n.text}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{n.time} më parë</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-4 py-2.5 border-t border-border text-center">
+                  <button
+                    onClick={() => { router.push("/dashboard/aktiviteti"); setNotifOpen(false); }}
+                    className="text-xs text-unify-blue hover:underline"
+                  >
+                    Shiko të gjitha aktivitetet →
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </header>
+
         <main className="flex-1 p-6 md:p-8 overflow-auto">{children}</main>
       </div>
     </div>
