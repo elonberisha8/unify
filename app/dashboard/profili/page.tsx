@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-profile
@@ -6,20 +6,45 @@
 //   • Dashboard — Profili → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=85-2
 // NOTION: https://www.notion.so/34874891227e8188a4d5e1c80adc017a
 // ============================================================
-// RREGULLI: importo VETËM nga libraria — kurrë nga skedarët direkt
-//   ✅ import { ... } from "@/components/ui"
-//   ✅ import { ... } from "@/components/public"
-//   ✅ import { ... } from "@/components/layout"
-//   ❌ import { Button } from "@/components/ui/Button"  ← GABIM
-// ============================================================
-// Make everything exactly as shown in the Figma design above.
-// Use ONLY components from @/components/* — never create new ones.
-// ============================================================
 
-// import { ProfileForm, ImageUploadZone, StripeVerificationCard } from "@/components/dashboard"
-// import { Switch, Button } from "@/components/ui"
-// import { DashboardLayout } from "@/components/layout"
+import * as React from "react";
+import { ProfileForm, ImageUploadZone } from "@/components/dashboard";
+import { DashboardLayout } from "@/components/layout";
 
 export default function ProfilPage() {
-  return null
+  const [avatarUrl, setAvatarUrl] = React.useState<string | undefined>();
+
+  return (
+    <DashboardLayout activeKey="profili">
+      <div className="space-y-8 max-w-2xl">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Profili im</h1>
+          <p className="text-sm text-gray-500 mt-1">Menaxho informacionin e llogarisë tënde.</p>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-gray-700">Foto e profilit</p>
+          <ImageUploadZone
+            value={avatarUrl}
+            onChange={(file) => setAvatarUrl(file ? URL.createObjectURL(file) : undefined)}
+            label="Ngarko foto"
+            hint="JPG, PNG deri 5 MB"
+            aspect="square"
+            className="max-w-xs"
+          />
+        </div>
+
+        <ProfileForm
+          initial={{ avatarUrl }}
+          onSave={async (data) => {
+            await fetch("/api/profile", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+          }}
+        />
+      </div>
+    </DashboardLayout>
+  );
 }
