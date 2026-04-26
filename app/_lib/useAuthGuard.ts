@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * useAuthGuard — Hook i unifikuar për autentikim në frontend.
@@ -9,7 +9,7 @@
  */
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { useRouter } from "next/navigation";
 
 interface AuthGuardOptions {
@@ -82,3 +82,4 @@ export function useAuthGuard(options: AuthGuardOptions = {}): AuthGuardResult {
     getToken: getTokenSafe,
   };
 }
+

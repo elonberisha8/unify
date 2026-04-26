@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // KOMPONENTI: ConnectOnboarding
@@ -21,7 +21,7 @@
 //   import { ConnectOnboarding } from "@/components/stripe"
 //
 //   // Merr të dhënat nga Clerk:
-//   import { useUser } from "@clerk/nextjs"
+//   import { useUser } from "@/app/_lib/useAuthLocal"
 //   const { user } = useUser()
 //
 //   <ConnectOnboarding
@@ -91,3 +91,4 @@ export function ConnectOnboarding({ userId, email, onSuccess }: ConnectOnboardin
     </div>
   )
 }
+

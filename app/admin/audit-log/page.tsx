@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-moderation
@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AuditLogTable, type AuditLogEntry } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Button, Skeleton } from "@/components/ui"
@@ -60,3 +60,4 @@ export default function AdminAuditLogPage() {
     </AdminLayout>
   )
 }
+

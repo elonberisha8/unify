@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // /admin/grupet — Group Management
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { AdminLayout } from "@/components/layout";
 import { Card, CardContent, Button, Input, Badge, Skeleton, Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
 import { UsersIcon, EyeIcon, AlertTriangleIcon, SearchIcon } from "@/components/icons";
@@ -163,3 +163,4 @@ export default function AdminGroupsPage() {
     </AdminLayout>
   );
 }
+

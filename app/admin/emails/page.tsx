@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // /admin/emails — Email Center (Resend)
@@ -9,7 +9,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { AdminLayout } from "@/components/layout";
 import { Card, CardContent, Button, Input, Textarea, Label, Badge, Skeleton, Switch,
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
@@ -396,3 +396,4 @@ export default function AdminEmailsPage() {
     </AdminLayout>
   );
 }
+

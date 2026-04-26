@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-moderation
@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AdminActionMenu, AdminFilterBar, AdminTable, BlogEditor, type AdminActionMenuItem, type BlogEditorData } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Card, CardContent, Skeleton } from "@/components/ui"
@@ -262,3 +262,4 @@ function Stat({ label, value, tone }: { label: string; value: string; tone: "war
     </Card>
   )
 }
+

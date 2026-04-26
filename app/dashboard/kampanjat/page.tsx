@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-campaigns
@@ -9,7 +9,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { CampaignTable, type CampaignRow } from "@/components/dashboard";
 import { Button, Card, CardContent, Skeleton } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";
@@ -100,3 +100,4 @@ export default function DashKampanjaPage() {
     </DashboardLayout>
   );
 }
+

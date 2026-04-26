@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // Wizard 6-hapësh — Kampanjë Donacionesh (e avancuar)
@@ -12,7 +12,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { useRouter } from "next/navigation";
 import { MultiImageUpload } from "@/components/dashboard";
 import {
@@ -457,3 +457,4 @@ export default function KrijoKampanjePage() {
     </DashboardLayout>
   );
 }
+

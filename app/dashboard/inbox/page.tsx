@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-inbox
@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { useRouter } from "next/navigation";
 import { InboxSidebar, ChatWindow, type ChatMessage, type InboxThread } from "@/components/dashboard";
 import { DashboardLayout } from "@/components/layout";
@@ -460,3 +460,4 @@ export default function InboxPage() {
     </DashboardLayout>
   );
 }
+

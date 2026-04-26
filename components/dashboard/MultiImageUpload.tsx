@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { PlusIcon, TrashIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { apiFetch } from "@/app/_lib/api";
@@ -156,3 +156,4 @@ export function MultiImageUpload({ images, onChange, max = 10, className }: Mult
     </div>
   );
 }
+

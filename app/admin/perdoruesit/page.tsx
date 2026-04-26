@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-moderation
@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AdminActionMenu, AdminFilterBar, AdminTable, type AdminActionMenuItem } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import {
@@ -258,3 +258,4 @@ export default function AdminPerdoruesitPage() {
     </AdminLayout>
   )
 }
+

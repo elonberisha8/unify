@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-home
@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { CampaignCard } from "@/components/public";
 import { EmptyState, DashboardLayout } from "@/components/layout";
 import { Skeleton } from "@/components/ui";
@@ -119,3 +119,4 @@ export default function TeRuajturaPage() {
     </DashboardLayout>
   );
 }
+

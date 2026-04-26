@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-core
@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AdminSettingsCard, AdminTable, AdminToggleSwitch } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Input, Skeleton } from "@/components/ui"
@@ -163,3 +163,4 @@ export default function AdminCilesimetPage() {
     </AdminLayout>
   )
 }
+

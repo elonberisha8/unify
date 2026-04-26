@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-core
@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AdminActionMenu, AdminFilterBar, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import {
@@ -329,3 +329,4 @@ function Info({ label, value }: { label: string; value: string }) {
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // Wizard Shpallje Vullnetare — me dropdown HelpType
@@ -9,7 +9,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { useRouter } from "next/navigation";
 import { MultiImageUpload } from "@/components/dashboard";
 import {
@@ -377,3 +377,4 @@ export default function KrijoShpalljePage() {
     </DashboardLayout>
   );
 }
+

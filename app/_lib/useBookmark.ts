@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * useBookmark — Hook për bookmark toggle me API
@@ -6,7 +6,7 @@
  */
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/app/_lib/api";
 
@@ -56,3 +56,4 @@ export function useBookmark(campaignId: string | null) {
 
   return { bookmarked, toggle, loading };
 }
+

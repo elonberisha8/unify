@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // KOMPONENTI: IdentityVerification
@@ -18,7 +18,7 @@
 //   import { IdentityVerification } from "@/components/stripe"
 //
 //   // Merr userId nga Clerk:
-//   import { useUser } from "@clerk/nextjs"
+//   import { useUser } from "@/app/_lib/useAuthLocal"
 //   const { user } = useUser()
 //
 //   <IdentityVerification
@@ -87,3 +87,4 @@ export function IdentityVerification({ userId, onSuccess }: IdentityVerification
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-home
@@ -6,7 +6,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/app/_lib/useAuthLocal";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
   Button, Input, Textarea, Label,
@@ -255,3 +255,4 @@ export default function BlogPage() {
     </DashboardLayout>
   );
 }
+

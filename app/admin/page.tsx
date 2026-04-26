@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/admin-core
@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/app/_lib/useAuthLocal"
 import { AdminQuickStats, AdminStatCard, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Card, CardContent, Skeleton } from "@/components/ui"
@@ -133,3 +133,4 @@ export default function AdminDashPage() {
     </AdminLayout>
   )
 }
+

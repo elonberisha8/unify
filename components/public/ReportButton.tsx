@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Textarea, Label, Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui";
 import { FlagIcon } from "@/components/icons";
@@ -29,7 +28,6 @@ const REASONS = [
 ];
 
 export function ReportButton({ targetType, targetId, variant = "icon", size = "sm", className }: ReportButtonProps) {
-  const { isSignedIn, getToken } = useAuth();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [reason, setReason] = React.useState("");
@@ -37,8 +35,7 @@ export function ReportButton({ targetType, targetId, variant = "icon", size = "s
   const [submitting, setSubmitting] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
 
-  const hasLocalAuth = typeof window !== "undefined" && Boolean(window.localStorage.getItem("authToken"));
-  const effectivelySignedIn = Boolean(isSignedIn) || hasLocalAuth;
+  const effectivelySignedIn = typeof window !== "undefined" && Boolean(window.localStorage.getItem("authToken"));
 
   function handleClick() {
     if (!effectivelySignedIn) {
@@ -51,7 +48,7 @@ export function ReportButton({ targetType, targetId, variant = "icon", size = "s
   async function submitReport() {
     setSubmitting(true);
     try {
-      const token = await getToken().catch(() => null);
+      const token = window.localStorage.getItem("authToken");
       const reasonText = `[${REASONS.find((r) => r.value === reason)?.label ?? reason}] ${details.trim()}`;
       const path = targetType === "campaign" ? `/campaigns/${targetId}/report`
         : targetType === "volunteer" ? `/volunteers/${targetId}/report`
