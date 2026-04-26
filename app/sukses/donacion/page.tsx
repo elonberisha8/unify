@@ -7,119 +7,125 @@
 // NOTION: https://www.notion.so/34874891227e8130855afa1edb64a28b
 // ============================================================
 
-import { ShareButtons } from "@/components/public"
+import * as React from "react"
+import { SuccessHero, ShareButtons, DonorList } from "@/components/public"
 import { Button, Card, CardContent } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-import { ArrowRightIcon, CalendarIcon, CheckIcon, CreditCardIcon, FileTextIcon, HeartIcon } from "@/components/icons"
-import { PUBLIC_FOOTER, PUBLIC_NAVBAR } from "../../_lib/public-layout-config"
+import { HeartIcon, ArrowRightIcon } from "@/components/icons"
 
+const NAV_LINKS = [
+  { label: "Kampanjat", href: "/kampanjat" },
+  { label: "Vullnetare", href: "/vullnetare" },
+  { label: "Shpalljet", href: "/shpalljet" },
+  { label: "Si Funksionon", href: "/si-funksionon" },
+  { label: "Rreth Nesh", href: "/rreth-nesh" },
+  { label: "Blog", href: "/blog" },
+]
+
+// In production: read payment details via query params
 const DONATION = {
+  donorName: "Elon",
   amount: 50,
   currency: "€",
-  campaignTitle: "Ujë i Pastër — Lipjan",
+  campaignTitle: "Trajtim urgjent për Lirën (2 vjeç)",
   campaignSlug: "c1",
-  txId: "UNF-2026-8841",
-  date: "14 Prill 2026, 16:42",
-  method: "Kartë Krediti (Visa)",
+  txId: "DON-2026-04-24-A1B2C3",
+  date: "24 Prill 2026, 14:32",
 }
 
-export default function SuksesPage() {
-  const shareUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/kampanjat/${DONATION.campaignSlug}` : ""
-  const handleShare = async () => {
-    if (navigator.share) {
-      await navigator.share({ title: DONATION.campaignTitle, url: shareUrl })
-      return
-    }
+const RECENT_DONORS = [
+  { name: "Elon", amount: "€50", date: "tani" },
+  { name: "Anonim", amount: "€25", anonymous: true, date: "para 1 ore" },
+  { name: "Valbona S.", amount: "€100", date: "para 2 orëve" },
+  { name: "Diaspora NYC", amount: "€75", date: "para 3 orëve" },
+]
 
-    await navigator.clipboard.writeText(shareUrl)
-  }
+export default function SuksesPage() {
+  const shareUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/kampanjat/${DONATION.campaignSlug}`
+    : ""
 
   return (
-    <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER} mainClassName="bg-unify-cream">
-      <section className="relative overflow-hidden px-4 py-12 md:px-6 md:py-20">
-        <div className="absolute left-[18%] top-[18%] h-5 w-5 rounded-full bg-unify-blue/30" />
-        <div className="absolute right-[15%] top-[24%] h-6 w-6 rounded-full bg-[#2fb0ab]/35" />
-        <div className="absolute left-[32%] top-[12%] h-4 w-4 rounded-full bg-[#2fb0ab]/30" />
+    <PublicLayout
+      navbar={{ links: NAV_LINKS }}
+      footer={{
+        tagline: "Platforma e parë për crowdfunding dhe ndihmë vullnetare.",
+        sections: [
+          { title: "Platforma", links: [{ label: "Si Funksionon", href: "/si-funksionon" }, { label: "Rreth Nesh", href: "/rreth-nesh" }] },
+          { title: "Ligjore", links: [{ label: "Kushtet", href: "/kushtet" }, { label: "Privatësia", href: "/privatesia" }] },
+          { title: "Kontakt", links: [{ label: "Na Shkruaj", href: "/kontakt" }] },
+        ],
+        socials: [{ platform: "facebook", href: "#" }, { platform: "instagram", href: "#" }],
+      }}
+    >
+      <div className="bg-unify-cream">
+        <SuccessHero
+          title={`Faleminderit, ${DONATION.donorName}!`}
+          description={`Donacioni juaj për "${DONATION.campaignTitle}" u realizua me sukses.`}
+          amount={`${DONATION.currency}${DONATION.amount.toLocaleString()}`}
+        />
+      </div>
 
-        <Card className="relative mx-auto max-w-[600px] rounded-[32px] border-border bg-white shadow-[0_25px_50px_rgba(0,0,0,0.18)]">
-          <CardContent className="px-8 py-10 md:px-12 md:py-12">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#2fb0ab] text-white shadow-lg">
-              <CheckIcon className="h-14 w-14" />
-            </div>
-
-            <div className="mt-8 text-center">
-              <h1 className="font-display text-4xl text-unify-brown md:text-5xl">Faleminderit!</h1>
-              <p className="mx-auto mt-4 max-w-[500px] text-base leading-7 text-unify-brown/70 md:text-lg">
-                Donacioni juaj u pranua me sukses. Faleminderit që jeni pjesë e ndryshimit pozitiv!
-              </p>
-            </div>
-
-            <div className="my-9 border-t border-border" />
-
-            <dl className="space-y-5">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <HeartIcon className="h-5 w-5 text-unify-blue" />
-                  Fushatë
-                </dt>
-                <dd className="text-right font-bold text-unify-brown">{DONATION.campaignTitle}</dd>
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 space-y-8">
+        {/* Receipt */}
+        <Card>
+          <CardContent className="p-6 space-y-4">
+            <h2 className="font-display text-xl text-unify-brown">Detajet e transaksionit</h2>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Numri i transaksionit</dt>
+                <dd className="mt-1 font-mono text-unify-brown">{DONATION.txId}</dd>
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <span className="text-xl font-bold text-unify-brown">{DONATION.currency}</span>
-                  Shuma
-                </dt>
-                <dd className="font-bold text-[#2fb0ab]">
-                  {DONATION.currency}
-                  {DONATION.amount.toFixed(2)}
-                </dd>
+              <div>
+                <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Data</dt>
+                <dd className="mt-1 text-unify-brown">{DONATION.date}</dd>
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <CreditCardIcon className="h-5 w-5 text-unify-blue" />
-                  Mënyra
-                </dt>
-                <dd className="text-right font-bold text-unify-brown">{DONATION.method}</dd>
+              <div>
+                <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Shuma</dt>
+                <dd className="mt-1 font-bold text-unify-blue">{DONATION.currency}{DONATION.amount.toLocaleString()}</dd>
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <FileTextIcon className="h-5 w-5 text-unify-blue" />
-                  Referenca
-                </dt>
-                <dd className="font-bold text-unify-brown">{DONATION.txId}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <CalendarIcon className="h-5 w-5 text-unify-blue" />
-                  Data
-                </dt>
-                <dd className="text-right font-bold text-unify-brown">{DONATION.date}</dd>
+              <div>
+                <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Kampanja</dt>
+                <dd className="mt-1 text-unify-brown">{DONATION.campaignTitle}</dd>
               </div>
             </dl>
+            <p className="text-xs text-muted-foreground pt-2 border-t border-border">
+              Faturën do ta merrni me email brenda pak minutash. Nëse nuk e gjeni, kontrolloni folderin Spam.
+            </p>
+          </CardContent>
+        </Card>
 
-            <div className="my-9 border-t border-border" />
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Button
-                size="lg"
-                onClick={() => {
-                  window.location.href = `/kampanjat/${DONATION.campaignSlug}`
-                }}
-              >
-                Kthehu te Kampanja
-              </Button>
-              <Button variant="outline" size="lg" onClick={handleShare}>
-                Shpërnda <ArrowRightIcon className="h-4 w-4" />
-              </Button>
+        {/* Share + CTA */}
+        <Card>
+          <CardContent className="p-6 space-y-4">
+            <div>
+              <h2 className="font-display text-xl text-unify-brown mb-2">Ndihmoje më shumë</h2>
+              <p className="text-sm text-muted-foreground">
+                Ndaje këtë kampanjë me rrjetin tënd — çdo ndarje sjell donatorë të rinj.
+              </p>
             </div>
-
-            <div className="mt-5 flex justify-center">
-              <ShareButtons url={shareUrl} title={DONATION.campaignTitle} />
+            <ShareButtons url={shareUrl} title={DONATION.campaignTitle} />
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Button
+                className="flex-1"
+                onClick={() => { window.location.href = `/kampanjat/${DONATION.campaignSlug}` }}
+              >
+                <HeartIcon className="h-4 w-4" /> Kthehu te kampanja
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => { window.location.href = "/kampanjat" }}
+              >
+                Zbulo kampanja të tjera <ArrowRightIcon className="h-4 w-4" />
+              </Button>
             </div>
           </CardContent>
         </Card>
-      </section>
+
+        {/* Donor wall preview */}
+        <DonorList title="Donatorët e fundit për këtë kampanjë" donors={RECENT_DONORS} />
+      </div>
     </PublicLayout>
   )
 }
