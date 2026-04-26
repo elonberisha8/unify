@@ -8,58 +8,17 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import { AuthLayout } from "@/components/layout"
 import { Button, Checkbox, Input } from "@/components/ui"
 import { LockIcon, MailIcon, UserIcon } from "@/components/icons"
-import { apiFetch } from "@/app/_lib/api"
-import { normalizeUsername, validateUsername } from "@/app/_lib/username"
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const [accepted, setAccepted] = useState(false)
-  const [username, setUsername] = useState("")
-  const [usernameError, setUsernameError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setSubmitting(true)
-    setUsernameError(null)
-
-    const cleanUsername = normalizeUsername(username)
-    const validation = validateUsername(cleanUsername)
-    if (!validation.ok) {
-      setUsernameError(validation.reason)
-      setSubmitting(false)
-      return
-    }
-
-    try {
-      const result = await apiFetch<{ available: boolean; error?: string }>(`/users/username/${cleanUsername}/available`)
-      if (!result.available) {
-        setUsernameError("Ky username eshte i zene. Provo nje tjeter.")
-        setSubmitting(false)
-        return
-      }
-    } catch (error) {
-      setUsernameError(error instanceof Error ? error.message : "Nuk mund te kontrollohet username.")
-      setSubmitting(false)
-      return
-    }
-
     window.localStorage.setItem("authToken", "demo-session")
-    window.localStorage.setItem("unifyUsername", cleanUsername)
-    window.dispatchEvent(new Event("unify-auth-change"))
-    // Nëse kishte redirect (p.sh. nga aplikim shpalljeje), shko aty pas onboarding
-    const redirect = searchParams?.get("redirect")
-    if (redirect) {
-      // Onboarding e ruan dhe pastaj kthen aty
-      router.replace(`/onboarding?next=${encodeURIComponent(redirect)}`)
-    } else {
-      router.replace("/onboarding")
-    }
+    window.location.href = "/onboarding"
   }
 
   return (
@@ -92,24 +51,6 @@ export default function RegisterPage() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-bold text-gray-700">Username unik</span>
-            <span className="relative block">
-              <UserIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                required
-                value={username}
-                onChange={(event) => {
-                  setUsername(event.target.value)
-                  setUsernameError(null)
-                }}
-                placeholder="p.sh. elon_berisha"
-                className="h-14 rounded-[14px] bg-gray-50 pl-12"
-              />
-            </span>
-            {usernameError && <span className="mt-2 block text-sm text-red-600">{usernameError}</span>}
-          </label>
-
-          <label className="block">
             <span className="mb-2 block text-sm font-bold text-gray-700">Fjalëkalimi</span>
             <span className="relative block">
               <LockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
@@ -136,10 +77,10 @@ export default function RegisterPage() {
           <Button
             type="submit"
             size="lg"
-            disabled={!accepted || submitting}
+            disabled={!accepted}
             className="h-[60px] w-full rounded-[14px] bg-gradient-to-r from-unify-blue to-blue-800 shadow-lg shadow-blue-500/20"
           >
-            {submitting ? "Duke kontrolluar..." : "Regjistrohu Falas"}
+            Regjistrohu Falas
           </Button>
 
           <p className="text-center text-base text-muted-foreground">
