@@ -62,7 +62,7 @@ export default function VerifikimiPage() {
 
   if (loading) {
     return (
-      <DashboardLayout activeKey="verifikimi">
+      <DashboardLayout activeKey="profile">
         <div className="flex h-64 items-center justify-center">
           <p className="text-sm text-gray-500">Duke ngarkuar...</p>
         </div>
@@ -71,7 +71,7 @@ export default function VerifikimiPage() {
   }
 
   return (
-    <DashboardLayout activeKey="verifikimi">
+    <DashboardLayout activeKey="profile">
       <div className="max-w-lg space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Verifikimi i identitetit</h1>

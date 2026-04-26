@@ -10,40 +10,27 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { CampaignCard } from "@/components/public"
 import { PublicLayout } from "@/components/layout"
-import { Button } from "@/components/ui"
+import { Button, Skeleton } from "@/components/ui"
 import { MessageCircleIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "@/components/icons"
 import { NAV_LINKS } from "@/app/_lib/constants"
 
-// ─── Mock data ─────────────────────────────────────────────────────────────────
-const CAMPAIGNS = [
-  {
-    id: "1",
-    title: '"Siguro ujë të pastër për familjet në nevojë."',
-    description: "Ndihmë familjeve të kenë qasje në ujë të pastër çdo ditë.",
-    category: "Ushqim",
-    imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop",
-    raised: 4373, goal: 10000, daysLeft: 18, donorCount: 124,
-    creatorName: "Fondacioni Kosovës", verified: true,
-  },
-  {
-    id: "2",
-    title: '"Ndihmo me vakte ushqyese sot."',
-    description: "Sigurimi i ushqimit ditor për fëmijët dhe familjet në nevojë.",
-    category: "Edukimi",
-    imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&h=400&fit=crop",
-    raised: 5200, goal: 7000, daysLeft: 12, donorCount: 67,
-    creatorName: "Shoqata Edukimit", verified: true,
-  },
-  {
-    id: "3",
-    title: '"Fuqizo jetët nëpërmjet bujarisë suaj."',
-    description: "Bashkohuni me ne dhe ndihmo jetët e njerëzve që kanë nevojë.",
-    category: "Bamirësi",
-    imageUrl: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop",
-    raised: 27890, goal: 50000, daysLeft: 30, donorCount: 203,
-    creatorName: "Organizata Bamirëse", verified: false,
-  },
-]
+const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"
+
+interface HomeCampaign {
+  id: string
+  slug: string
+  title: string
+  description: string
+  images: string[]
+  category: string
+  location: string
+  currentAmount: number
+  targetAmount: number
+  isFeatured: boolean
+  endsAt: string | null
+  creator: { name: string; isVerified: boolean }
+  _count: { donations: number }
+}
 
 const SERVICES = [
   {
@@ -86,6 +73,34 @@ const FAQ_ITEMS = [
 export default function HomePage() {
   const router = useRouter()
   const [faqOpen, setFaqOpen] = React.useState<number>(0)
+  const [campaigns, setCampaigns] = React.useState<HomeCampaign[]>([])
+  const [campaignsLoading, setCampaignsLoading] = React.useState(true)
+  const [isFeaturedSection, setIsFeaturedSection] = React.useState(false)
+
+  React.useEffect(() => {
+    async function loadCampaigns() {
+      try {
+        // Provo featured fillimisht
+        const featRes = await fetch(`${BACKEND}/api/campaigns?featured=true&limit=3`)
+        const featData = await featRes.json()
+        if (featData.campaigns?.length > 0) {
+          setCampaigns(featData.campaigns)
+          setIsFeaturedSection(true)
+          return
+        }
+        // Fallback: kampanjat me të fundit
+        const recRes = await fetch(`${BACKEND}/api/campaigns?limit=3&sort=newest`)
+        const recData = await recRes.json()
+        setCampaigns(recData.campaigns ?? [])
+        setIsFeaturedSection(false)
+      } catch {
+        setCampaigns([])
+      } finally {
+        setCampaignsLoading(false)
+      }
+    }
+    loadCampaigns()
+  }, [])
 
   return (
     <PublicLayout
@@ -207,30 +222,71 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          3. SHKAQET TONA TË FUNDIT — Campaigns
+          3. KAMPANJAT — Featured ose të fundit
       ══════════════════════════════════════════════════════════ */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-unify-blue text-center mb-3">
-            Rastet Tona
+            {isFeaturedSection ? "Kampanjat e Zgjedhura" : "Rastet Tona"}
           </p>
           <h2 className="font-display text-4xl text-unify-brown text-center mb-12">
-            Shkaqet Tona të Fundit
+            {isFeaturedSection ? "Të Zgjedhura nga Unify" : "Shkaqet Tona të Fundit"}
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {CAMPAIGNS.map((c) => (
-              <CampaignCard
-                key={c.id}
-                {...c}
-                onDonate={() => router.push(`/kampanjat/${c.id}`)}
-                onClick={() => router.push(`/kampanjat/${c.id}`)}
-              />
-            ))}
-          </div>
+
+          {campaignsLoading ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-3 rounded-2xl overflow-hidden border border-border">
+                  <Skeleton className="h-48 w-full rounded-none" />
+                  <div className="p-5 space-y-3">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-2 w-full rounded-full" />
+                    <Skeleton className="h-9 w-full rounded-lg" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : campaigns.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {campaigns.map((c) => {
+                const daysLeft = c.endsAt
+                  ? Math.max(0, Math.ceil((new Date(c.endsAt).getTime() - Date.now()) / 86_400_000))
+                  : undefined
+                return (
+                  <CampaignCard
+                    key={c.id}
+                    id={c.id}
+                    title={c.title}
+                    description={c.description}
+                    imageUrl={c.images?.[0]}
+                    category={c.category}
+                    location={c.location}
+                    raised={c.currentAmount}
+                    goal={c.targetAmount}
+                    daysLeft={daysLeft}
+                    donorCount={c._count.donations}
+                    creatorName={c.creator.name}
+                    verified={c.creator.isVerified}
+                    featured={c.isFeatured}
+                    onDonate={() => router.push(`/kampanjat/${c.slug}`)}
+                    onClick={() => router.push(`/kampanjat/${c.slug}`)}
+                  />
+                )
+              })}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground text-sm py-12">
+              Nuk ka kampanja aktive për momentin.
+            </p>
+          )}
+
           <div className="mt-10 flex justify-center">
-            <Button variant="outline" size="lg" className="uppercase tracking-widest"
-              onClick={() => router.push("/kampanjat")}>
-              Shiko të gjitha
+            <Button
+              variant="outline" size="lg" className="uppercase tracking-widest"
+              onClick={() => router.push("/kampanjat")}
+            >
+              Shfleto të gjitha kampanjat
             </Button>
           </div>
         </div>

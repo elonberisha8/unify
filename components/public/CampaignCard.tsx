@@ -19,6 +19,7 @@ export interface CampaignCardProps {
   donorCount?: number;
   creatorName?: string;
   verified?: boolean;
+  featured?: boolean;
   bookmarked?: boolean;
   onBookmark?: () => void;
   onShare?: () => void;
@@ -29,7 +30,7 @@ export interface CampaignCardProps {
 
 export function CampaignCard({
   title, description, imageUrl, category, location, raised, goal,
-  currency = "€", daysLeft, donorCount, creatorName, verified,
+  currency = "€", daysLeft, donorCount, creatorName, verified, featured,
   bookmarked, onBookmark, onShare, onDonate, onClick, className,
 }: CampaignCardProps) {
   const pct = Math.min(100, Math.round((raised / goal) * 100));
@@ -54,7 +55,12 @@ export function CampaignCard({
         ) : (
           <div className="w-full h-full bg-unify-cream" />
         )}
-        {category && <Badge variant="primary" className="absolute top-3 left-3">{category}</Badge>}
+        {featured && (
+          <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-amber-400 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow">
+            ⭐ E Zgjedhur
+          </div>
+        )}
+        {!featured && category && <Badge variant="primary" className="absolute top-3 left-3">{category}</Badge>}
         <div className="absolute top-3 right-3 flex gap-2">
           {onBookmark && (
             <button onClick={(e) => { e.stopPropagation(); onBookmark(); }} className="h-9 w-9 rounded-full bg-white/90 flex items-center justify-center hover:bg-white">
