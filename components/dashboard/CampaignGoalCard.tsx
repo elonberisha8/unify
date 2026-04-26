@@ -9,6 +9,7 @@ import { Badge } from "../ui/Badge";
 
 export interface CampaignGoalCardProps {
   title: string;
+  image?: string | null;
   status?: "active" | "draft" | "completed" | "paused";
   raised: number;
   goal: number;
@@ -27,13 +28,18 @@ const STATUS_MAP = {
 };
 
 export function CampaignGoalCard({
-  title, status = "active", raised, goal, currency = "€",
+  title, image, status = "active", raised, goal, currency = "€",
   daysLeft, donorCount, onMenuClick, className,
 }: CampaignGoalCardProps) {
   const pct = Math.min(100, Math.round((raised / goal) * 100));
   const s = STATUS_MAP[status];
   return (
-    <Card className={cn(className)}>
+    <Card className={cn("overflow-hidden", className)}>
+      {image && (
+        <div className="h-32 w-full overflow-hidden">
+          <img src={image} alt={title} className="h-full w-full object-cover" />
+        </div>
+      )}
       <CardContent className="p-5 space-y-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">

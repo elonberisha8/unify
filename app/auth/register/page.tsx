@@ -61,6 +61,7 @@ export default function RegisterPage() {
       setLoading(false)
       return
     }
+    const username = (formData.get("username") as string).trim()
     const firstName = fullName.split(" ")[0]
     const lastName = fullName.split(" ").slice(1).join(" ") || ""
     try {
@@ -69,6 +70,7 @@ export default function RegisterPage() {
         lastName,
         emailAddress: email,
         password,
+        username,
       })
       if (result.status === "complete" && await finishSignUp(result.createdSessionId)) {
         return
@@ -201,6 +203,14 @@ export default function RegisterPage() {
             <span className="relative block">
               <UserIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
               <Input required name="name" placeholder="Elona Krasniqi" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+            </span>
+          </label>
+
+          <label className="block">
+            <span className="mb-2 block text-sm font-bold text-gray-700">Username</span>
+            <span className="relative block">
+              <UserIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <Input required name="username" placeholder="p.sh. elona_krasniqi" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
             </span>
           </label>
 

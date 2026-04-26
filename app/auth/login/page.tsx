@@ -7,9 +7,9 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useSignIn } from "@clerk/nextjs"
+import { useAuth, useSignIn } from "@clerk/nextjs"
 import { AuthLayout } from "@/components/layout"
 import { Button, Input, SocialButton } from "@/components/ui"
 import { LockIcon, MailIcon } from "@/components/icons"
@@ -27,9 +27,14 @@ function GoogleIcon() {
 
 export default function LoginPage() {
   const router = useRouter()
+  const { isSignedIn } = useAuth()
   const { signIn, setActive, isLoaded } = useSignIn()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (isSignedIn) router.replace("/dashboard")
+  }, [isSignedIn, router])
 
   const getRedirectUrl = () => {
     if (typeof window === "undefined") return "/dashboard"
@@ -39,11 +44,21 @@ export default function LoginPage() {
 
   const handleGoogle = async () => {
     if (!isLoaded) return
-    await signIn.authenticateWithRedirect({
-      strategy: "oauth_google",
-      redirectUrl: `${window.location.origin}/sso-callback`,
-      redirectUrlComplete: getRedirectUrl(),
-    })
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: getRedirectUrl(),
+      })
+    } catch (err: unknown) {
+      const clerkErr = err as { errors?: { code: string; message: string }[] }
+      const code = clerkErr.errors?.[0]?.code
+      if (code === "session_exists" || clerkErr.errors?.[0]?.message?.toLowerCase().includes("already signed in")) {
+        router.replace(getRedirectUrl())
+      } else {
+        setError(clerkErr.errors?.[0]?.message ?? "Gabim gjatë kyçjes me Google.")
+      }
+    }
   }
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {

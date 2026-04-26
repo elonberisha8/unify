@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
 import Stripe from "stripe"
 
-// Krijon Identity Verification Session për verifikimin e krijuesit
 export async function POST(req: NextRequest) {
   try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: "Jo i autentikuar" }, { status: 401 })
+    }
+
     const secretKey = process.env.STRIPE_SECRET_KEY
     if (!secretKey) {
       return NextResponse.json(
@@ -12,18 +17,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { userId } = await req.json()
-    if (!userId) {
-      return NextResponse.json({ error: "userId mungon" }, { status: 400 })
-    }
-
     const stripe = new Stripe(secretKey, {
       apiVersion: "2026-03-25.dahlia" as any,
       typescript: true,
     })
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? req.nextUrl.origin
 
-    const verificationSession = await stripe.identity.verificationSessions.create({
+    const session = await stripe.identity.verificationSessions.create({
       type: "document",
       metadata: { userId },
       options: {
@@ -37,20 +37,13 @@ export async function POST(req: NextRequest) {
       return_url: `${appUrl}/dashboard/verifikimi?identity=complete`,
     })
 
-    if (!verificationSession.url) {
+    if (!session.url) {
       return NextResponse.json({ error: "Stripe nuk ktheu URL për verifikim. Provo përsëri." }, { status: 502 })
     }
 
-    return NextResponse.json({
-      sessionId: verificationSession.id,
-      clientSecret: verificationSession.client_secret,
-      url: verificationSession.url,
-    })
+    return NextResponse.json({ url: session.url, sessionId: session.id })
   } catch (error: any) {
     console.error("Stripe Identity error:", error)
-    return NextResponse.json(
-      { error: error.message || "Gabim gjatë verifikimit" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: error.message || "Gabim gjatë hapjes së Stripe Identity" }, { status: 500 })
   }
 }

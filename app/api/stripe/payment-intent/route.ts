@@ -3,19 +3,18 @@ import { stripe } from "@/lib/stripe/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { amount, campaignId, tip, anonymous, message } = await req.json()
+    const { campaignId, amount, tip, isAnonymous, message, guestName, donorId } = await req.json()
 
-    // amount është në EUR (p.sh. 25.00)
-    // Stripe punon me cent (2500 = €25.00)
-    const amountInCents = Math.round(amount * 100)
-    const tipInCents = Math.round((tip || 0) * 100)
-    const totalInCents = amountInCents + tipInCents
+    if (!campaignId) {
+      return NextResponse.json({ error: "campaignId mungon" }, { status: 400 })
+    }
+
+    const amountInCents = Math.round(Number(amount) * 100)
+    const tipInCents    = Math.round((Number(tip) || 0) * 100)
+    const totalInCents  = amountInCents + tipInCents
 
     if (totalInCents < 50) {
-      return NextResponse.json(
-        { error: "Shuma minimale është €0.50" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Shuma minimale është €0.50" }, { status: 400 })
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -23,16 +22,17 @@ export async function POST(req: NextRequest) {
       currency: "eur",
       automatic_payment_methods: { enabled: true },
       metadata: {
-        campaignId: campaignId || "",
-        donationAmount: amountInCents.toString(),
-        tipAmount: tipInCents.toString(),
-        anonymous: anonymous ? "true" : "false",
-        message: message || "",
+        campaignId,
+        donorId:     donorId   || "guest",
+        isAnonymous: isAnonymous ? "true" : "false",
+        message:     (message  || "").slice(0, 500),
+        guestName:   guestName || "",
+        tipAmount:   tipInCents.toString(),
       },
     })
 
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret:    paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
     })
   } catch (error: any) {

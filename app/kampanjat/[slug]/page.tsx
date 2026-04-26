@@ -142,7 +142,9 @@ export default function CampaignDetailPage() {
     )
   }
 
-  const pct = Math.min(100, Math.round((campaign.currentAmount / campaign.targetAmount) * 100))
+  const rawPct = Math.min(100, (campaign.currentAmount / campaign.targetAmount) * 100)
+  const pct    = rawPct > 0 && rawPct < 1 ? 1 : Math.round(rawPct)
+  const pctLabel = rawPct >= 1 ? `${Math.round(rawPct)}%` : rawPct > 0 ? `${rawPct.toFixed(1)}%` : "0%"
   const remainingDays = daysLeft(campaign.endsAt)
   const donorCount = campaign._count?.donations ?? campaign.donations?.length ?? 0
   const recentDonors = (campaign.donations ?? []).map((donation) => ({
@@ -297,7 +299,7 @@ export default function CampaignDetailPage() {
               <div>
                 <div className="mb-2 flex items-baseline justify-between">
                   <span className="font-display text-3xl text-unify-brown">€{campaign.currentAmount.toLocaleString()}</span>
-                  <span className="text-sm text-muted-foreground">{pct}%</span>
+                  <span className="text-sm text-muted-foreground">{pctLabel}</span>
                 </div>
                 <Progress value={pct} />
                 <p className="mt-2 text-sm text-muted-foreground">nga €{campaign.targetAmount.toLocaleString()} qëllimi</p>
@@ -348,8 +350,8 @@ export default function CampaignDetailPage() {
       <DonationModal
         open={showModal}
         onOpenChange={setShowModal}
+        campaignId={campaign.id}
         campaignTitle={campaign.title}
-        onSubmit={() => router.push("/sukses/donacion")}
       />
     </PublicLayout>
   )

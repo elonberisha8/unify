@@ -1,83 +1,264 @@
-﻿"use client"
+"use client";
 
 // ============================================================
 // BRANCH: feat/dashboard-home
-// FIGMA:
-//   • Dashboard — Home → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=50-2
-// NOTION: https://www.notion.so/34874891227e81f2a6e0ec234fd70570
+// FIGMA: https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=50-2
 // ============================================================
 
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { DashboardLayout } from "@/components/layout"
-import { Button, Card, CardContent } from "@/components/ui"
-import { FileTextIcon, HandHeartIcon, MegaphoneIcon, WalletIcon } from "@/components/icons"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import {
+  LineChart, Line, BarChart, Bar, XAxis, YAxis,
+  CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
+import { StatCard, CampaignGoalCard, ActivityLogItem, CreatorCTA } from "@/components/dashboard";
+import { Card, CardContent } from "@/components/ui";
+import { DashboardLayout } from "@/components/layout";
+import { UsersIcon, TrendingUpIcon } from "@/components/icons";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { apiFetch } from "@/app/_lib/api";
 
-const STATS = [
-  { label: "Kampanja aktive", value: "3", icon: <MegaphoneIcon className="h-5 w-5" /> },
-  { label: "Shpallje vullnetare", value: "5", icon: <HandHeartIcon className="h-5 w-5" /> },
-  { label: "Transaksione", value: "€1,240", icon: <WalletIcon className="h-5 w-5" /> },
-  { label: "Artikuj blogu", value: "4", icon: <FileTextIcon className="h-5 w-5" /> },
-]
+// ── Types ────────────────────────────────────────────────────
+
+interface DashboardOverview {
+  stats: Array<{ label: string; value: string | number; change: { value: string; direction: "up" | "down" | "neutral" } }>;
+  donationTrend: Array<{ muaji: string; shuma: number }>;
+  applicationsPerListing: Array<{ shpallja: string; aplikime: number }>;
+  topDonors: Array<{ name: string; amount: string; avatar: string }>;
+  campaigns: Array<{
+    id: string; slug: string; title: string; image?: string | null;
+    status: "active" | "draft" | "completed" | "paused";
+    raised: number; goal: number; currency: string;
+    donorCount: number; daysLeft?: number;
+  }>;
+  activity: Array<{ id: string; actor: { name: string }; action: string; target: string; timestamp: string }>;
+}
+
+// ── Skeleton ─────────────────────────────────────────────────
+
+function Skeleton({ className }: { className?: string }) {
+  return <div className={`animate-pulse rounded-lg bg-gray-100 ${className ?? ""}`} />;
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div><Skeleton className="h-7 w-48" /><Skeleton className="h-4 w-64 mt-2" /></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28" />)}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Skeleton className="h-64" /><Skeleton className="h-64" />
+      </div>
+    </div>
+  );
+}
+
+// ── Component ────────────────────────────────────────────────
 
 export default function DashboardHomePage() {
-  const router = useRouter()
+  const router = useRouter();
+  const { signOut, getToken } = useAuth();
+  const { user } = useUser();
+
+  const [data, setData] = React.useState<DashboardOverview | null>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const token = await getToken();
+        const overview = await apiFetch<DashboardOverview>("/dashboard/overview", { token });
+        if (!cancelled) setData(overview);
+      } catch {
+        // nëse gabim, lë të dhënat null (shfaq empty state)
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [getToken]);
+
+  const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "Përdorues";
+
   return (
     <DashboardLayout
       activeKey="home"
-      user={{ name: "Unify User", email: "user@unify.local" }}
-      onLogout={() => router.push("/")}
+      user={{
+        name: user?.fullName ?? user?.firstName ?? "Përdorues",
+        email: user?.primaryEmailAddress?.emailAddress ?? "",
+        avatarUrl: user?.imageUrl,
+      }}
+      onLogout={() => signOut(() => router.push("/"))}
     >
       <div className="space-y-8">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-unify-blue">Dashboard</p>
-            <h1 className="mt-2 font-display text-4xl text-unify-brown">Mirë se erdhe në Unify</h1>
-            <p className="mt-2 max-w-2xl text-muted-foreground">
-              Menaxho kampanjat, shpalljet, aplikimet dhe hyr shpejt te blogu publik i platformës.
-            </p>
-          </div>
-          <Button onClick={() => router.push("/blog")}>
-            Hap Blogun
-          </Button>
+
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Mirë se erdhe, {firstName}!</h1>
+          <p className="text-sm text-gray-500 mt-1">Pamja e përgjithshme e aktivitetit tënd.</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {STATS.map((stat) => (
-            <Card key={stat.label}>
-              <CardContent className="flex items-start justify-between p-5">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-                  <p className="mt-2 font-display text-3xl text-unify-brown">{stat.value}</p>
-                </div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-unify-blue/10 text-unify-blue">
-                  {stat.icon}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="font-display text-2xl text-unify-brown">Hyrje të shpejta</h2>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Button variant="outline" onClick={() => router.push("/dashboard/krijo/kampanje")}>
-                Krijo kampanjë
-              </Button>
-              <Button variant="outline" onClick={() => router.push("/dashboard/krijo/shpallje")}>
-                Krijo shpallje
-              </Button>
-              <Button variant="outline" onClick={() => router.push("/dashboard/aplikimet")}>
-                Aplikimet
-              </Button>
-              <Button variant="outline" onClick={() => router.push("/blog")}>
-                Blog
-              </Button>
+        {loading ? (
+          <DashboardSkeleton />
+        ) : (
+          <>
+            {/* Stat cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {(data?.stats ?? []).map((s) => (
+                <StatCard key={s.label} label={s.label} value={s.value} change={s.change} />
+              ))}
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Charts row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {/* Line chart — donacione */}
+              <Card>
+                <CardContent className="pt-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <TrendingUpIcon className="h-4 w-4 text-unify-blue" />
+                    <h2 className="text-sm font-semibold text-gray-900">Donacione mujore (€)</h2>
+                  </div>
+                  {data?.donationTrend && data.donationTrend.some((d) => d.shuma > 0) ? (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <LineChart data={data.donationTrend} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f0ede4" />
+                        <XAxis dataKey="muaji" tick={{ fontSize: 12 }} />
+                        <YAxis tick={{ fontSize: 12 }} />
+                        <Tooltip formatter={(v) => [`€${v}`, "Donacione"]} />
+                        <Line type="monotone" dataKey="shuma" stroke="#009eff" strokeWidth={2} dot={{ r: 4, fill: "#009eff" }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-[200px] flex items-center justify-center text-sm text-gray-400">
+                      Nuk ka ende donacione të regjistruara.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Bar chart — aplikimet */}
+              <Card>
+                <CardContent className="pt-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <UsersIcon className="h-4 w-4 text-unify-blue" />
+                    <h2 className="text-sm font-semibold text-gray-900">Aplikimet sipas shpalljes</h2>
+                  </div>
+                  {data?.applicationsPerListing && data.applicationsPerListing.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <BarChart data={data.applicationsPerListing} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f0ede4" />
+                        <XAxis dataKey="shpallja" tick={{ fontSize: 10 }} />
+                        <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
+                        <Tooltip formatter={(v) => [v, "Aplikime"]} />
+                        <Bar dataKey="aplikime" fill="#009eff" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-[200px] flex items-center justify-center text-sm text-gray-400">
+                      Nuk ka ende shpallje vullnetare.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Campaigns + Activity + Top Donors */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+              {/* Kampanjat */}
+              <div className="lg:col-span-1 space-y-4">
+                <h2 className="text-sm font-semibold text-gray-900">Kampanjat e mia</h2>
+                {data?.campaigns && data.campaigns.length > 0 ? (
+                  <div className="space-y-3">
+                    {data.campaigns.map((c) => (
+                      <CampaignGoalCard
+                        key={c.id}
+                        title={c.title}
+                        image={c.image}
+                        status={c.status}
+                        raised={c.raised}
+                        goal={c.goal}
+                        currency={c.currency}
+                        donorCount={c.donorCount}
+                        daysLeft={c.daysLeft}
+                        onMenuClick={() => router.push(`/dashboard/kampanjat`)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400">
+                    <p>Nuk ke ende kampanja.</p>
+                    <button
+                      onClick={() => router.push("/dashboard/kampanjat/krijo")}
+                      className="mt-2 text-unify-blue font-medium hover:underline"
+                    >
+                      Krijo kampanjën e parë →
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Aktiviteti */}
+              <div className="lg:col-span-1 space-y-4">
+                <h2 className="text-sm font-semibold text-gray-900">Aktiviteti i fundit</h2>
+                {data?.activity && data.activity.length > 0 ? (
+                  <div className="space-y-2">
+                    {data.activity.map((a) => (
+                      <ActivityLogItem
+                        key={a.id}
+                        actor={a.actor}
+                        action={a.action}
+                        target={a.target}
+                        timestamp={a.timestamp}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400">
+                    Nuk ka ende aktivitet.
+                  </div>
+                )}
+              </div>
+
+              {/* Top Donors */}
+              <div className="lg:col-span-1 space-y-4">
+                <h2 className="text-sm font-semibold text-gray-900">Donatorët kryesorë</h2>
+                {data?.topDonors && data.topDonors.length > 0 ? (
+                  <div className="space-y-3">
+                    {data.topDonors.map((d, i) => (
+                      <div key={d.name} className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3">
+                        <span className="w-6 h-6 rounded-full bg-unify-blue/10 text-unify-blue text-xs font-bold flex items-center justify-center flex-shrink-0">
+                          {i + 1}
+                        </span>
+                        <div className="w-8 h-8 rounded-full bg-unify-brown/10 text-unify-brown text-xs font-bold flex items-center justify-center flex-shrink-0">
+                          {d.avatar}
+                        </div>
+                        <span className="flex-1 text-sm font-medium text-gray-800 truncate">{d.name}</span>
+                        <span className="text-sm font-bold text-unify-blue">{d.amount}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400">
+                    Nuk ka ende donatorë.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <CreatorCTA
+              title="Bëhu krijues në Unify"
+              description="Krijo kampanja, shpallje vullnetare dhe mblidh donacione — të gjitha në një vend."
+              ctaLabel="Fillo tani"
+              onCta={() => router.push("/dashboard/behu-krijues")}
+            />
+          </>
+        )}
       </div>
     </DashboardLayout>
-  )
+  );
 }

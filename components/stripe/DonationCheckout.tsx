@@ -1,42 +1,7 @@
 "use client"
 
-// ============================================================
-// KOMPONENTI: DonationCheckout
-// ============================================================
-// ÇFARË BËN:
-//   Krijon PaymentIntent te Stripe dhe shfaq formën e pagesës.
-//   Pas pagesës së suksesshme → thërret onSuccess(paymentIntentId).
-//
-// KU PËRDORET:
-//   → app/kampanjat/[slug]/page.tsx (brenda Modal-it të Donacionit)
-//   → Hapet kur useri klikon butonin "Dono Tani"
-//
-// SI E PËRDOR FRONTISTI:
-//   import { DonationCheckout } from "@/components/stripe"
-//
-//   <DonationCheckout
-//     campaignId={campaign.id}          ← ID e kampanjës nga DB/URL
-//     campaignTitle={campaign.title}    ← Titulli për t'u shfaqur
-//     amount={selectedAmount}           ← Shuma që zgjodhi useri (EUR)
-//     tip={selectedTip}                 ← Tip-i për Unify (0, 5%, 10%) default: 0
-//     anonymous={isAnonymous}           ← Toggle "Dono anonim" default: false
-//     message={donationMessage}         ← Mesazhi opsional default: ""
-//     onSuccess={(paymentIntentId) => {
-//       // Redirect te /sukses/donacion ose shfaq konfirmim
-//       router.push(`/sukses/donacion?pi=${paymentIntentId}`)
-//     }}
-//     onError={(message) => {
-//       // Shfaq toast gabimi
-//       toast.error(message)
-//     }}
-//   />
-//
-// ÇFARË NDODH PAS SUKSESIT (BACKEND):
-//   Webhook → payment_intent.succeeded → ruhet donacioni në DB automatikisht
-//   Frontend nuk duhet të bëjë gjë tjetër — vetëm redirect
-// ============================================================
-
 import { useState, useEffect } from "react"
+import { useAuth } from "@clerk/nextjs"
 import { Elements } from "@stripe/react-stripe-js"
 import { getStripe } from "@/lib/stripe/client"
 import { PaymentForm } from "./PaymentForm"
@@ -45,10 +10,11 @@ import { Spinner } from "@/components/ui"
 interface DonationCheckoutProps {
   campaignId: string
   campaignTitle: string
-  amount: number       // EUR
-  tip?: number         // EUR
+  amount: number
+  tip?: number
   anonymous?: boolean
   message?: string
+  guestName?: string
   onSuccess: (paymentIntentId: string) => void
   onError: (message: string) => void
 }
@@ -60,19 +26,33 @@ export function DonationCheckout({
   tip = 0,
   anonymous = false,
   message = "",
+  guestName = "",
   onSuccess,
   onError,
 }: DonationCheckoutProps) {
+  const { getToken, userId } = useAuth()
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const createIntent = async () => {
       try {
+        const token = await getToken()
         const res = await fetch("/api/stripe/payment-intent", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, campaignId, tip, anonymous, message }),
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            campaignId,
+            amount,
+            tip,
+            isAnonymous: anonymous,
+            message,
+            guestName,
+            donorId: userId ?? "guest",
+          }),
         })
         const data = await res.json()
         if (data.error) throw new Error(data.error)
@@ -85,7 +65,7 @@ export function DonationCheckout({
     }
 
     createIntent()
-  }, [amount, campaignId, tip, anonymous, message])
+  }, [campaignId, amount, tip, anonymous, message, guestName])
 
   if (loading) {
     return (
