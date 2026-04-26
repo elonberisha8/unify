@@ -9,7 +9,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@/app/_lib/useAuthLocal";
+import { useAuth } from "@clerk/nextjs";
 import { AdminLayout } from "@/components/layout";
 import { Card, CardContent, Button, Input, Textarea, Label, Badge, Skeleton, Switch,
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,

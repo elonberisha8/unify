@@ -20,7 +20,7 @@
 import { useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
-import { useUser } from "@/app/_lib/useAuthLocal"
+import { useUser } from "@clerk/nextjs"
 import { PublicLayout } from "@/components/layout"
 import { ShareButtons } from "@/components/public"
 import {

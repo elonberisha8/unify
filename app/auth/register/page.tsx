@@ -8,17 +8,48 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
+import { useSignUp } from "@clerk/nextjs"
 import { AuthLayout } from "@/components/layout"
 import { Button, Checkbox, Input } from "@/components/ui"
 import { LockIcon, MailIcon, UserIcon } from "@/components/icons"
 
 export default function RegisterPage() {
+  const { signUp, setActive, isLoaded } = useSignUp()
   const [accepted, setAccepted] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    window.localStorage.setItem("authToken", "demo-session")
-    window.location.href = "/onboarding"
+    if (!isLoaded) return
+    setError("")
+    setLoading(true)
+    const formData = new FormData(event.currentTarget)
+    const fullName = formData.get("name") as string
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+    const firstName = fullName.split(" ")[0]
+    const lastName = fullName.split(" ").slice(1).join(" ") || ""
+    try {
+      const result = await signUp.create({
+        firstName,
+        lastName,
+        emailAddress: email,
+        password,
+      })
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId })
+        window.location.href = "/onboarding"
+      } else {
+        // Email verification e nevojshme — ridrejtoje te onboarding
+        window.location.href = "/onboarding"
+      }
+    } catch (err: unknown) {
+      const clerkErr = err as { errors?: { message: string }[] }
+      setError(clerkErr.errors?.[0]?.message ?? "Gabim gjatë regjistrimit.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -38,7 +69,7 @@ export default function RegisterPage() {
             <span className="mb-2 block text-sm font-bold text-gray-700">Emri i Plotë</span>
             <span className="relative block">
               <UserIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input required placeholder="Elona Krasniqi" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+              <Input required name="name" placeholder="Elona Krasniqi" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
             </span>
           </label>
 
@@ -46,7 +77,7 @@ export default function RegisterPage() {
             <span className="mb-2 block text-sm font-bold text-gray-700">Email Adresa</span>
             <span className="relative block">
               <MailIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input required type="email" placeholder="emri@shembull.com" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+              <Input required name="email" type="email" placeholder="emri@shembull.com" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
             </span>
           </label>
 
@@ -54,7 +85,7 @@ export default function RegisterPage() {
             <span className="mb-2 block text-sm font-bold text-gray-700">Fjalëkalimi</span>
             <span className="relative block">
               <LockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input required type="password" minLength={8} placeholder="Min. 8 karaktere" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+              <Input required name="password" type="password" minLength={8} placeholder="Min. 8 karaktere" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
             </span>
           </label>
 
@@ -62,7 +93,7 @@ export default function RegisterPage() {
             <span className="mb-2 block text-sm font-bold text-gray-700">Konfirmo Fjalëkalimin</span>
             <span className="relative block">
               <LockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input required type="password" minLength={8} placeholder="Rifut fjalëkalimin" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
+              <Input required name="confirmPassword" type="password" minLength={8} placeholder="Rifut fjalëkalimin" className="h-14 rounded-[14px] bg-gray-50 pl-12" />
             </span>
           </label>
 
@@ -74,13 +105,15 @@ export default function RegisterPage() {
             </span>
           </label>
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
           <Button
             type="submit"
             size="lg"
-            disabled={!accepted}
+            disabled={!accepted || loading}
             className="h-[60px] w-full rounded-[14px] bg-gradient-to-r from-unify-blue to-blue-800 shadow-lg shadow-blue-500/20"
           >
-            Regjistrohu Falas
+            {loading ? "Duke u regjistruar..." : "Regjistrohu Falas"}
           </Button>
 
           <p className="text-center text-base text-muted-foreground">

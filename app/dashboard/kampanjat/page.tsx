@@ -9,7 +9,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/_lib/useAuthLocal";
+import { useAuth } from "@clerk/nextjs";
 import { CampaignTable, type CampaignRow } from "@/components/dashboard";
 import { Button, Card, CardContent, Skeleton } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";

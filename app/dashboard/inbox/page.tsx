@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@/app/_lib/useAuthLocal";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { InboxSidebar, ChatWindow, type ChatMessage, type InboxThread } from "@/components/dashboard";
 import { DashboardLayout } from "@/components/layout";

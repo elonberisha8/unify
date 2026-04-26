@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react"
-import { useAuth } from "@/app/_lib/useAuthLocal"
+import { useAuth } from "@clerk/nextjs"
 import { AuditLogTable, type AuditLogEntry } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Button, Skeleton } from "@/components/ui"

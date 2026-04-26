@@ -18,7 +18,7 @@
 //   import { IdentityVerification } from "@/components/stripe"
 //
 //   // Merr userId nga Clerk:
-//   import { useUser } from "@/app/_lib/useAuthLocal"
+//   import { useUser } from "@clerk/nextjs"
 //   const { user } = useUser()
 //
 //   <IdentityVerification

@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/app/_lib/useAuthLocal"
+import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminFilterBar, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import {

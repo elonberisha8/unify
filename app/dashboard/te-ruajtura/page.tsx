@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@/app/_lib/useAuthLocal";
+import { useAuth } from "@clerk/nextjs";
 import { CampaignCard } from "@/components/public";
 import { EmptyState, DashboardLayout } from "@/components/layout";
 import { Skeleton } from "@/components/ui";

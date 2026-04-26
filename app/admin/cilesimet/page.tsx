@@ -8,7 +8,7 @@
 // ============================================================
 
 import * as React from "react"
-import { useAuth } from "@/app/_lib/useAuthLocal"
+import { useAuth } from "@clerk/nextjs"
 import { AdminSettingsCard, AdminTable, AdminToggleSwitch } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Input, Skeleton } from "@/components/ui"

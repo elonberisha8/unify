@@ -21,7 +21,7 @@
 //   import { ConnectOnboarding } from "@/components/stripe"
 //
 //   // Merr të dhënat nga Clerk:
-//   import { useUser } from "@/app/_lib/useAuthLocal"
+//   import { useUser } from "@clerk/nextjs"
 //   const { user } = useUser()
 //
 //   <ConnectOnboarding
