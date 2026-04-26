@@ -2,10 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  experimental: {
-    // Stripe nuk bundle-ohet nga Next.js (server-side only)
-    serverComponentsExternalPackages: ["stripe"],
-  },
+  // Stripe nuk bundle-ohet nga Next.js (server-side only)
+  // Në Next.js 14.2+, kjo është top-level (jo brenda experimental)
+  serverExternalPackages: ["stripe"],
 
   images: {
     remotePatterns: [
@@ -16,6 +15,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "img.clerk.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },
