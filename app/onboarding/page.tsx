@@ -12,6 +12,8 @@
 
 import { ChangeEvent, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useUser, useAuth } from "@clerk/nextjs"
+import { apiFetch } from "@/app/_lib/api"
 import { Button, Card, CardContent, Input, Stepper, Textarea } from "@/components/ui"
 import {
   ArrowLeftIcon,
@@ -49,6 +51,8 @@ const roles = [
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const { user } = useUser()
+  const { getToken } = useAuth()
   const [current, setCurrent] = useState(0)
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [role, setRole] = useState("Donator")
@@ -62,8 +66,23 @@ export default function OnboardingPage() {
     }
   }, [profilePhoto])
 
-  const next = () => {
+  const next = async () => {
     if (current === steps.length - 1) {
+      // Ruaj userin në DB para se të shkojë te dashboard
+      try {
+        const token = await getToken()
+        await apiFetch("/users/sync", {
+          method: "POST",
+          token,
+          body: JSON.stringify({
+            name: user?.fullName || user?.firstName || "Anëtar",
+            email: user?.primaryEmailAddress?.emailAddress || "",
+            image: user?.imageUrl || null,
+          }),
+        })
+      } catch {
+        // Vazhdo edhe nëse sync dështon
+      }
       router.push("/dashboard")
       return
     }
