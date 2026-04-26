@@ -11,15 +11,7 @@ import * as React from "react"
 import { CampaignCard, SearchBar, FilterChips } from "@/components/public"
 import { Pagination, Badge, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-
-const NAV_LINKS = [
-  { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Si Funksionon", href: "/si-funksionon" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Blog", href: "/blog" },
-]
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 const CATEGORIES = [
   { label: "Të gjitha", value: "all" },

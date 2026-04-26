@@ -12,6 +12,7 @@ import { CampaignCard } from "@/components/public"
 import { PublicLayout } from "@/components/layout"
 import { Button } from "@/components/ui"
 import { MessageCircleIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "@/components/icons"
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 // ─── Mock data ─────────────────────────────────────────────────────────────────
 const CAMPAIGNS = [
@@ -79,15 +80,6 @@ const FAQ_ITEMS = [
   { question: "Ku shkojnë paratë e donacioneve të mia?", answer: "100% e donacioneve shkojnë direkt te krijuesi i kampanjës nëpërmjet Stripe. Unify nuk mban komisione — vetëm tip vullnetar nga donatori." },
   { question: "A mund të krijoj unë një kampanjë të re?",  answer: "Po — duhet të verifikoheni si Krijues nëpërmjet Stripe Identity (selfie + dokument ID). Procesi zgjat 2–3 minuta dhe pastaj mund të publikoni." },
   { question: "Si vlerësohet siguria e pagesave?",         answer: "Të gjitha pagesat processohen nëpërmjet Stripe, platformës lider botëror në pagesa të sigurta. Të dhënat tuaja bankare nuk i shohim kurrë." },
-]
-
-const NAV_LINKS = [
-  { label: "Kryefaqja",         href: "/" },
-  { label: "Kampanjat",         href: "/kampanjat" },
-  { label: "Ndihmë Vullnetare", href: "/vullnetare" },
-  { label: "Si Funksionon",     href: "/sherbimet" },
-  { label: "Blog",              href: "/blog" },
-  { label: "Kontakt",           href: "/kontakt" },
 ]
 
 // ─── Faqja ─────────────────────────────────────────────────────────────────────

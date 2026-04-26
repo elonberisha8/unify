@@ -20,7 +20,7 @@
 import { useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
-import { useUser } from "@clerk/nextjs"
+import { useUser } from "@/app/_lib/useAuthLocal"
 import { PublicLayout } from "@/components/layout"
 import { ShareButtons } from "@/components/public"
 import {
@@ -39,16 +39,9 @@ import {
   Textarea,
 } from "@/components/ui"
 import { CalendarIcon, ClockIcon, UsersIcon, CheckIcon, BadgeCheckIcon, ShareIcon, MapPinIcon } from "@/components/icons"
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 // ── Konstante statike jashtë komponentit ──────────────────────────────────────
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Sherbimet", href: "/sherbimet" },
-  { label: "Blog", href: "/blog" },
-  { label: "Kontakt", href: "/kontakt" },
-]
 
 const FOOTER_SECTIONS = [
   {

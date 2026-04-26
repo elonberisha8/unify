@@ -18,15 +18,7 @@ import { PublicLayout } from "@/components/layout"
 import {
   HeartIcon, MapPinIcon, CalendarIcon, UsersIcon, CheckIcon, FlagIcon,
 } from "@/components/icons"
-
-const NAV_LINKS = [
-  { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Si Funksionon", href: "/si-funksionon" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Blog", href: "/blog" },
-]
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 // Mock data — in production: fetch by params.slug from API
 const CAMPAIGN = {

@@ -12,15 +12,7 @@ import { SuccessHero, ShareButtons, DonorList } from "@/components/public"
 import { Button, Card, CardContent } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
 import { HeartIcon, ArrowRightIcon } from "@/components/icons"
-
-const NAV_LINKS = [
-  { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Si Funksionon", href: "/si-funksionon" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Blog", href: "/blog" },
-]
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 // In production: read payment details via query params
 const DONATION = {

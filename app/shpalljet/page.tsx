@@ -12,15 +12,7 @@ import * as React from "react"
 import { CampaignCard, VolunteerCard, SearchBar, FilterChips } from "@/components/public"
 import { Tabs, TabsList, TabsTrigger, TabsContent, Pagination, Badge } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-
-const NAV_LINKS = [
-  { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Si Funksionon", href: "/si-funksionon" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Blog", href: "/blog" },
-]
+import { NAV_LINKS } from "@/app/_lib/constants"
 
 const CATEGORIES = [
   { label: "Të gjitha", value: "all" },
