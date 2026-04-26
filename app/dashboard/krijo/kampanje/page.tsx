@@ -36,7 +36,134 @@ const CATEGORIES = [
   { label: "Tjera", value: "OTHER" },
 ];
 
-const LOCATIONS = ["Prishtinë", "Prizren", "Mitrovicë", "Pejë", "Ferizaj", "Gjakovë", "Gjilan", "Tiranë", "Tetovë", "Shkup", "Diasporë", "Online"];
+// ── Të gjitha komunat + qytetet kryesore të Kosovës ─────────────
+const KOSOVO_LOCATIONS = [
+  // Qytetet kryesore
+  "Prishtinë",
+  "Prizren",
+  "Pejë",
+  "Mitrovicë",
+  "Ferizaj",
+  "Gjakovë",
+  "Gjilan",
+  // Komunat e tjera
+  "Vushtrri",
+  "Suharekë",
+  "Rahovec",
+  "Lipjan",
+  "Podujevë",
+  "Istog",
+  "Klinë",
+  "Skënderaj",
+  "Drenas",
+  "Deçan",
+  "Malishevë",
+  "Dragash",
+  "Kaçanik",
+  "Shtime",
+  "Fushë Kosovë",
+  "Obiliq",
+  "Novo Bërdë",
+  "Kamenicë",
+  "Vitia",
+  "Leposaviq",
+  "Zubin Potok",
+  "Zveçan",
+  "Shtërpcë",
+  "Graçanicë",
+  "Ranillug",
+  "Partesh",
+  "Kllokot",
+  "Mamushë",
+  "Hani i Elezit",
+  "Junik",
+  "Mitrovica e Veriut",
+  // Jashtë Kosovës
+  "Diasporë",
+  "Online",
+  "Jashtë Kosovës",
+];
+
+// ── Combobox për lokacion ─────────────────────────────────────
+function LocationCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState(value);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Sync input when value is set externally
+  React.useEffect(() => { setQuery(value); }, [value]);
+
+  // Close on outside click
+  React.useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        // if user typed something but didn't pick, keep it as custom
+        if (query.trim() && query !== value) onChange(query.trim());
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [query, value, onChange]);
+
+  const filtered = KOSOVO_LOCATIONS.filter((l) =>
+    l.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const showCustom =
+    query.trim().length > 0 &&
+    !KOSOVO_LOCATIONS.some((l) => l.toLowerCase() === query.trim().toLowerCase());
+
+  function select(loc: string) {
+    onChange(loc);
+    setQuery(loc);
+    setOpen(false);
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      <input
+        type="text"
+        value={query}
+        placeholder="Kërko qytetin ose shtyp vetë..."
+        className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        onFocus={() => setOpen(true)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setOpen(true);
+          if (e.target.value === "") onChange("");
+        }}
+      />
+      {open && (filtered.length > 0 || showCustom) && (
+        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+          {filtered.map((loc) => (
+            <button
+              key={loc}
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); select(loc); }}
+              className={`flex w-full items-center px-3 py-2 text-sm hover:bg-unify-blue/5 text-left ${
+                value === loc ? "font-semibold text-unify-blue bg-unify-blue/5" : "text-gray-800"
+              }`}
+            >
+              {value === loc && <CheckIcon className="mr-2 h-3.5 w-3.5 shrink-0 text-unify-blue" />}
+              <span className={value === loc ? "" : "ml-5"}>{loc}</span>
+            </button>
+          ))}
+          {showCustom && (
+            <button
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); select(query.trim()); }}
+              className="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2.5 text-sm text-unify-blue hover:bg-unify-blue/5 text-left"
+            >
+              <PlusIcon className="h-3.5 w-3.5 shrink-0" />
+              Përdor <span className="font-semibold">&quot;{query.trim()}&quot;</span>
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const STEP_LABELS = ["Problemi", "Storyja", "Plani", "Buxheti", "FAQ", "Preview"];
 const URGENCY_LABELS: Record<number, string> = {
@@ -175,7 +302,7 @@ export default function KrijoKampanjePage() {
   ][step];
 
   return (
-    <DashboardLayout activeKey="kampanjat">
+    <DashboardLayout activeKey="campaigns">
       <div className="max-w-4xl space-y-6">
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Krijo Kampanjë</p>
@@ -215,10 +342,7 @@ export default function KrijoKampanjePage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>Lokacioni *</Label>
-                    <Select value={location} onValueChange={setLocation}>
-                      <SelectTrigger><SelectValue placeholder="Zgjidh qytetin" /></SelectTrigger>
-                      <SelectContent>{LOCATIONS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
-                    </Select>
+                    <LocationCombobox value={location} onChange={setLocation} />
                   </div>
                 </div>
 
