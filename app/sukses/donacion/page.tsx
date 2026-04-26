@@ -8,6 +8,7 @@ import { PublicLayout } from "@/components/layout"
 import { HeartIcon, ArrowRightIcon } from "@/components/icons"
 import { NAV_LINKS } from "@/app/_lib/constants"
 import { useUser } from "@clerk/nextjs"
+import { formatCurrency } from "@/lib/format"
 
 export default function SuksesPage() {
   const router       = useRouter()
@@ -45,7 +46,7 @@ export default function SuksesPage() {
         <SuccessHero
           title={`Faleminderit, ${donorName}!`}
           description={`Donacioni juaj për "${title}" u realizua me sukses.`}
-          amount={`€${Number(amount).toLocaleString("sq-AL")}`}
+          amount={formatCurrency(Number(amount))}
         />
       </div>
 
@@ -65,7 +66,7 @@ export default function SuksesPage() {
               </div>
               <div>
                 <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Shuma</dt>
-                <dd className="mt-1 font-bold text-unify-blue">€{Number(amount).toLocaleString("sq-AL")}</dd>
+                <dd className="mt-1 font-bold text-unify-blue">{formatCurrency(Number(amount))}</dd>
               </div>
               <div>
                 <dt className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Kampanja</dt>

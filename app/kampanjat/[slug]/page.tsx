@@ -22,6 +22,7 @@ import { PublicLayout } from "@/components/layout"
 import { CalendarIcon, CheckIcon, FlagIcon, HeartIcon, MapPinIcon, UsersIcon } from "@/components/icons"
 import { NAV_LINKS } from "@/app/_lib/constants"
 import { apiFetch, type Campaign } from "@/app/_lib/api"
+import { formatCurrency } from "@/lib/format"
 
 const CATEGORY_LABELS: Record<string, string> = {
   MEDICAL: "Mjekësore",
@@ -149,7 +150,7 @@ export default function CampaignDetailPage() {
   const donorCount = campaign._count?.donations ?? campaign.donations?.length ?? 0
   const recentDonors = (campaign.donations ?? []).map((donation) => ({
     name: donation.isAnonymous ? "Anonim" : donation.donor?.name ?? donation.guestName ?? "Anonim",
-    amount: `€${donation.amount.toLocaleString()}`,
+    amount: formatCurrency(donation.amount),
     avatar: donation.donor?.image ?? undefined,
     anonymous: donation.isAnonymous,
     date: formatDate(donation.createdAt),
@@ -232,7 +233,7 @@ export default function CampaignDetailPage() {
                           <div className="flex-1 pt-1">
                             <div className="flex items-center justify-between gap-3">
                               <p className="font-bold text-unify-brown">{milestone.title}</p>
-                              <span className="text-sm text-muted-foreground">€{milestone.amount.toLocaleString()}</span>
+                              <span className="text-sm text-muted-foreground">{formatCurrency(milestone.amount)}</span>
                             </div>
                             {milestone.description && <p className="mt-1 text-sm text-muted-foreground">{milestone.description}</p>}
                           </div>
@@ -298,11 +299,11 @@ export default function CampaignDetailPage() {
             <div className="space-y-5 rounded-3xl border border-border bg-white p-6 shadow-sm">
               <div>
                 <div className="mb-2 flex items-baseline justify-between">
-                  <span className="font-display text-3xl text-unify-brown">€{campaign.currentAmount.toLocaleString()}</span>
+                  <span className="font-display text-3xl text-unify-brown">{formatCurrency(campaign.currentAmount)}</span>
                   <span className="text-sm text-muted-foreground">{pctLabel}</span>
                 </div>
                 <Progress value={pct} />
-                <p className="mt-2 text-sm text-muted-foreground">nga €{campaign.targetAmount.toLocaleString()} qëllimi</p>
+                <p className="mt-2 text-sm text-muted-foreground">nga {formatCurrency(campaign.targetAmount)} qëllimi</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-y border-border py-4">

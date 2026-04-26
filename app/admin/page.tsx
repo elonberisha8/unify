@@ -15,6 +15,7 @@ import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Card, CardContent, Skeleton } from "@/components/ui"
 import { AlertTriangleIcon, HandHeartIcon, MegaphoneIcon, UsersIcon } from "@/components/icons"
 import { apiFetch, type AdminStats } from "@/app/_lib/api"
+import { formatCurrency, formatNumber } from "@/lib/format"
 
 interface RecentEvent {
   id: string
@@ -61,10 +62,10 @@ export default function AdminDashPage() {
 
   const systemStats = stats
     ? [
-        { label: "Perdorues", value: stats.totalUsers.toLocaleString(), icon: <UsersIcon className="h-5 w-5" />, change: { value: "Total", trend: "up" as const } },
-        { label: "Kampanja aktive", value: stats.activeCampaigns.toLocaleString(), icon: <MegaphoneIcon className="h-5 w-5" />, change: { value: `${stats.pendingCampaigns} pending`, trend: "up" as const } },
-        { label: "Total kampanja", value: stats.totalCampaigns.toLocaleString(), icon: <HandHeartIcon className="h-5 w-5" />, change: { value: "Gjithsej", trend: "up" as const } },
-        { label: "Fonde te mbledhura", value: `€${stats.totalRaised.toLocaleString()}`, icon: <AlertTriangleIcon className="h-5 w-5" />, change: { value: "Stripe confirmed", trend: "up" as const } },
+        { label: "Perdorues", value: formatNumber(stats.totalUsers), icon: <UsersIcon className="h-5 w-5" />, change: { value: "Total", trend: "up" as const } },
+        { label: "Kampanja aktive", value: formatNumber(stats.activeCampaigns), icon: <MegaphoneIcon className="h-5 w-5" />, change: { value: `${stats.pendingCampaigns} pending`, trend: "up" as const } },
+        { label: "Total kampanja", value: formatNumber(stats.totalCampaigns), icon: <HandHeartIcon className="h-5 w-5" />, change: { value: "Gjithsej", trend: "up" as const } },
+        { label: "Fonde te mbledhura", value: formatCurrency(stats.totalRaised), icon: <AlertTriangleIcon className="h-5 w-5" />, change: { value: "Stripe confirmed", trend: "up" as const } },
       ]
     : []
 

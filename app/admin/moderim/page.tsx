@@ -13,6 +13,7 @@ import { AdminTable, ModerationDecisionCard } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Card, CardContent, Input, Skeleton } from "@/components/ui"
 import { apiFetch, type AdminCampaign, type AdminVolunteer } from "@/app/_lib/api"
+import { formatCurrency, formatNumber } from "@/lib/format"
 
 type ModerationRisk = "low" | "medium" | "high"
 type DecisionStatus = "approved" | "rejected" | "paused"
@@ -81,7 +82,7 @@ function campaignToItem(c: AdminCampaign): ModerationItem {
     objectUrl: `/admin/kampanjat`,
     ownerUrl: `/admin/perdoruesit/${c.creator.id}`,
     details: [
-      { label: "Shuma", value: `€${c.currentAmount.toLocaleString()} / ${c.targetAmount.toLocaleString()}` },
+      { label: "Shuma", value: `${formatCurrency(c.currentAmount)} / ${formatNumber(c.targetAmount)}` },
       { label: "Donatorë", value: `${c._count.donations}` },
       { label: "Featured", value: c.isFeatured ? "Po" : "Jo" },
       { label: "Status", value: c.status },

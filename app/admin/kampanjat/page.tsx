@@ -34,6 +34,7 @@ import {
   type AdminLifecycleStatus,
 } from "@/app/admin/_lib/adminLifecycle"
 import { apiFetch, type AdminCampaign } from "@/app/_lib/api"
+import { formatCurrency, formatNumber } from "@/lib/format"
 
 type StatusFilter = "all" | AdminLifecycleStatus
 
@@ -210,7 +211,7 @@ export default function AdminKampanjatPage() {
                 render: (row) => (
                   <div className="min-w-40">
                     <p>
-                      €{row.currentAmount.toLocaleString()} / {row.targetAmount.toLocaleString()}
+                      {formatCurrency(row.currentAmount)} / {formatNumber(row.targetAmount)}
                     </p>
                     <ProgressBar
                       value={Math.min(100, Math.round((row.currentAmount / row.targetAmount) * 100))}
@@ -273,15 +274,15 @@ export default function AdminKampanjatPage() {
                 <Input value={editing.title} readOnly />
                 <Input value={editing.category} readOnly />
                 <Input value={editing.location} readOnly />
-                <Input value={`€${editing.targetAmount.toLocaleString()}`} readOnly />
+                <Input value={formatCurrency(editing.targetAmount)} readOnly />
               </div>
               <Card>
                 <CardContent className="grid gap-4 p-4 text-sm md:grid-cols-3">
                   <Info label="Creator" value={editing.creator.name} />
                   <Info label="Email" value={editing.creator.email} />
                   <Info label="Donatorë" value={`${editing._count.donations}`} />
-                  <Info label="Mbledhur" value={`€${editing.currentAmount.toLocaleString()}`} />
-                  <Info label="Target" value={`€${editing.targetAmount.toLocaleString()}`} />
+                  <Info label="Mbledhur" value={formatCurrency(editing.currentAmount)} />
+                  <Info label="Target" value={formatCurrency(editing.targetAmount)} />
                   <Info label="Featured" value={editing.isFeatured ? "Po" : "Jo"} />
                 </CardContent>
               </Card>
