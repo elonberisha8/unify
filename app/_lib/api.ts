@@ -307,14 +307,17 @@ export interface PublicProfileCampaign {
   id: string
   title: string
   slug: string
-  shortDescription: string | null
-  description: string
   images: string[]
-  category: string
-  location: string
   currentAmount: number
   targetAmount: number
-  endsAt: string | null
+  status: string
+  category: string
+  location: string
+  isUrgent: boolean
+  createdAt: string
+  endsAt?: string | null
+  shortDescription?: string | null
+  description?: string | null
   _count?: { donations: number }
 }
 
@@ -338,25 +341,6 @@ export interface PublicProfile {
     totalDonated: number
     volunteerListings: number
   }
-}
-
-// ─── Public Profile Campaign ─────────────────────────────────────────────────
-export interface PublicProfileCampaign {
-  id: string
-  title: string
-  slug: string
-  images: string[]
-  currentAmount: number
-  targetAmount: number
-  status: string
-  category: string
-  location: string
-  isUrgent: boolean
-  createdAt: string
-  endsAt?: string | null
-  shortDescription?: string | null
-  description?: string | null
-  _count?: { donations: number }
 }
 
 // ─── Messaging ───────────────────────────────────────────────────────────────
