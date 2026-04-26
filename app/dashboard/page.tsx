@@ -48,7 +48,8 @@ export default function DashboardHomePage() {
       if (!isLoaded) return;
       const hasLocalToken = typeof window !== "undefined" && Boolean(window.localStorage.getItem("authToken"));
       if (!isSignedIn && !hasLocalToken) {
-        setLoading(false);
+        // Security: redirekto në login nëse pa auth (nuk lejo qasje në dashboard layout)
+        router.replace(`/auth/login?redirect=${encodeURIComponent("/dashboard")}`);
         return;
       }
       setLoading(true);
