@@ -1,26 +1,66 @@
-// ============================================================
-// BRANCH: feat/static-pages
-// FIGMA:
-//   • Blog — Lista → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=88-397
-// NOTION: https://www.notion.so/34874891227e8130855afa1edb64a28b
-// ============================================================
-
 import Link from "next/link"
 import { BlogCard, BlogSidebar } from "@/components/public"
 import { PublicLayout } from "@/components/layout"
 import { Badge, Button } from "@/components/ui"
 import { ArrowRightIcon } from "@/components/icons"
-import { BLOG_CATEGORIES, BLOG_POSTS, BLOG_TAGS } from "../_lib/blog-data"
 import { PUBLIC_FOOTER, PUBLIC_NAVBAR } from "../_lib/public-layout-config"
 
-const FEATURED_POST = BLOG_POSTS.find((post) => post.featured) ?? BLOG_POSTS[0]
-const OTHER_POSTS = BLOG_POSTS.filter((post) => post.slug !== FEATURED_POST.slug)
+const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"
 
-export default function BlogListPage() {
+type BlogPost = {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  coverImage: string | null
+  tags: string[]
+  createdAt: string
+  author?: { name: string; email?: string; username?: string | null; image?: string | null }
+}
+
+async function getPublishedPosts() {
+  try {
+    const res = await fetch(`${BACKEND}/api/blog`, { cache: "no-store" })
+    if (!res.ok) return []
+    return (await res.json()) as BlogPost[]
+  } catch {
+    return []
+  }
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString("sq-AL", { day: "numeric", month: "long", year: "numeric" })
+}
+
+function readTime(post: BlogPost) {
+  const words = `${post.title} ${post.excerpt ?? ""}`.trim().split(/\s+/).filter(Boolean).length
+  return `${Math.max(1, Math.ceil(words / 180))} min`
+}
+
+function categoriesFromPosts(posts: BlogPost[]) {
+  const counts = new Map<string, number>()
+  for (const post of posts) {
+    const firstTag = post.tags?.[0] || "Komunitet"
+    counts.set(firstTag, (counts.get(firstTag) ?? 0) + 1)
+  }
+  return Array.from(counts.entries()).map(([label, count]) => ({ label, count }))
+}
+
+function tagsFromPosts(posts: BlogPost[]) {
+  return Array.from(new Set(posts.flatMap((post) => post.tags ?? []))).slice(0, 12)
+}
+
+export default async function BlogListPage() {
+  const posts = await getPublishedPosts()
+  const featuredPost = posts[0]
+  const otherPosts = featuredPost ? posts.filter((post) => post.slug !== featuredPost.slug) : []
+  const categories = categoriesFromPosts(posts)
+  const tags = tagsFromPosts(posts)
+
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       <section className="border-b border-border bg-unify-cream">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-16">
           <Badge variant="secondary" className="mb-4">
             Unify Blog
           </Badge>
@@ -30,20 +70,18 @@ export default function BlogListPage() {
                 Ide, udhëzime dhe histori nga komuniteti ynë.
               </h1>
               <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-                Këtu ndajmë këshilla praktike për krijuesit, donatorët dhe të gjithë
-                ata që duan të ndërtojnë më shumë besim rreth kauzave publike.
+                Artikujt vijnë nga dashboard-i dhe shfaqen publikisht vetëm pasi aprovohen nga admini.
               </p>
             </div>
-            <div className="rounded-[28px] border border-border bg-white/80 p-6 shadow-sm">
+            <div className="rounded-[24px] border border-border bg-white/80 p-6 shadow-sm">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-unify-blue">
                 Në fokus
               </p>
               <h2 className="mt-3 font-display text-2xl text-unify-brown">
-                Tema që po i lexojnë më së shumti këtë javë
+                Postimet e aprovuara
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Përmbajtje që ndihmon ekipet, familjet dhe komunitetet të prezantojnë
-                kauza serioze në mënyrë të qartë, të sigurt dhe të besueshme.
+                Blogjet e reja që krijohen nga dashboard-i fillimisht shfaqen në admin si pending.
               </p>
             </div>
           </div>
@@ -51,90 +89,109 @@ export default function BlogListPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
-          <div className="space-y-8">
-            <div>
-              <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-unify-blue">
-                Artikulli kryesor
-              </p>
-              <Link href={`/blog/${FEATURED_POST.slug}`} className="block">
-                <BlogCard
-                  title={FEATURED_POST.title}
-                  excerpt={FEATURED_POST.excerpt}
-                  imageUrl={FEATURED_POST.imageUrl}
-                  category={FEATURED_POST.category}
-                  author={FEATURED_POST.author}
-                  publishedAt={FEATURED_POST.publishedAt}
-                  readTime={FEATURED_POST.readTime}
-                  variant="featured"
-                />
-              </Link>
-            </div>
-
-            <div>
-              <div className="mb-6 flex items-center justify-between gap-4">
+        {posts.length === 0 ? (
+          <div className="rounded-[24px] border border-border bg-white p-8">
+            <h2 className="font-display text-2xl text-unify-brown">Ende nuk ka postime publike</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Blogjet e krijuara nga dashboard-i do të shfaqen këtu pasi admini i aprovon.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="space-y-8">
+              {featuredPost && (
                 <div>
-                  <h2 className="font-display text-2xl text-unify-brown">Artikujt e fundit</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Përmbajtje e shkurtër, praktike dhe e dobishme për publikun.
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-unify-blue">
+                    Artikulli kryesor
                   </p>
-                </div>
-                <Button variant="ghost" className="hidden sm:inline-flex">
-                  Të gjitha temat
-                </Button>
-              </div>
-
-              <div className="grid gap-6">
-                {OTHER_POSTS.map((post) => (
-                  <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
+                  <Link href={`/blog/${featuredPost.slug}`} className="block">
                     <BlogCard
-                      title={post.title}
-                      excerpt={post.excerpt}
-                      imageUrl={post.imageUrl}
-                      category={post.category}
-                      author={post.author}
-                      publishedAt={post.publishedAt}
-                      readTime={post.readTime}
-                      variant="horizontal"
+                      title={featuredPost.title}
+                      excerpt={featuredPost.excerpt ?? undefined}
+                      imageUrl={featuredPost.coverImage ?? undefined}
+                      category={featuredPost.tags?.[0] ?? "Blog"}
+                      author={featuredPost.author?.name ?? "Unify"}
+                      publishedAt={formatDate(featuredPost.createdAt)}
+                      readTime={readTime(featuredPost)}
+                      variant="featured"
                     />
                   </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+                </div>
+              )}
 
-          <BlogSidebar
-            recent={BLOG_POSTS.slice(0, 4).map((post) => ({
-              title: post.title,
-              date: post.publishedAt,
-              image: post.imageUrl,
-              href: `/blog/${post.slug}`,
-            }))}
-            categories={BLOG_CATEGORIES}
-            tags={BLOG_TAGS}
-          />
-        </div>
+              {otherPosts.length > 0 ? (
+                <div>
+                  <div className="mb-6 flex items-center justify-between gap-4">
+                    <div>
+                      <h2 className="font-display text-2xl text-unify-brown">Artikujt e fundit</h2>
+                      <p className="text-sm text-muted-foreground">
+                        Përmbajtje e krijuar në dashboard dhe e publikuar pas aprovimit.
+                      </p>
+                    </div>
+                    <Button variant="ghost" className="hidden sm:inline-flex">
+                      Të gjitha temat
+                    </Button>
+                  </div>
+
+                  <div className="grid gap-6">
+                    {otherPosts.map((post) => (
+                      <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
+                        <BlogCard
+                          title={post.title}
+                          excerpt={post.excerpt ?? undefined}
+                          imageUrl={post.coverImage ?? undefined}
+                          category={post.tags?.[0] ?? "Blog"}
+                          author={post.author?.name ?? "Unify"}
+                          publishedAt={formatDate(post.createdAt)}
+                          readTime={readTime(post)}
+                          variant="horizontal"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-[24px] border border-border bg-white p-6">
+                  <h2 className="font-display text-xl text-unify-brown">Më shumë artikuj së shpejti</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    Për momentin ka vetëm një postim të aprovuar. Blogjet demo që krijuam do shfaqen këtu pasi t’i aprovosh nga admini.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <BlogSidebar
+              recent={posts.slice(0, 4).map((post) => ({
+                title: post.title,
+                date: formatDate(post.createdAt),
+                image: post.coverImage ?? undefined,
+                href: `/blog/${post.slug}`,
+              }))}
+              categories={categories}
+              tags={tags}
+            />
+          </div>
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
-        <div className="rounded-[32px] border border-border bg-unify-brown px-6 py-10 text-white md:px-10">
+        <div className="rounded-[28px] border border-border bg-unify-brown px-6 py-10 text-white md:px-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">
-                Për krijuesit dhe donatorët
+                Për krijuesit
               </p>
               <h2 className="mt-3 font-display text-3xl">
-                Dëshiron të shohësh edhe faqet kryesore të platformës?
+                Dëshiron të krijosh një artikull?
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-white/80">
-                Shfleto kampanjat, lexo si funksionon Unify dhe zbulo si ndërtohet
-                besimi rreth një kauze publike.
+                Hyr në dashboard, shkruaj blogun dhe dërgoje për aprovim.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild>
-                <Link href="/shpalljet">
-                  Shpalljet
+                <Link href="/dashboard/blog">
+                  Krijo blog
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

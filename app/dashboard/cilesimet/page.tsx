@@ -56,7 +56,7 @@ export default function DashboardCilesimetPage() {
   }
 
   return (
-    <DashboardLayout activeKey="settings">
+    <DashboardLayout activeKey="profile">
       <div className="max-w-3xl space-y-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Cilësimet</h1>

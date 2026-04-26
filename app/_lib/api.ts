@@ -301,7 +301,22 @@ export interface UserSearchResult {
   isVerified: boolean
 }
 
-// ─── Public Profile (GET /users/profile/@username) ───────────────────────────
+// ─── Public Profile (GET /users/:username) ───────────────────────────────────
+export interface PublicProfileCampaign {
+  id: string
+  title: string
+  slug: string
+  shortDescription: string | null
+  description: string
+  images: string[]
+  category: string
+  location: string
+  currentAmount: number
+  targetAmount: number
+  endsAt: string | null
+  _count?: { donations: number }
+}
+
 export interface PublicProfile {
   id: string
   username: string

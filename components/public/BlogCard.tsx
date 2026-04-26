@@ -23,6 +23,7 @@ export function BlogCard({
   readTime, variant = "default", onClick, className,
 }: BlogCardProps) {
   const isHorizontal = variant === "horizontal";
+  const isFeatured = variant === "featured";
   return (
     <Card
       className={cn(
@@ -32,11 +33,23 @@ export function BlogCard({
       )}
       onClick={onClick}
     >
-      <div className={cn("relative overflow-hidden bg-muted", isHorizontal ? "w-1/3 shrink-0" : "aspect-video w-full")}>
+      <div
+        className={cn(
+          "relative overflow-hidden bg-muted",
+          isHorizontal ? "w-1/3 min-w-[120px] shrink-0" : isFeatured ? "h-56 w-full" : "aspect-video w-full"
+        )}
+      >
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
-          <div className="w-full h-full bg-unify-cream" />
+          <div className="flex h-full w-full items-center justify-center bg-unify-cream px-5 text-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-unify-blue">Unify Blog</p>
+              {!isHorizontal && (
+                <p className="mt-3 line-clamp-2 font-display text-xl text-unify-brown">{title}</p>
+              )}
+            </div>
+          </div>
         )}
         {category && <Badge variant="primary" className="absolute top-3 left-3">{category}</Badge>}
       </div>

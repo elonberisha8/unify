@@ -3,7 +3,6 @@ export const NAV_LINKS = [
   { label: "Kryefaqja",         href: "/" },
   { label: "Kampanjat",         href: "/kampanjat" },
   { label: "Ndihmë Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet",         href: "/shpalljet" },
   { label: "Si Funksionon",     href: "/sherbimet" },
   { label: "Blog",              href: "/blog" },
   { label: "Kontakt",           href: "/kontakt" },

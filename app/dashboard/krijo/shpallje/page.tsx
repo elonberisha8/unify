@@ -142,7 +142,7 @@ export default function KrijoShpalljePage() {
   ][step];
 
   return (
-    <DashboardLayout activeKey="shpalljet">
+    <DashboardLayout activeKey="volunteer">
       <div className="max-w-4xl space-y-6">
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Krijo Shpallje Vullnetare</p>

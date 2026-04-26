@@ -86,7 +86,7 @@ export default function AplikimetPage() {
   };
 
   return (
-    <DashboardLayout activeKey="aplikimet">
+    <DashboardLayout activeKey="applications">
       <div className="space-y-6">
         <div className="flex items-start justify-between">
           <div>

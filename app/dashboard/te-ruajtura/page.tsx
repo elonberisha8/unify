@@ -57,7 +57,7 @@ export default function TeRuajturaPage() {
   }, [getToken, isLoaded, isSignedIn]);
 
   return (
-    <DashboardLayout activeKey="te-ruajtura">
+    <DashboardLayout activeKey="bookmarks">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Te ruajtura</h1>

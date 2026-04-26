@@ -129,7 +129,7 @@ export default function AktivitetiPage() {
   }
 
   return (
-    <DashboardLayout activeKey="aktiviteti">
+    <DashboardLayout activeKey="home">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Audit Log — Aktiviteti i llogarisë</h1>

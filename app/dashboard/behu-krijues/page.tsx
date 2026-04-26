@@ -22,7 +22,7 @@ export default function BehuKrijuesPage() {
   const router = useRouter();
 
   return (
-    <DashboardLayout activeKey="behu-krijues">
+    <DashboardLayout activeKey="campaigns">
       <div className="space-y-8 max-w-2xl">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Bëhu Krijues</h1>
