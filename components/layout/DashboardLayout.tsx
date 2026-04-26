@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth, useUser } from "@clerk/nextjs"
 import {
   BookmarkIcon,
   FileTextIcon,
@@ -11,7 +13,6 @@ import {
   LogOutIcon,
   MegaphoneIcon,
   ScrollTextIcon,
-  SettingsIcon,
   UserIcon,
   WalletIcon,
 } from "@/components/icons"
@@ -27,16 +28,15 @@ export interface DashboardNavItem {
 }
 
 export const DEFAULT_DASHBOARD_NAV: DashboardNavItem[] = [
-  { key: "home", label: "Dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
-  { key: "campaigns", label: "Kampanjat", icon: <MegaphoneIcon className="h-4 w-4" />, href: "/dashboard/kampanjat" },
-  { key: "volunteer", label: "Shpalljet", icon: <HandHeartIcon className="h-4 w-4" />, href: "/dashboard/shpalljet" },
-  { key: "blog", label: "Blog", icon: <FileTextIcon className="h-4 w-4" />, href: "/blog" },
-  { key: "inbox", label: "Inbox", icon: <InboxIcon className="h-4 w-4" />, href: "/dashboard/inbox" },
-  { key: "bookmarks", label: "Ruajtura", icon: <BookmarkIcon className="h-4 w-4" />, href: "/dashboard/te-ruajtura" },
-  { key: "transactions", label: "Transaksionet", icon: <WalletIcon className="h-4 w-4" />, href: "/dashboard/transaksionet" },
-  { key: "applications", label: "Aplikimet", icon: <ScrollTextIcon className="h-4 w-4" />, href: "/dashboard/aplikimet" },
-  { key: "profile", label: "Profili", icon: <UserIcon className="h-4 w-4" />, href: "/dashboard/profili" },
-  { key: "settings", label: "Cilësimet", icon: <SettingsIcon className="h-4 w-4" />, href: "/dashboard/cilesimet" },
+  { key: "home",         label: "Dashboard",     icon: <LayoutDashboardIcon className="h-4 w-4" />, href: "/dashboard" },
+  { key: "campaigns",    label: "Kampanjat",     icon: <MegaphoneIcon      className="h-4 w-4" />, href: "/dashboard/kampanjat" },
+  { key: "volunteer",    label: "Shpalljet",     icon: <HandHeartIcon      className="h-4 w-4" />, href: "/dashboard/shpalljet" },
+  { key: "blog",         label: "Blog",          icon: <FileTextIcon       className="h-4 w-4" />, href: "/dashboard/blog" },
+  { key: "inbox",        label: "Inbox",         icon: <InboxIcon          className="h-4 w-4" />, href: "/dashboard/inbox" },
+  { key: "bookmarks",    label: "Ruajtura",      icon: <BookmarkIcon       className="h-4 w-4" />, href: "/dashboard/te-ruajtura" },
+  { key: "transactions", label: "Transaksionet", icon: <WalletIcon         className="h-4 w-4" />, href: "/dashboard/transaksionet" },
+  { key: "applications", label: "Aplikimet",     icon: <ScrollTextIcon     className="h-4 w-4" />, href: "/dashboard/aplikimet" },
+  { key: "profile",      label: "Profili",       icon: <UserIcon           className="h-4 w-4" />, href: "/dashboard/profili" },
 ]
 
 export interface DashboardLayoutProps {
@@ -44,8 +44,10 @@ export interface DashboardLayoutProps {
   navItems?: DashboardNavItem[]
   activeKey?: string
   onSelect?: (key: string) => void
-  user?: { name: string; email?: string; avatarUrl?: string }
+  /** @deprecated — logout handled internally now */
   onLogout?: () => void
+  /** @deprecated — user fetched from Clerk internally now */
+  user?: { name: string; email?: string; avatarUrl?: string }
   className?: string
 }
 
@@ -54,10 +56,29 @@ export function DashboardLayout({
   navItems = DEFAULT_DASHBOARD_NAV,
   activeKey,
   onSelect,
-  user,
-  onLogout,
   className,
 }: DashboardLayoutProps) {
+  const router  = useRouter()
+  const { signOut } = useAuth()
+  const { user } = useUser()
+  const [loggingOut, setLoggingOut] = React.useState(false)
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+    try {
+      await signOut({ redirectUrl: "/auth/login" })
+    } catch {
+      // fallback
+      router.push("/auth/login")
+    } finally {
+      setLoggingOut(false)
+    }
+  }
+
+  const displayName  = user?.fullName ?? user?.firstName ?? "Përdorues"
+  const displayEmail = user?.primaryEmailAddress?.emailAddress ?? ""
+  const avatarUrl    = user?.imageUrl ?? ""
+
   return (
     <div className={cn("flex min-h-screen bg-background", className)}>
       <aside className="flex w-64 shrink-0 flex-col border-r border-border bg-white">
@@ -74,7 +95,9 @@ export function DashboardLayout({
                 onClick={() => onSelect?.(item.key)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors",
-                  activeKey === item.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+                  activeKey === item.key
+                    ? "bg-unify-blue text-white"
+                    : "text-unify-brown hover:bg-muted"
                 )}
               >
                 {item.icon}
@@ -83,7 +106,9 @@ export function DashboardLayout({
                   <span
                     className={cn(
                       "rounded-full px-2 py-0.5 text-xs",
-                      activeKey === item.key ? "bg-white text-unify-blue" : "bg-unify-blue text-white"
+                      activeKey === item.key
+                        ? "bg-white text-unify-blue"
+                        : "bg-unify-blue text-white"
                     )}
                   >
                     {item.badge}
@@ -96,7 +121,9 @@ export function DashboardLayout({
                 onClick={() => onSelect?.(item.key)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-bold transition-colors",
-                  activeKey === item.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+                  activeKey === item.key
+                    ? "bg-unify-blue text-white"
+                    : "text-unify-brown hover:bg-muted"
                 )}
               >
                 {item.icon}
@@ -106,29 +133,30 @@ export function DashboardLayout({
           )}
         </nav>
 
-        {user && (
-          <div className="border-t border-border p-3">
-            <div className="flex items-center gap-3 p-2">
-              <Avatar>
-                {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
-                <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold">{user.name}</p>
-                {user.email && <p className="truncate text-xs text-muted-foreground">{user.email}</p>}
-              </div>
-              {onLogout && (
-                <button
-                  onClick={onLogout}
-                  className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-muted"
-                  aria-label="Dil"
-                >
-                  <LogOutIcon className="h-4 w-4" />
-                </button>
+        {/* User + Logout — always visible */}
+        <div className="border-t border-border p-3">
+          <div className="flex items-center gap-3 p-2">
+            <Avatar>
+              {avatarUrl && <AvatarImage src={avatarUrl} />}
+              <AvatarFallback>{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-bold text-unify-brown">{displayName}</p>
+              {displayEmail && (
+                <p className="truncate text-xs text-muted-foreground">{displayEmail}</p>
               )}
             </div>
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50"
+              aria-label="Dil nga llogaria"
+              title="Dil"
+            >
+              <LogOutIcon className="h-4 w-4" />
+            </button>
           </div>
-        )}
+        </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">

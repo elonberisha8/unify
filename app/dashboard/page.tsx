@@ -58,7 +58,7 @@ function DashboardSkeleton() {
 
 export default function DashboardHomePage() {
   const router = useRouter();
-  const { signOut, getToken } = useAuth();
+  const { getToken } = useAuth();
   const { user } = useUser();
 
   const [data, setData] = React.useState<DashboardOverview | null>(null);
@@ -84,15 +84,7 @@ export default function DashboardHomePage() {
   const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "Përdorues";
 
   return (
-    <DashboardLayout
-      activeKey="home"
-      user={{
-        name: user?.fullName ?? user?.firstName ?? "Përdorues",
-        email: user?.primaryEmailAddress?.emailAddress ?? "",
-        avatarUrl: user?.imageUrl,
-      }}
-      onLogout={() => signOut(() => router.push("/"))}
-    >
+    <DashboardLayout activeKey="home">
       <div className="space-y-8">
 
         {/* Header */}
