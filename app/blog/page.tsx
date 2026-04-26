@@ -1,7 +1,9 @@
+"use client"
+import * as React from "react"
 import Link from "next/link"
 import { BlogCard, BlogSidebar } from "@/components/public"
 import { PublicLayout } from "@/components/layout"
-import { Badge, Button } from "@/components/ui"
+import { Badge, Button, Spinner } from "@/components/ui"
 import { ArrowRightIcon } from "@/components/icons"
 import { PUBLIC_FOOTER, PUBLIC_NAVBAR } from "../_lib/public-layout-config"
 
@@ -16,16 +18,6 @@ type BlogPost = {
   tags: string[]
   createdAt: string
   author?: { name: string; email?: string; username?: string | null; image?: string | null }
-}
-
-async function getPublishedPosts() {
-  try {
-    const res = await fetch(`${BACKEND}/api/blog`, { cache: "no-store" })
-    if (!res.ok) return []
-    return (await res.json()) as BlogPost[]
-  } catch {
-    return []
-  }
 }
 
 function formatDate(value: string) {
@@ -50,10 +42,29 @@ function tagsFromPosts(posts: BlogPost[]) {
   return Array.from(new Set(posts.flatMap((post) => post.tags ?? []))).slice(0, 12)
 }
 
-export default async function BlogListPage() {
-  const posts = await getPublishedPosts()
-  const featuredPost = posts[0]
-  const otherPosts = featuredPost ? posts.filter((post) => post.slug !== featuredPost.slug) : []
+export default function BlogListPage() {
+  const [posts, setPosts] = React.useState<BlogPost[]>([])
+  const [loading, setLoading] = React.useState(true)
+  const [query, setQuery] = React.useState("")
+
+  React.useEffect(() => {
+    fetch(`${BACKEND}/api/blog`, { cache: "no-store" })
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: BlogPost[]) => setPosts(data))
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const filtered = query.trim()
+    ? posts.filter((p) =>
+        p.title.toLowerCase().includes(query.toLowerCase()) ||
+        (p.excerpt ?? "").toLowerCase().includes(query.toLowerCase()) ||
+        p.tags.some((t) => t.toLowerCase().includes(query.toLowerCase()))
+      )
+    : posts
+
+  const featuredPost = filtered[0]
+  const otherPosts = featuredPost ? filtered.filter((p) => p.slug !== featuredPost.slug) : []
   const categories = categoriesFromPosts(posts)
   const tags = tagsFromPosts(posts)
 
@@ -72,6 +83,16 @@ export default async function BlogListPage() {
               <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
                 Artikujt vijnë nga dashboard-i dhe shfaqen publikisht vetëm pasi aprovohen nga admini.
               </p>
+              <div className="relative mt-6 max-w-md">
+                <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Kërko artikuj..."
+                  className="h-11 w-full rounded-xl border border-border bg-white pl-9 pr-4 text-sm shadow-sm outline-none focus:border-unify-blue focus:ring-2 focus:ring-unify-blue/20"
+                />
+              </div>
             </div>
             <div className="rounded-[24px] border border-border bg-white/80 p-6 shadow-sm">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-unify-blue">
@@ -89,11 +110,26 @@ export default async function BlogListPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
-        {posts.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-24">
+            <Spinner className="h-8 w-8 text-unify-blue" />
+          </div>
+        ) : posts.length === 0 ? (
           <div className="rounded-[24px] border border-border bg-white p-8">
             <h2 className="font-display text-2xl text-unify-brown">Ende nuk ka postime publike</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Blogjet e krijuara nga dashboard-i do të shfaqen këtu pasi admini i aprovon.
+            </p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="rounded-[24px] border border-border bg-white p-8">
+            <h2 className="font-display text-xl text-unify-brown">Nuk u gjet asnjë rezultat</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Provo me fjalë kyçe të tjera ose{" "}
+              <button onClick={() => setQuery("")} className="text-unify-blue underline-offset-2 hover:underline">
+                pastro filtrimin
+              </button>
+              .
             </p>
           </div>
         ) : (

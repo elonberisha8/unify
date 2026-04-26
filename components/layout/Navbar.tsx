@@ -4,7 +4,8 @@ import * as React from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { MenuIcon, SearchIcon } from "@/components/icons";
+import { useUser } from "@clerk/nextjs";
+import { MenuIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
 
@@ -16,9 +17,12 @@ export interface NavLink {
 export interface NavbarProps {
   logo?: React.ReactNode;
   links?: NavLink[];
+  /** @deprecated — handled internally via Clerk */
   onLogin?: () => void;
+  /** @deprecated — handled internally via Clerk */
   onRegister?: () => void;
   onSearch?: () => void;
+  /** @deprecated — detected internally via Clerk */
   isAuthenticated?: boolean;
   userMenu?: React.ReactNode;
   className?: string;
@@ -26,10 +30,16 @@ export interface NavbarProps {
 
 export function Navbar({
   logo, links = [], onLogin, onRegister, onSearch,
-  isAuthenticated, userMenu, className,
+  isAuthenticated: isAuthProp, userMenu, className,
 }: NavbarProps) {
   const pathname = usePathname();
-  const router = useRouter();
+  const router   = useRouter();
+  const { isSignedIn } = useUser();
+
+  // Clerk-aware: prop fallback → internal Clerk state
+  const authenticated = isAuthProp ?? isSignedIn ?? false;
+  const handleLogin    = onLogin    ?? (() => router.push("/auth/login"));
+  const handleRegister = onRegister ?? (() => router.push("/auth/register"));
 
   useEffect(() => {
     links.forEach((l) => router.prefetch(l.href));
@@ -42,6 +52,7 @@ export function Navbar({
           {logo ?? "Unify"}
         </Link>
 
+        {/* Nav links — desktop */}
         <nav className="hidden md:flex items-center gap-1 flex-1">
           {links.map((l) => {
             const active = l.href === "/" ? pathname === "/" : pathname === l.href || pathname.startsWith(l.href + "/");
@@ -60,23 +71,31 @@ export function Navbar({
           })}
         </nav>
 
+        {/* Actions — desktop */}
         <div className="hidden md:flex items-center gap-2 ml-auto">
           {onSearch && (
             <button onClick={onSearch} aria-label="Kërko" className="h-10 w-10 rounded-full hover:bg-muted flex items-center justify-center">
-              <SearchIcon className="h-4 w-4" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </button>
           )}
-          {isAuthenticated ? userMenu : (
+          {authenticated ? (
+            userMenu ?? (
+              <Button variant="outline" onClick={() => router.push("/dashboard")}>
+                Dashboard
+              </Button>
+            )
+          ) : (
             <>
-              {onLogin && <Button variant="ghost" onClick={onLogin}>Hyr</Button>}
-              {onRegister && <Button onClick={onRegister}>Regjistrohu</Button>}
+              <Button variant="ghost" onClick={handleLogin}>Hyr</Button>
+              <Button onClick={handleRegister}>Regjistrohu</Button>
             </>
           )}
         </div>
 
+        {/* Mobile menu */}
         <Sheet>
           <SheetTrigger asChild>
-            <button className="md:hidden ml-auto h-10 w-10 rounded-full hover:bg-muted flex items-center justify-center" aria-label="MenuIcon">
+            <button className="md:hidden ml-auto h-10 w-10 rounded-full hover:bg-muted flex items-center justify-center" aria-label="Menu">
               <MenuIcon className="h-5 w-5" />
             </button>
           </SheetTrigger>
@@ -88,8 +107,16 @@ export function Navbar({
                 </Link>
               ))}
               <div className="mt-4 flex flex-col gap-2">
-                {onLogin && <Button variant="outline" onClick={onLogin} className="w-full">Hyr</Button>}
-                {onRegister && <Button onClick={onRegister} className="w-full">Regjistrohu</Button>}
+                {authenticated ? (
+                  <Button onClick={() => router.push("/dashboard")} className="w-full">
+                    Dashboard
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" onClick={handleLogin} className="w-full">Hyr</Button>
+                    <Button onClick={handleRegister} className="w-full">Regjistrohu</Button>
+                  </>
+                )}
               </div>
             </nav>
           </SheetContent>
