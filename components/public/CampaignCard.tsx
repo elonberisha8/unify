@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { HeartIcon, MapPinIcon, CalendarIcon, ShareIcon, BookmarkIcon } from "@/components/icons";
+import { HeartIcon, MapPinIcon, CalendarIcon, ShareIcon, BookmarkIcon, CheckCircleIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { Badge, Button, Card, CardContent, Progress } from "@/components/ui";
@@ -95,7 +95,7 @@ export function CampaignCard({
             {creatorName && (
               <span className="flex items-center gap-1 text-muted-foreground">
                 nga <span className="font-bold text-foreground">{creatorName}</span>
-                {verified && <span className="text-unify-blue">✓</span>}
+                {verified && <CheckCircleIcon className="h-3 w-3 text-unify-blue" />}
               </span>
             )}
             {donorCount != null && <span className="text-muted-foreground">{donorCount} donatorë</span>}
