@@ -148,7 +148,14 @@ export default function AdminEmailsPage() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      sidebar={{ activeKey: "emails" }}
+      header={{
+        title: "Email Center",
+        description: "Templates · Dërgim manual · Email automatike · Logs · Resend integration",
+        user: { name: "Unify Admin", role: "Internal" },
+      }}
+    >
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">

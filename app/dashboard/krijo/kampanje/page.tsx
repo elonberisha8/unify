@@ -217,6 +217,7 @@ export default function KrijoKampanjePage() {
   const router = useRouter();
   const { isSignedIn, getToken } = useAuth();
   const [step, setStep] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   // Hapi 1
   const [title, setTitle] = useState("");
@@ -265,6 +266,8 @@ export default function KrijoKampanjePage() {
   }
 
   async function handleSubmit() {
+    if (submitting) return;
+    setSubmitting(true);
     try {
       const token = isSignedIn ? await getToken() : null;
       await apiFetch("/campaigns", {
@@ -289,14 +292,15 @@ export default function KrijoKampanjePage() {
     } catch (e) {
       const msg = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e)
       alert(msg || "Gabim gjatë krijimit të kampanjës")
+      setSubmitting(false);
     }
   }
 
   const canProceed = [
-    title.trim() && category && location && problemStatement.trim().length >= 50 && targetGroup.trim(),
+    title.trim().length >= 10 && category && location && problemStatement.trim().length >= 50 && targetGroup.trim(),
     background.trim().length >= 50 && images.length > 0,
-    solutionPlan.trim().length >= 50 && milestones.length > 0,
-    Number(targetAmount) >= 50 && budgetItems.length > 0 && endDate,
+    solutionPlan.trim().length >= 50,
+    Number(targetAmount) >= 50 && endDate,
     true,
     true,
   ][step];
@@ -322,8 +326,11 @@ export default function KrijoKampanjePage() {
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label>Titulli i Kampanjës *</Label>
+                  <Label>Titulli i Kampanjës * (min 10 karaktere)</Label>
                   <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="p.sh. Operacion urgjent për Arianitin (5 vjeç)" />
+                  {title.trim().length > 0 && title.trim().length < 10 && (
+                    <p className="text-xs text-red-500">Titulli duhet të ketë të paktën 10 karaktere ({title.trim().length}/10)</p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -652,8 +659,8 @@ export default function KrijoKampanjePage() {
                 Vazhdo →
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
-                Publiko Kampanjën
+              <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700">
+                {submitting ? "Duke publikuar..." : "Publiko Kampanjën"}
               </Button>
             )}
           </div>
