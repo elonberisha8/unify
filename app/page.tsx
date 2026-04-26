@@ -409,7 +409,7 @@ export default function HomePage() {
               </p>
               <Button
                 variant="outline"
-                onClick={() => router.push("/vullnetare")}
+                onClick={() => router.push("/shpalljet?kind=VOLUNTEER_CONTRIBUTION")}
                 className="uppercase tracking-widest"
               >
                 Bëhu Vullnetar
@@ -560,7 +560,7 @@ export default function HomePage() {
                 </span>
               </button>
               <button
-                onClick={() => router.push("/vullnetare")}
+                onClick={() => router.push("/shpalljet?kind=VOLUNTEER_CONTRIBUTION")}
                 className="flex items-center gap-3 rounded-full bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-unify-brown transition-opacity hover:opacity-90"
               >
                 Hapi 02

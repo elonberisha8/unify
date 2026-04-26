@@ -8,7 +8,7 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { AuthLayout } from "@/components/layout"
 import { Button, Checkbox, Input } from "@/components/ui"
 import { LockIcon, MailIcon, UserIcon } from "@/components/icons"
@@ -17,6 +17,7 @@ import { normalizeUsername, validateUsername } from "@/app/_lib/username"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [accepted, setAccepted] = useState(false)
   const [username, setUsername] = useState("")
   const [usernameError, setUsernameError] = useState<string | null>(null)
@@ -51,7 +52,14 @@ export default function RegisterPage() {
     window.localStorage.setItem("authToken", "demo-session")
     window.localStorage.setItem("unifyUsername", cleanUsername)
     window.dispatchEvent(new Event("unify-auth-change"))
-    router.replace("/onboarding")
+    // Nëse kishte redirect (p.sh. nga aplikim shpalljeje), shko aty pas onboarding
+    const redirect = searchParams?.get("redirect")
+    if (redirect) {
+      // Onboarding e ruan dhe pastaj kthen aty
+      router.replace(`/onboarding?next=${encodeURIComponent(redirect)}`)
+    } else {
+      router.replace("/onboarding")
+    }
   }
 
   return (

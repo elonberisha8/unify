@@ -11,6 +11,8 @@
 // ============================================================
 
 import { ChangeEvent, useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import Link from "next/link"
 import { Button, Card, CardContent, Input, Stepper, Textarea } from "@/components/ui"
 import {
   ArrowLeftIcon,
@@ -47,6 +49,9 @@ const roles = [
 ]
 
 export default function OnboardingPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const nextUrl = searchParams?.get("next") || "/dashboard"
   const [current, setCurrent] = useState(0)
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [role, setRole] = useState("Donator")
@@ -62,7 +67,7 @@ export default function OnboardingPage() {
 
   const next = () => {
     if (current === steps.length - 1) {
-      window.location.href = "/dashboard"
+      router.replace(nextUrl)
       return
     }
     setCurrent((value) => Math.min(value + 1, steps.length - 1))
@@ -84,8 +89,8 @@ export default function OnboardingPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#faf7f2]">
       <header className="flex h-20 items-center justify-between px-6 md:px-16">
-        <a href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue">Unify</a>
-        <a href="/dashboard" className="text-sm font-bold text-muted-foreground hover:text-unify-blue">Kalo për tani</a>
+        <Link href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue">Unify</Link>
+        <Link href={nextUrl} className="text-sm font-bold text-muted-foreground hover:text-unify-blue">Kalo për tani</Link>
       </header>
 
       <section className="mx-auto max-w-[760px] px-5 pb-16 pt-4">

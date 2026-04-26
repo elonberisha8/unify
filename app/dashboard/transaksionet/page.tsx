@@ -210,8 +210,8 @@ export default function TransaksionetPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        {t.campaignId ? (
-                          <a href={`/kampanjat/${t.campaignId}`} className="font-medium text-unify-blue hover:underline">
+                        {t.campaignSlug ? (
+                          <a href={`/kampanjat/${t.campaignSlug}`} className="font-medium text-unify-blue hover:underline">
                             {t.campaignTitle ?? "—"}
                           </a>
                         ) : (
