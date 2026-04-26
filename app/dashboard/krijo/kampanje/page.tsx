@@ -84,7 +84,7 @@ const LOCATION_GROUPS: { label: string; cities: string[] }[] = [
 
 const ALL_CITIES = LOCATION_GROUPS.flatMap((g) => g.cities);
 
-// ── Combobox me stil identik me Select ───────────────────────
+// ── Combobox me stil 1:1 si SelectTrigger / SelectContent ────
 function LocationCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
@@ -109,10 +109,11 @@ function LocationCombobox({ value, onChange }: { value: string; onChange: (v: st
   }
 
   const q = query.toLowerCase();
-  const isSearching = q.length > 0;
 
-  const filteredGroups = isSearching
-    ? LOCATION_GROUPS.map((g) => ({ ...g, cities: g.cities.filter((c) => c.toLowerCase().includes(q)) })).filter((g) => g.cities.length > 0)
+  const filteredGroups = q.length > 0
+    ? LOCATION_GROUPS
+        .map((g) => ({ ...g, cities: g.cities.filter((c) => c.toLowerCase().includes(q)) }))
+        .filter((g) => g.cities.length > 0)
     : LOCATION_GROUPS;
 
   const showCustom =
@@ -121,75 +122,80 @@ function LocationCombobox({ value, onChange }: { value: string; onChange: (v: st
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger — identik me SelectTrigger */}
+
+      {/* ── Trigger — copje e saktë e SelectTrigger ── */}
       <button
         type="button"
         onClick={() => { setOpen((o) => !o); setTimeout(() => inputRef.current?.focus(), 10); }}
-        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-white px-4 py-2 text-sm focus:outline-none focus:border-unify-blue disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className={value ? "text-foreground" : "text-muted-foreground"}>
           {value || "Zgjidh qytetin"}
         </span>
-        <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+        <ChevronDownIcon className="h-4 w-4 opacity-50" />
       </button>
 
-      {/* Dropdown */}
+      {/* ── Dropdown — copje e saktë e SelectContent ── */}
       {open && (
-        <div className="absolute z-50 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-          {/* Search input */}
-          <div className="border-b border-gray-100 p-2">
+        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md">
+
+          {/* Search — brenda viewport-it */}
+          <div className="border-b border-border px-1 py-1.5">
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Kërko qytetin..."
-              className="w-full rounded-sm px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground"
+              className="w-full rounded-lg px-3 py-1.5 text-sm outline-none placeholder:text-muted-foreground bg-transparent"
             />
           </div>
 
-          {/* List */}
-          <div className="max-h-64 overflow-y-auto py-1">
+          {/* Lista me grupime */}
+          <div className="max-h-64 overflow-y-auto p-1">
             {filteredGroups.map((group) => (
               <div key={group.label}>
-                <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                {/* SelectGroup label */}
+                <p className="py-1.5 pl-2 pr-2 text-xs font-semibold text-muted-foreground">
                   {group.label}
                 </p>
                 {group.cities.map((city) => (
+                  /* SelectItem — h-11 rounded-xl pl-8 pr-2 me check absolut */
                   <button
                     key={city}
                     type="button"
                     onMouseDown={(e) => { e.preventDefault(); select(city); }}
-                    className={`flex w-full items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground ${
-                      value === city ? "bg-accent/60 font-semibold text-unify-blue" : ""
-                    }`}
+                    className="relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm text-left outline-none hover:bg-accent/10 focus:bg-accent/10"
                   >
-                    {value === city
-                      ? <CheckIcon className="h-3.5 w-3.5 shrink-0 text-unify-blue" />
-                      : <span className="w-3.5" />
-                    }
+                    {value === city && (
+                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                        <CheckIcon className="h-4 w-4" />
+                      </span>
+                    )}
                     {city}
                   </button>
                 ))}
               </div>
             ))}
 
-            {/* Opsioni custom */}
+            {/* Opsioni custom — shfaqet vetëm nëse teksti nuk gjendet */}
             {showCustom && (
-              <div className="border-t border-gray-100 pt-1">
+              <div className="border-t border-border pt-1 mt-1">
                 <button
                   type="button"
                   onMouseDown={(e) => { e.preventDefault(); select(query.trim()); }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-left text-unify-blue hover:bg-accent"
+                  className="relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm text-left text-unify-blue outline-none hover:bg-accent/10"
                 >
-                  <PlusIcon className="h-3.5 w-3.5 shrink-0" />
-                  Vendos <span className="font-semibold">&quot;{query.trim()}&quot;</span>
+                  <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                    <PlusIcon className="h-4 w-4" />
+                  </span>
+                  Vendos &quot;{query.trim()}&quot;
                 </button>
               </div>
             )}
 
             {filteredGroups.length === 0 && !showCustom && (
-              <p className="px-3 py-4 text-center text-sm text-muted-foreground">
+              <p className="py-4 text-center text-sm text-muted-foreground">
                 Nuk u gjet asnjë qytet.
               </p>
             )}
