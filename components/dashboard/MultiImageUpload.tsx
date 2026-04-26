@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useAuth } from "@clerk/nextjs";
 import { PlusIcon, TrashIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { apiFetch } from "@/app/_lib/api";
 
 export interface MultiImageUploadProps {
   images: string[];
@@ -11,21 +13,77 @@ export interface MultiImageUploadProps {
   className?: string;
 }
 
+interface CloudinarySignature {
+  signature: string;
+  timestamp: number;
+  folder: string;
+  cloudName: string;
+  apiKey: string;
+}
+
 /**
- * Multi-image uploader — allows up to `max` images (default 10).
- * In a real app, files would be uploaded to Cloudinary and the returned
- * URL stored. Here we use blob URLs for preview; backend should accept
- * uploaded file references and convert to permanent URLs.
+ * MultiImageUpload — ngarkon foto në Cloudinary direkt nga browseri
+ *
+ * Flow:
+ * 1. Kërko signature nga backend: GET /api/uploads/signature
+ * 2. Përdor signature për të bërë POST direkt te Cloudinary
+ * 3. Ruaj URL-në publike që Cloudinary kthen
+ *
+ * Fallback: nëse Cloudinary dështon, përdor blob URL (preview lokal)
  */
 export function MultiImageUpload({ images, onChange, max = 10, className }: MultiImageUploadProps) {
+  const { getToken } = useAuth();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const [error, setError] = React.useState<string | null>(null);
 
-  function handleFiles(files: FileList | null) {
+  async function uploadOne(file: File): Promise<string> {
+    // 1) Get signature nga backend
+    const token = await getToken().catch(() => null);
+    const sig = await apiFetch<CloudinarySignature>("/uploads/signature", { token });
+
+    // 2) POST direkt te Cloudinary
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", sig.apiKey);
+    formData.append("timestamp", String(sig.timestamp));
+    formData.append("signature", sig.signature);
+    formData.append("folder", sig.folder);
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error("Cloudinary upload failed");
+    const data = await res.json();
+    return data.secure_url as string;
+  }
+
+  async function handleFiles(files: FileList | null) {
     if (!files) return;
+    setError(null);
     const remaining = max - images.length;
     const take = Array.from(files).slice(0, remaining);
-    const urls = take.map((f) => URL.createObjectURL(f));
-    onChange([...images, ...urls]);
+
+    setUploading(true);
+    setProgress(0);
+    const uploaded: string[] = [];
+    for (let i = 0; i < take.length; i++) {
+      try {
+        const url = await uploadOne(take[i]);
+        uploaded.push(url);
+      } catch (e) {
+        // Fallback: blob URL (preview lokal për demo)
+        console.warn("Cloudinary failed, using blob:", e);
+        uploaded.push(URL.createObjectURL(take[i]));
+        setError("⚠️ Cloudinary nuk është konfiguruar — duke përdorur preview lokal (foto do humbasin pas refresh)");
+      }
+      setProgress(Math.round(((i + 1) / take.length) * 100));
+    }
+    onChange([...images, ...uploaded]);
+    setUploading(false);
+    setProgress(0);
   }
 
   function removeAt(idx: number) {
@@ -54,7 +112,7 @@ export function MultiImageUpload({ images, onChange, max = 10, className }: Mult
           </div>
         ))}
 
-        {images.length < max && (
+        {images.length < max && !uploading && (
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
@@ -64,6 +122,14 @@ export function MultiImageUpload({ images, onChange, max = 10, className }: Mult
             <span className="text-xs font-medium">Shto foto</span>
             <span className="text-[10px] text-gray-400">{images.length}/{max}</span>
           </button>
+        )}
+
+        {uploading && (
+          <div className="aspect-square rounded-lg border-2 border-dashed border-unify-blue/40 bg-blue-50 flex flex-col items-center justify-center text-unify-blue">
+            <div className="animate-spin h-6 w-6 border-2 border-unify-blue border-t-transparent rounded-full mb-2" />
+            <span className="text-xs font-medium">Duke ngarkuar...</span>
+            <span className="text-[10px]">{progress}%</span>
+          </div>
         )}
       </div>
 
@@ -75,6 +141,12 @@ export function MultiImageUpload({ images, onChange, max = 10, className }: Mult
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />
+
+      {error && (
+        <p className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-2 py-1">
+          {error}
+        </p>
+      )}
 
       {images.length > 0 && (
         <p className="text-xs text-gray-500">
