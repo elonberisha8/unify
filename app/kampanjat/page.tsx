@@ -3,61 +3,46 @@
 // ============================================================
 // BRANCH: feat/listings
 // FIGMA:
-//   - Shpalljet Publike -> https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=54-2
+//   • Shpalljet Publike → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=54-2
 // NOTION: https://www.notion.so/34874891227e81fd9a06df93436ce2d9
 // ============================================================
 
 import * as React from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CampaignCard, SearchBar, FilterChips } from "@/components/public"
 import {
   Pagination,
   Badge,
-  Button,
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-  Skeleton,
 } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
 import { PUBLIC_NAVBAR, PUBLIC_FOOTER } from "../_lib/public-layout-config"
-import { apiFetch, type Campaign } from "@/app/_lib/api"
 
 const CATEGORIES = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Mjekesore", value: "MEDICAL" },
-  { label: "Arsim", value: "EDUCATION" },
-  { label: "Emergjence", value: "EMERGENCY" },
-  { label: "Komunitet", value: "COMMUNITY" },
-  { label: "Sport", value: "SPORTS" },
-  { label: "Kafshe", value: "ANIMALS" },
-  { label: "Mjedis", value: "ENVIRONMENT" },
-  { label: "Teknologji", value: "TECHNOLOGY" },
-  { label: "Kreative", value: "CREATIVE" },
-  { label: "Tjera", value: "OTHER" },
+  { label: "Të gjitha", value: "all" },
+  { label: "Mjekësore", value: "Mjekësore" },
+  { label: "Arsim", value: "Arsim" },
+  { label: "Emergjencë", value: "Emergjencë" },
+  { label: "Komunitet", value: "Komunitet" },
+  { label: "Sport", value: "Sport" },
+  { label: "Kafshë", value: "Kafshë" },
+  { label: "Mjedis", value: "Mjedis" },
 ]
 
 const LOCATIONS = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Prishtine", value: "Prishtine" },
-  { label: "Tirane", value: "Tirane" },
+  { label: "Të gjitha", value: "all" },
+  { label: "Prishtinë", value: "Prishtinë" },
+  { label: "Tiranë", value: "Tiranë" },
   { label: "Prizren", value: "Prizren" },
   { label: "Shkup", value: "Shkup" },
   { label: "Diaspora", value: "Diaspora" },
 ]
 
-const SORT_OPTIONS = [
-  { label: "Urgjente se pari", value: "urgent" },
-  { label: "Me te rejat", value: "newest" },
-  { label: "Afer qellimit", value: "almostDone" },
-  { label: "Me te financuara", value: "mostFunded" },
-]
-
-type CampaignRow = {
+type Campaign = {
   id: string
-  slug: string
   title: string
   description: string
   imageUrl: string
@@ -69,145 +54,202 @@ type CampaignRow = {
   donorCount: number
   creatorName: string
   verified: boolean
-  urgent: boolean
+  urgent?: boolean
+  createdAt: number
 }
 
-type SortKey = "urgent" | "newest" | "almostDone" | "mostFunded"
+const CAMPAIGNS: Campaign[] = [
+  {
+    id: "c1",
+    title: "Ndihmë për operacionin e Ariut",
+    description: "Familja jonë po përballet me një sfidë të madhe shëndetësore.",
+    imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800",
+    category: "Mjekësore",
+    location: "Prishtinë",
+    raised: 8450,
+    goal: 15000,
+    daysLeft: 12,
+    donorCount: 234,
+    creatorName: "Familja Krasniqi",
+    verified: true,
+    urgent: true,
+    createdAt: 10,
+  },
+  {
+    id: "c2",
+    title: "Rinovimi i bibliotekës së fshatit",
+    description: "Libra të rinj dhe mobilie për bibliotekën e komunitetit.",
+    imageUrl: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800",
+    category: "Arsim",
+    location: "Prizren",
+    raised: 3200,
+    goal: 5000,
+    daysLeft: 25,
+    donorCount: 87,
+    creatorName: "Shoqata Dritë",
+    verified: true,
+    createdAt: 8,
+  },
+  {
+    id: "c3",
+    title: "Strehimi për qentë e rrugës",
+    description: "Ndërtojmë një strehë për qentë pa shtëpi.",
+    imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800",
+    category: "Kafshë",
+    location: "Tiranë",
+    raised: 1800,
+    goal: 8000,
+    daysLeft: 45,
+    donorCount: 56,
+    creatorName: "Anila Hoxha",
+    verified: false,
+    createdAt: 6,
+  },
+  {
+    id: "c4",
+    title: "Pajisje sportive për shkollën",
+    description: "Topa, rrjeta dhe pajisje për edukatën fizike.",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800",
+    category: "Sport",
+    location: "Prishtinë",
+    raised: 950,
+    goal: 2500,
+    daysLeft: 30,
+    donorCount: 41,
+    creatorName: "Drin Gashi",
+    verified: true,
+    createdAt: 4,
+  },
+  {
+    id: "c5",
+    title: "Trajtim urgjent për Lirën (2 vjeç)",
+    description: "Lira ka nevojë për operacion jashtë vendit.",
+    imageUrl: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=800",
+    category: "Mjekësore",
+    location: "Diaspora",
+    raised: 23100,
+    goal: 45000,
+    daysLeft: 8,
+    donorCount: 512,
+    creatorName: "Familja Berisha",
+    verified: true,
+    urgent: true,
+    createdAt: 12,
+  },
+  {
+    id: "c6",
+    title: "Mbjellja e 1000 pemëve",
+    description: "Projekt mjedisor për të rikthyer gjelbërimin.",
+    imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+    category: "Mjedis",
+    location: "Shkup",
+    raised: 4200,
+    goal: 6000,
+    daysLeft: 20,
+    donorCount: 118,
+    creatorName: "EcoAlbania",
+    verified: true,
+    createdAt: 9,
+  },
+  {
+    id: "c7",
+    title: "Ndihmë për familjet pas tërmetit",
+    description: "Ushqim, strehim dhe pajisje për familjet.",
+    imageUrl: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800",
+    category: "Emergjencë",
+    location: "Tiranë",
+    raised: 12800,
+    goal: 20000,
+    daysLeft: 5,
+    donorCount: 367,
+    creatorName: "Kryqi i Kuq",
+    verified: true,
+    urgent: true,
+    createdAt: 11,
+  },
+  {
+    id: "c8",
+    title: "Rikonstruktimi i pallatit të kulturës",
+    description: "Restaurimi i objektit historik të komunitetit.",
+    imageUrl: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800",
+    category: "Komunitet",
+    location: "Prishtinë",
+    raised: 6300,
+    goal: 12000,
+    daysLeft: 40,
+    donorCount: 145,
+    creatorName: "Komuna e Prishtinës",
+    verified: true,
+    createdAt: 5,
+  },
+  {
+    id: "c9",
+    title: "Laptop për studentët e fakultetit",
+    description: "50 laptopa për studentët e skamur.",
+    imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+    category: "Arsim",
+    location: "Tiranë",
+    raised: 2100,
+    goal: 10000,
+    daysLeft: 35,
+    donorCount: 62,
+    creatorName: "Fondacioni i Edukimit",
+    verified: true,
+    createdAt: 3,
+  },
+  {
+    id: "c10",
+    title: "Pajisje mjekësore për spitalin",
+    description: "Pajisje moderne për spitalin rajonal.",
+    imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800",
+    category: "Mjekësore",
+    location: "Shkup",
+    raised: 18500,
+    goal: 30000,
+    daysLeft: 15,
+    donorCount: 289,
+    creatorName: "Spitali Rajonal",
+    verified: true,
+    createdAt: 7,
+  },
+]
 
 const PAGE_SIZE = 9
-const CATEGORY_VALUES = CATEGORIES.map((item) => item.value)
-const LOCATION_VALUES = LOCATIONS.map((item) => item.value)
-const SORT_VALUES = SORT_OPTIONS.map((item) => item.value)
 
-function calcDaysLeft(endsAt: string | null): number {
-  if (!endsAt) return 999
-  const diff = new Date(endsAt).getTime() - Date.now()
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
-}
-
-function normalizeValue(value: string | null, allowed: string[], fallback: string) {
-  if (!value) return fallback
-  return allowed.includes(value) ? value : fallback
-}
-
-function normalizePage(value: string | null) {
-  const parsed = Number.parseInt(value ?? "1", 10)
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
-}
-
-function labelFor(options: Array<{ label: string; value: string }>, value: string) {
-  return options.find((item) => item.value === value)?.label ?? value
-}
-
-function mapCampaign(c: Campaign): CampaignRow {
-  return {
-    id: c.id,
-    slug: c.slug,
-    title: c.title,
-    description: c.shortDescription ?? c.description.slice(0, 120),
-    imageUrl: c.images[0] ?? "",
-    category: c.category,
-    location: c.location,
-    raised: c.currentAmount,
-    goal: c.targetAmount,
-    daysLeft: calcDaysLeft(c.endsAt),
-    donorCount: c._count.donations,
-    creatorName: c.isAnonymous ? "Anonim" : c.creator.name,
-    verified: c.creator.isVerified,
-    urgent: c.isUrgent,
-  }
-}
+type SortKey = "newest" | "urgent" | "almostDone" | "mostFunded"
 
 export default function KampanjaListPage() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const [category, setCategory] = React.useState("all")
+  const [location, setLocation] = React.useState("all")
+  const [query, setQuery] = React.useState("")
+  const [sort, setSort] = React.useState<SortKey>("urgent")
+  const [page, setPage] = React.useState(1)
 
-  const category = normalizeValue(searchParams.get("category"), CATEGORY_VALUES, "all")
-  const location = normalizeValue(searchParams.get("location"), LOCATION_VALUES, "all")
-  const sort = normalizeValue(searchParams.get("sort"), SORT_VALUES, "urgent") as SortKey
-  const query = (searchParams.get("search") ?? "").trim()
-  const page = normalizePage(searchParams.get("page"))
+  const filtered = React.useMemo(() => {
+    let items = CAMPAIGNS.filter((c) => {
+      if (category !== "all" && c.category !== category) return false
+      if (location !== "all" && c.location !== location) return false
+      if (query && !c.title.toLowerCase().includes(query.toLowerCase())) return false
+      return true
+    })
 
-  const [campaigns, setCampaigns] = React.useState<CampaignRow[]>([])
-  const [total, setTotal] = React.useState(0)
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
-  const [queryDraft, setQueryDraft] = React.useState(query)
+    items = [...items].sort((a, b) => {
+      if (sort === "urgent") return (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0) || a.daysLeft - b.daysLeft
+      if (sort === "newest") return b.createdAt - a.createdAt
+      if (sort === "almostDone") return b.raised / b.goal - a.raised / a.goal
+      if (sort === "mostFunded") return b.raised - a.raised
+      return 0
+    })
 
-  const updateQuery = React.useCallback(
-    (next: Record<string, string | number | null>) => {
-      const params = new URLSearchParams(searchParams.toString())
-      Object.entries(next).forEach(([key, value]) => {
-        if (value === null || value === "" || value === "all" || value === 1) {
-          params.delete(key)
-        } else {
-          params.set(key, String(value))
-        }
-      })
-      const url = params.toString() ? `${pathname}?${params.toString()}` : pathname
-      router.replace(url, { scroll: false })
-    },
-    [pathname, router, searchParams]
-  )
+    return items
+  }, [category, location, query, sort])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   React.useEffect(() => {
-    setQueryDraft(query)
-  }, [query])
-
-  React.useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const clean = queryDraft.trim()
-      if (clean !== query) updateQuery({ search: clean || null, page: null })
-    }, 350)
-
-    return () => window.clearTimeout(timer)
-  }, [queryDraft, query, updateQuery])
-
-  React.useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      setLoading(true)
-      setError(null)
-      try {
-        const params = new URLSearchParams({
-          sort,
-          page: String(page),
-          limit: String(PAGE_SIZE),
-        })
-        if (category !== "all") params.set("category", category)
-        if (location !== "all") params.set("location", location)
-        if (query) params.set("search", query)
-
-        const res = await apiFetch<{ campaigns: Campaign[]; total: number }>(
-          `/campaigns?${params.toString()}`
-        )
-
-        if (!cancelled) {
-          setCampaigns(res.campaigns.map(mapCampaign))
-          setTotal(res.total)
-        }
-      } catch {
-        if (!cancelled) {
-          setCampaigns([])
-          setTotal(0)
-          setError("Nuk arritem t'i marrim kampanjat nga databaza.")
-        }
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-
-    load()
-    return () => {
-      cancelled = true
-    }
-  }, [category, location, page, query, sort])
-
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
-  const hasFilters = category !== "all" || location !== "all" || sort !== "urgent" || query.length > 0
-  const clearFilters = () => router.replace(pathname, { scroll: false })
+    setPage(1)
+  }, [category, location, query, sort])
 
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
@@ -221,9 +263,9 @@ export default function KampanjaListPage() {
               Kampanjat Aktive
             </h1>
             <p className="mb-8 text-lg text-muted-foreground">
-              Gjej nje kampanje qe te flet dhe dhuroji nje kontribut. Cdo euro numeroret.
+              Gjej një kampanjë që të flet dhe dhuroji një kontribut. Çdo euro numërohet.
             </p>
-            <SearchBar value={queryDraft} onChange={setQueryDraft} placeholder="Kerko kampanje..." size="lg" />
+            <SearchBar value={query} onChange={setQuery} placeholder="Kërko kampanjë..." size="lg" />
           </div>
         </div>
       </section>
@@ -232,19 +274,11 @@ export default function KampanjaListPage() {
         <div className="mx-auto max-w-7xl space-y-4 px-4 py-6 md:px-6">
           <div>
             <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Kategoria</p>
-            <FilterChips
-              options={CATEGORIES}
-              value={category}
-              onChange={(value) => updateQuery({ category: value, page: null })}
-            />
+            <FilterChips options={CATEGORIES} value={category} onChange={setCategory} />
           </div>
           <div>
             <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Lokacioni</p>
-            <FilterChips
-              options={LOCATIONS}
-              value={location}
-              onChange={(value) => updateQuery({ location: value, page: null })}
-            />
+            <FilterChips options={LOCATIONS} value={location} onChange={setLocation} />
           </div>
         </div>
       </section>
@@ -253,85 +287,60 @@ export default function KampanjaListPage() {
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              <span className="font-bold text-unify-brown">{total}</span> kampanja
+              <span className="font-bold text-unify-brown">{filtered.length}</span> kampanja
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {hasFilters && (
-                <Button variant="outline" size="sm" onClick={clearFilters}>
-                  Pastro filtrat
-                </Button>
-              )}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Rendit:</span>
-                <Select value={sort} onValueChange={(value) => updateQuery({ sort: value, page: null })}>
-                  <SelectTrigger className="w-[200px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SORT_OPTIONS.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Rendit:</span>
+              <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="urgent">Urgjente së pari</SelectItem>
+                  <SelectItem value="newest">Më të rejat</SelectItem>
+                  <SelectItem value="almostDone">Afër qëllimit</SelectItem>
+                  <SelectItem value="mostFunded">Më të financuara</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-72 w-full rounded-3xl" />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="rounded-3xl border border-border bg-white p-12 text-center">
-              <p className="mb-2 font-display text-2xl text-unify-brown">Dicka shkoi keq</p>
-              <p className="mb-6 text-muted-foreground">{error}</p>
-              <Button onClick={() => window.location.reload()}>Provo perseri</Button>
-            </div>
-          ) : campaigns.length === 0 ? (
-            <div className="rounded-3xl border border-border bg-white p-16 text-center">
-              <p className="mb-2 font-display text-2xl text-unify-brown">Nuk u gjet asnje kampanje</p>
-              <p className="mb-6 text-muted-foreground">Provo filtra tjere ose fjale kyce.</p>
-              {hasFilters && (
-                <Button variant="outline" onClick={clearFilters}>
-                  Pastro filtrat
-                </Button>
-              )}
+          {pageItems.length === 0 ? (
+            <div className="py-20 text-center">
+              <p className="mb-2 font-display text-2xl text-unify-brown">Nuk u gjet asnjë kampanjë</p>
+              <p className="text-muted-foreground">Provo filtra tjerë ose fjalë kyçe.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {campaigns.map((campaign) => (
+              {pageItems.map((c) => (
                 <CampaignCard
-                  key={campaign.id}
-                  id={campaign.id}
-                  title={campaign.title}
-                  description={campaign.description}
-                  imageUrl={campaign.imageUrl}
-                  category={campaign.urgent ? "URGJENTE" : labelFor(CATEGORIES, campaign.category)}
-                  location={campaign.location}
-                  raised={campaign.raised}
-                  goal={campaign.goal}
-                  daysLeft={campaign.daysLeft}
-                  donorCount={campaign.donorCount}
-                  creatorName={campaign.creatorName}
-                  verified={campaign.verified}
-                  onClick={() => router.push(`/kampanjat/${campaign.slug}`)}
-                  onDonate={() => router.push(`/kampanjat/${campaign.slug}`)}
+                  key={c.id}
+                  id={c.id}
+                  title={c.title}
+                  description={c.description}
+                  imageUrl={c.imageUrl}
+                  category={c.urgent ? "URGJENTE" : c.category}
+                  location={c.location}
+                  raised={c.raised}
+                  goal={c.goal}
+                  daysLeft={c.daysLeft}
+                  donorCount={c.donorCount}
+                  creatorName={c.creatorName}
+                  verified={c.verified}
+                  onClick={() => {
+                    window.location.href = `/kampanjat/${c.id}`
+                  }}
+                  onDonate={() => {
+                    window.location.href = `/kampanjat/${c.id}`
+                  }}
                 />
               ))}
             </div>
           )}
 
-          {!loading && !error && totalPages > 1 && (
+          {totalPages > 1 && (
             <div className="mt-10 flex justify-center">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={(nextPage) => updateQuery({ page: nextPage })}
-              />
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </div>
           )}
         </div>

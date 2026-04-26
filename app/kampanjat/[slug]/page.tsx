@@ -3,578 +3,603 @@
 // ============================================================
 // BRANCH: feat/campaign-detail
 // FIGMA:
-//   - Kampanja Detail -> https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=55-2
+//   • Kampanja — Detail → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=55-2
+//   • Kampanja — Modal Donacioni → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=199-2
 // NOTION: https://www.notion.so/34874891227e8164afc4f7f6568c7a81
 // ============================================================
 
 import * as React from "react"
-import { useAuth } from "@clerk/nextjs"
-import { useParams, useRouter } from "next/navigation"
-import { CampaignCard, DonationModal, DonorList, ShareButtons } from "@/components/public"
+import { useParams } from "next/navigation"
+import { DonationModal, DonorList, ShareButtons, CampaignCard } from "@/components/public"
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Badge,
   Button,
-  Card,
-  CardContent,
+  Badge,
   Progress,
-  Separator,
-  Skeleton,
   Tabs,
-  TabsContent,
   TabsList,
   TabsTrigger,
+  TabsContent,
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
   Textarea,
+  Separator,
 } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-import { CalendarIcon, CheckIcon, FlagIcon, HeartIcon, MapPinIcon, UsersIcon } from "@/components/icons"
-import { PUBLIC_FOOTER, PUBLIC_NAVBAR } from "../../_lib/public-layout-config"
-import { apiFetch, type Campaign } from "../../_lib/api"
+import { HeartIcon, MapPinIcon, CalendarIcon, UsersIcon, CheckIcon, FlagIcon } from "@/components/icons"
+import { PUBLIC_NAVBAR, PUBLIC_FOOTER } from "../../_lib/public-layout-config"
 
-type JsonRecord = Record<string, unknown>
-type CampaignComment = { id: string; content: string; author?: { name: string } }
+const BASE_CAMPAIGN = {
+  id: "c1",
+  title: "Trajtim urgjent për Lirën (2 vjeç)",
+  category: "Mjekësore",
+  location: "Diaspora",
+  urgent: true,
+  images: [
+    "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200",
+    "https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200",
+    "https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=1200",
+    "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1200",
+  ],
+  creator: {
+    name: "Familja Berisha",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+    verified: true,
+    campaignCount: 1,
+    username: "familja-berisha",
+  },
+  description: `Lira është 2 vjeç dhe ka nevojë urgjente për një operacion të rëndë që nuk mund të kryhet në Kosovë.
 
-function calcDaysLeft(endsAt: string | null): number {
-  if (!endsAt) return 999
-  const diff = new Date(endsAt).getTime() - Date.now()
-  return Math.max(0, Math.ceil(diff / 86400000))
+Mjekët në klinikën private në Turqi kanë konfirmuar se operacioni është i nevojshëm brenda 30 ditëve. Kostoja totale e trajtimit, duke përfshirë operacionin, ilaçet dhe rehabilitimin, është €45,000.
+
+Familja jonë është e madhe por e varfër — nuk kemi mundësi ta përballojmë këtë shumë vetëm. Çdo euro që ju dhuroni do të përdoret ekskluzivisht për trajtimin e Lirës.
+
+Faleminderit nga zemra për çdo kontribut.`,
+  raised: 23100,
+  goal: 45000,
+  daysLeft: 8,
+  donorCount: 512,
+  milestones: [
+    { label: "Konsultimet fillestare", amount: 5000, done: true, current: false },
+    { label: "Operacioni kryesor", amount: 25000, done: true, current: false },
+    { label: "Ilaçet & rehabilitimi", amount: 35000, done: false, current: true },
+    { label: "Kontrolli pas-operativ", amount: 45000, done: false, current: false },
+  ],
+  updates: [
+    {
+      date: "20 Prill 2026",
+      title: "Operacioni u krye me sukses!",
+      body: "Dua të falënderoj çdo donator. Operacioni shkoi siç ishte planifikuar dhe Lira tani po qëndron në kujdes intensiv.",
+    },
+    {
+      date: "15 Prill 2026",
+      title: "Udhëtimi për në Turqi",
+      body: "U nisëm sot për Stamboll. Çdo hap na afron më shumë me shpresën.",
+    },
+    {
+      date: "10 Prill 2026",
+      title: "Falë juve arritëm €20,000!",
+      body: "Nuk mund ta besoj sa shumë njerëz na kanë ndihmuar. Mirënjohje e pafund.",
+    },
+  ],
+  topDonors: [
+    { name: "Arben Krasniqi", amount: "€1,000", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" },
+    { name: "Ylli Gashi", amount: "€500" },
+    { name: "Anonim", amount: "€500", anonymous: true },
+    { name: "Dritë Hoxha", amount: "€250" },
+    { name: "Besart Aliu", amount: "€200" },
+  ],
+  recentDonors: [
+    { name: "Anonim", amount: "€50", anonymous: true, date: "para 2 orëve", message: "Shëndet për Lirën!" },
+    { name: "Valbona S.", amount: "€25", date: "para 3 orëve" },
+    { name: "Diaspora NYC", amount: "€100", date: "para 5 orëve", message: "Nga New York me dashuri." },
+    { name: "Arben K.", amount: "€30", date: "para 6 orëve" },
+  ],
+  comments: [
+    {
+      id: "cm1",
+      name: "Valbona S.",
+      date: "2 ditë më parë",
+      body: "Zoti i dhëntë shëndet Lirës. Ju dëgjoj në lutje.",
+    },
+    {
+      id: "cm2",
+      name: "Ylli Gashi",
+      date: "3 ditë më parë",
+      body: "Kam transferuar edhe unë. Ndihuni të fortë!",
+    },
+    {
+      id: "cm3",
+      name: "Arben Krasniqi",
+      date: "5 ditë më parë",
+      body: "Po ndaj kudo. Shpresoj arrihet qëllimi shpejt.",
+    },
+  ],
+  similar: [
+    {
+      id: "c2",
+      title: "Rinovimi i bibliotekës",
+      description: "Libra dhe mobilie për bibliotekën.",
+      imageUrl: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600",
+      category: "Arsim",
+      location: "Prizren",
+      raised: 3200,
+      goal: 5000,
+      daysLeft: 25,
+      donorCount: 87,
+      creatorName: "Shoqata Dritë",
+      verified: true,
+    },
+    {
+      id: "c3",
+      title: "Strehimi për qentë",
+      description: "Streha për qentë pa shtëpi.",
+      imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
+      category: "Kafshë",
+      location: "Tiranë",
+      raised: 1800,
+      goal: 8000,
+      daysLeft: 45,
+      donorCount: 56,
+      creatorName: "Anila Hoxha",
+      verified: false,
+    },
+    {
+      id: "c7",
+      title: "Ndihmë pas tërmetit",
+      description: "Ushqim dhe strehim për familjet.",
+      imageUrl: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600",
+      category: "Emergjencë",
+      location: "Tiranë",
+      raised: 12800,
+      goal: 20000,
+      daysLeft: 5,
+      donorCount: 367,
+      creatorName: "Kryqi i Kuq",
+      verified: true,
+    },
+  ],
 }
 
-function asRecords(value: unknown): JsonRecord[] {
-  return Array.isArray(value)
-    ? value.filter((item): item is JsonRecord => Boolean(item) && typeof item === "object" && !Array.isArray(item))
-    : []
-}
+const CAMPAIGN_SUMMARIES = [
+  {
+    id: "c1",
+    title: "Ndihmë për operacionin e Ariut",
+    category: "Mjekësore",
+    location: "Prishtinë",
+    urgent: true,
+    imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1200",
+    creatorName: "Familja Krasniqi",
+    username: "familja-krasniqi",
+    description:
+      "Ariu ka nevojë për një ndërhyrje të rëndësishme mjekësore dhe familja po kërkon ndihmë nga komuniteti. Çdo kontribut ndihmon në mbulimin e kontrollave, trajtimit dhe kujdesit pas operacionit.",
+    raised: 8450,
+    goal: 15000,
+    daysLeft: 12,
+    donorCount: 234,
+  },
+  {
+    id: "c2",
+    title: "Rinovimi i bibliotekës së fshatit",
+    category: "Arsim",
+    location: "Prizren",
+    imageUrl: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200",
+    creatorName: "Shoqata Dritë",
+    username: "shoqata-drite",
+    description:
+      "Biblioteka e fshatit ka nevojë për libra të rinj, rafte dhe hapësirë më të ngrohtë për fëmijët. Kampanja synon ta kthejë bibliotekën në qendër të gjallë të komunitetit.",
+    raised: 3200,
+    goal: 5000,
+    daysLeft: 25,
+    donorCount: 87,
+  },
+  {
+    id: "c3",
+    title: "Strehimi për qentë e rrugës",
+    category: "Kafshë",
+    location: "Tiranë",
+    imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1200",
+    creatorName: "Anila Hoxha",
+    username: "anila-hoxha",
+    description:
+      "Ky projekt krijon një strehë të sigurt për qentë pa shtëpi, me ushqim, kujdes veterinar dhe hapësirë të mbrojtur derisa të adoptohen.",
+    raised: 1800,
+    goal: 8000,
+    daysLeft: 45,
+    donorCount: 56,
+  },
+  {
+    id: "c4",
+    title: "Pajisje sportive për shkollën",
+    category: "Sport",
+    location: "Prishtinë",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200",
+    creatorName: "Drin Gashi",
+    username: "drin-gashi",
+    description:
+      "Shkolla ka nevojë për topa, rrjeta dhe pajisje bazike sportive që nxënësit të zhvillojnë orët e edukatës fizike në kushte më të mira.",
+    raised: 950,
+    goal: 2500,
+    daysLeft: 30,
+    donorCount: 41,
+  },
+  {
+    id: "c5",
+    title: "Trajtim urgjent për Lirën (2 vjeç)",
+    category: "Mjekësore",
+    location: "Diaspora",
+    urgent: true,
+    imageUrl: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200",
+    creatorName: "Familja Berisha",
+    username: "familja-berisha",
+    description: BASE_CAMPAIGN.description,
+    raised: 23100,
+    goal: 45000,
+    daysLeft: 8,
+    donorCount: 512,
+  },
+  {
+    id: "c6",
+    title: "Mbjellja e 1000 pemëve",
+    category: "Mjedis",
+    location: "Shkup",
+    imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200",
+    creatorName: "EcoAlbania",
+    username: "ecoalbania",
+    description:
+      "Një projekt i gjelbër për të mbjellë 1000 pemë dhe për të rikthyer gjelbërimin në hapësira publike të lagjeve.",
+    raised: 4200,
+    goal: 6000,
+    daysLeft: 20,
+    donorCount: 118,
+  },
+  {
+    id: "c7",
+    title: "Ndihmë për familjet pas tërmetit",
+    category: "Emergjencë",
+    location: "Tiranë",
+    urgent: true,
+    imageUrl: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1200",
+    creatorName: "Kryqi i Kuq",
+    username: "kryqi-i-kuq",
+    description:
+      "Familjet e prekura nga tërmeti kanë nevojë për ushqim, strehim të përkohshëm dhe pajisje bazike për jetesë të sigurt.",
+    raised: 12800,
+    goal: 20000,
+    daysLeft: 5,
+    donorCount: 367,
+  },
+  {
+    id: "c8",
+    title: "Rikonstruktimi i pallatit të kulturës",
+    category: "Komunitet",
+    location: "Prishtinë",
+    imageUrl: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1200",
+    creatorName: "Komuna e Prishtinës",
+    username: "komuna-prishtines",
+    description:
+      "Restaurim i hapësirës kulturore që komuniteti ta përdorë për aktivitete, shfaqje dhe takime publike.",
+    raised: 6300,
+    goal: 12000,
+    daysLeft: 40,
+    donorCount: 145,
+  },
+  {
+    id: "c9",
+    title: "Laptop për studentët e fakultetit",
+    category: "Arsim",
+    location: "Tiranë",
+    imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200",
+    creatorName: "Fondacioni i Edukimit",
+    username: "fondacioni-edukimit",
+    description:
+      "50 studentë kanë nevojë për laptopë që të ndjekin mësimin, të përgatisin projekte dhe të kenë qasje në materiale online.",
+    raised: 2100,
+    goal: 10000,
+    daysLeft: 35,
+    donorCount: 62,
+  },
+  {
+    id: "c10",
+    title: "Pajisje mjekësore për spitalin",
+    category: "Mjekësore",
+    location: "Shkup",
+    imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1200",
+    creatorName: "Spitali Rajonal",
+    username: "spitali-rajonal",
+    description:
+      "Spitali rajonal ka nevojë për pajisje moderne diagnostikuese dhe mbështetëse për të ofruar shërbim më të shpejtë për pacientët.",
+    raised: 18500,
+    goal: 30000,
+    daysLeft: 15,
+    donorCount: 289,
+  },
+]
 
-function textValue(value: unknown) {
-  if (value === null || value === undefined) return ""
-  return String(value).trim()
-}
+function getCampaignBySlug(slug?: string) {
+  const summary = CAMPAIGN_SUMMARIES.find((campaign) => campaign.id === slug) ?? CAMPAIGN_SUMMARIES[0]
+  const similar = CAMPAIGN_SUMMARIES.filter((campaign) => campaign.id !== summary.id).slice(0, 3).map((campaign) => ({
+    id: campaign.id,
+    title: campaign.title,
+    description: campaign.description,
+    imageUrl: campaign.imageUrl,
+    category: campaign.category,
+    location: campaign.location,
+    raised: campaign.raised,
+    goal: campaign.goal,
+    daysLeft: campaign.daysLeft,
+    donorCount: campaign.donorCount,
+    creatorName: campaign.creatorName,
+    verified: true,
+  }))
 
-function money(value: number) {
-  return `EUR ${Number(value || 0).toLocaleString("sq-AL")}`
-}
-
-function descriptionSections(description: string) {
-  return description
-    .split(/\n\n## /)
-    .map((section, index) => {
-      if (index === 0) return { title: "Problemi", body: section.replace(/^##\s*/, "").trim() }
-      const [rawTitle, ...rest] = section.split("\n")
-      return { title: rawTitle.trim(), body: rest.join("\n").trim() }
-    })
-    .filter((section) => section.body)
-}
-
-function DetailBlock({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <Card className="rounded-3xl border-border bg-white shadow-sm">
-      <CardContent className="space-y-4 p-6 md:p-8">
-        <h2 className="font-display text-2xl text-unify-brown">{title}</h2>
-        {children}
-      </CardContent>
-    </Card>
-  )
-}
-
-function InfoTile({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl bg-unify-cream p-4">
-      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</p>
-      <div className="mt-1 text-sm font-bold text-unify-brown">{value}</div>
-    </div>
-  )
+  return {
+    ...BASE_CAMPAIGN,
+    id: summary.id,
+    title: summary.title,
+    category: summary.category,
+    location: summary.location,
+    urgent: Boolean(summary.urgent),
+    images: [summary.imageUrl, ...BASE_CAMPAIGN.images.slice(1)],
+    creator: {
+      ...BASE_CAMPAIGN.creator,
+      name: summary.creatorName,
+      username: summary.username,
+      verified: true,
+    },
+    description: summary.description,
+    raised: summary.raised,
+    goal: summary.goal,
+    daysLeft: summary.daysLeft,
+    donorCount: summary.donorCount,
+    similar,
+  }
 }
 
 function PhotoGallery({ images, title }: { images: string[]; title: string }) {
   const [idx, setIdx] = React.useState(0)
-
-  if (images.length === 0) {
-    return <div className="aspect-[4/3] w-full rounded-3xl bg-muted" />
-  }
 
   return (
     <div className="space-y-3">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-3xl bg-muted">
         <img src={images[idx]} alt={title} className="h-full w-full object-cover" />
       </div>
-      {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
-          {images.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              onClick={() => setIdx(i)}
-              className={`aspect-square overflow-hidden rounded-xl border-2 transition-colors ${
-                i === idx ? "border-unify-blue" : "border-transparent hover:border-border"
-              }`}
-            >
-              <img src={src} alt="" className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-4 gap-2">
+        {images.map((src, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            className={`aspect-square overflow-hidden rounded-xl border-2 transition-colors ${
+              i === idx ? "border-unify-blue" : "border-transparent hover:border-border"
+            }`}
+          >
+            <img src={src} alt="" className="h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
 
 export default function CampaignDetailPage() {
   const params = useParams<{ slug: string }>()
-  const router = useRouter()
-  const slug = params?.slug ?? ""
-  const { isLoaded, isSignedIn, getToken } = useAuth()
-
-  const [campaign, setCampaign] = React.useState<Campaign | null>(null)
-  const [similar, setSimilar] = React.useState<Campaign[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [notFound, setNotFound] = React.useState(false)
+  const CAMPAIGN = getCampaignBySlug(params?.slug)
   const [showModal, setShowModal] = React.useState(false)
   const [comment, setComment] = React.useState("")
-  const [comments, setComments] = React.useState<CampaignComment[]>([])
-  const [liked, setLiked] = React.useState(false)
-  const [messageSent, setMessageSent] = React.useState(false)
-
-  React.useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      setLoading(true)
-      setNotFound(false)
-      try {
-        const data = await apiFetch<Campaign>(`/campaigns/${slug}`)
-        if (cancelled) return
-        setCampaign(data)
-        setComments((data.comments ?? []).map((item) => ({ id: item.id, content: item.content, author: item.author })))
-
-        try {
-          const res = await apiFetch<{ campaigns: Campaign[] }>(`/campaigns?category=${encodeURIComponent(data.category)}&limit=4`)
-          if (!cancelled) setSimilar((res.campaigns ?? []).filter((item) => item.id !== data.id).slice(0, 3))
-        } catch {
-          if (!cancelled) setSimilar([])
-        }
-      } catch {
-        if (!cancelled) setNotFound(true)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-
-    if (slug) load()
-    return () => {
-      cancelled = true
-    }
-  }, [slug])
-
-  if (loading) {
-    return (
-      <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
-        <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px] lg:gap-12">
-            <div className="space-y-6">
-              <Skeleton className="aspect-[4/3] w-full rounded-3xl" />
-              <Skeleton className="h-10 w-2/3 rounded-xl" />
-              <Skeleton className="h-40 w-full rounded-xl" />
-            </div>
-            <Skeleton className="h-72 w-full rounded-3xl" />
-          </div>
-        </div>
-      </PublicLayout>
-    )
-  }
-
-  if (notFound || !campaign) {
-    return (
-      <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
-        <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 py-20">
-          <p className="font-display text-3xl text-unify-brown">Kampanja nuk u gjet</p>
-          <p className="text-muted-foreground">Kjo kampanje nuk ekziston ose eshte fshire.</p>
-          <Button onClick={() => router.push("/kampanjat")}>Shiko kampanjat</Button>
-        </div>
-      </PublicLayout>
-    )
-  }
-
-  const pct = Math.min(100, Math.round((campaign.currentAmount / campaign.targetAmount) * 100))
-  const daysLeft = calcDaysLeft(campaign.endsAt)
-  const creatorName = campaign.isAnonymous ? "Anonim" : campaign.creator.name
-  const creatorAvatar = campaign.creator.image ?? ""
-  const creatorUsername = campaign.creator.username ?? campaign.creator.id
-  const budgetItems = asRecords(campaign.budgetItems)
-  const budgetBreakdown = asRecords(campaign.budgetBreakdown)
-  const faqs = asRecords(campaign.faqs)
-  const docs = campaign.supportingDocs ?? []
-  const milestones = campaign.milestones ?? []
-  const updates = campaign.updates ?? []
-  const sections = descriptionSections(campaign.description)
-  const donors = (campaign.donations ?? []).map((donation) => ({
-    name: donation.donor?.name ?? donation.guestName ?? "Guest",
-    amount: money(donation.amount),
-    avatar: donation.donor?.image ?? undefined,
-    message: donation.message ?? undefined,
-    date: new Date(donation.createdAt).toLocaleDateString("sq-AL"),
-    anonymous: donation.isAnonymous,
-  }))
+  const pct = Math.min(100, Math.round((CAMPAIGN.raised / CAMPAIGN.goal) * 100))
   const shareUrl = typeof window !== "undefined" ? window.location.href : ""
-
-  const requireLogin = () => {
-    router.push(`/auth/login?redirect=${encodeURIComponent(`/kampanjat/${slug}`)}`)
-  }
-
-  async function submitComment() {
-    if (!isLoaded || !campaign) return
-    if (!isSignedIn) {
-      requireLogin()
-      return
-    }
-    const token = await getToken()
-    const created = await apiFetch<CampaignComment>(`/campaigns/${campaign.id}/comments`, {
-      method: "POST",
-      token,
-      body: JSON.stringify({ content: comment.trim() }),
-    })
-    setComments((prev) => [created, ...prev])
-    setComment("")
-  }
-
-  async function startDirectMessage() {
-    if (!isLoaded || !campaign) return
-    if (!isSignedIn) {
-      requireLogin()
-      return
-    }
-    if (!campaign.creator.username) return
-    const token = await getToken()
-    await apiFetch("/messages/start", {
-      method: "POST",
-      token,
-      body: JSON.stringify({
-        username: campaign.creator.username,
-        content: `Pershendetje, po ju shkruaj per kampanjen "${campaign.title}".`,
-      }),
-    })
-    setMessageSent(true)
-  }
-
-  function toggleReaction() {
-    if (!isLoaded) return
-    if (!isSignedIn) {
-      requireLogin()
-      return
-    }
-    setLiked((value) => !value)
-  }
 
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px] lg:gap-12">
           <div className="min-w-0 space-y-8">
-            <PhotoGallery images={campaign.images} title={campaign.title} />
+            <PhotoGallery images={CAMPAIGN.images} title={CAMPAIGN.title} />
 
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
-                <Badge variant="primary">{campaign.category}</Badge>
-                <Badge variant="secondary">{campaign.location}</Badge>
-                {campaign.isUrgent && <Badge variant="destructive">URGJENTE</Badge>}
-                {campaign.creator.isVerified && <Badge variant="success">VERIFIKUAR</Badge>}
+                <Badge variant="primary">{CAMPAIGN.category}</Badge>
+                <Badge variant="secondary">{CAMPAIGN.location}</Badge>
+                {CAMPAIGN.urgent && <Badge variant="destructive">URGJENTE</Badge>}
+                {CAMPAIGN.creator.verified && <Badge variant="success">VERIFIKUAR</Badge>}
               </div>
-              <h1 className="font-display text-3xl text-unify-brown md:text-4xl">{campaign.title}</h1>
-              {campaign.shortDescription && <p className="text-lg text-muted-foreground">{campaign.shortDescription}</p>}
+              <h1 className="font-display text-3xl text-unify-brown md:text-4xl">{CAMPAIGN.title}</h1>
             </div>
 
             <div className="flex items-center gap-4 rounded-2xl bg-unify-cream p-4">
               <Avatar className="h-14 w-14">
-                <AvatarImage src={creatorAvatar} alt={creatorName} />
-                <AvatarFallback>{creatorName.charAt(0)}</AvatarFallback>
+                <AvatarImage src={CAMPAIGN.creator.avatar} alt={CAMPAIGN.creator.name} />
+                <AvatarFallback>{CAMPAIGN.creator.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-unify-brown">{creatorName}</p>
-                  {campaign.creator.isVerified && <CheckIcon className="h-4 w-4 text-unify-blue" />}
+                  <p className="font-bold text-unify-brown">{CAMPAIGN.creator.name}</p>
+                  {CAMPAIGN.creator.verified && <CheckIcon className="h-4 w-4 text-unify-blue" />}
                 </div>
-                <p className="text-sm text-muted-foreground">{campaign.location}</p>
+                <p className="text-sm text-muted-foreground">
+                  {CAMPAIGN.creator.campaignCount} kampanjë · {CAMPAIGN.location}
+                </p>
               </div>
-              {!campaign.isAnonymous && (
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" onClick={() => router.push(`/profili/${creatorUsername}`)}>
-                    Shiko Profilin
-                  </Button>
-                  {campaign.creator.username && (
-                    <Button variant="secondary" onClick={startDirectMessage}>
-                      {messageSent ? "Mesazhi u dergua" : "Shkruaj"}
-                    </Button>
-                  )}
-                </div>
-              )}
+              <Button
+                variant="outline"
+                onClick={() => {
+                  window.location.href = `/profili/${CAMPAIGN.creator.username}`
+                }}
+              >
+                Shiko Profilin
+              </Button>
             </div>
 
             <Tabs defaultValue="description">
               <TabsList className="w-full justify-start overflow-x-auto">
-                <TabsTrigger value="description">Detajet</TabsTrigger>
-                <TabsTrigger value="budget">Buxheti</TabsTrigger>
-                <TabsTrigger value="updates">Lajme</TabsTrigger>
-                <TabsTrigger value="donors">Donatoret</TabsTrigger>
-                <TabsTrigger value="comments">Komente</TabsTrigger>
+                <TabsTrigger value="description">Përshkrimi</TabsTrigger>
+                <TabsTrigger value="updates">Lajme ({CAMPAIGN.updates.length})</TabsTrigger>
+                <TabsTrigger value="donors">Donatorët</TabsTrigger>
+                <TabsTrigger value="comments">Komente ({CAMPAIGN.comments.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="description" className="space-y-6">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <InfoTile label="Grupi qe preket" value={campaign.targetGroup || "Nuk eshte specifikuar"} />
-                  <InfoTile label="Urgjenca" value={campaign.urgency ? `${campaign.urgency}/10` : campaign.isUrgent ? "Urgjente" : "Normale"} />
-                  <InfoTile label="Afati" value={campaign.endsAt ? new Date(campaign.endsAt).toLocaleDateString("sq-AL") : "Pa afat"} />
+                <div>
+                  {CAMPAIGN.description.split("\n\n").map((p, i) => (
+                    <p key={i} className="mb-4 leading-relaxed text-unify-brown">
+                      {p}
+                    </p>
+                  ))}
                 </div>
 
-                {campaign.problemStatement && (
-                  <DetailBlock title="Problemi kryesor">
-                    <p className="whitespace-pre-line leading-relaxed text-muted-foreground">{campaign.problemStatement}</p>
-                  </DetailBlock>
-                )}
-
-                <DetailBlock title="Storyja dhe plani">
-                  <div className="space-y-5">
-                    {sections.map((section) => (
-                      <div key={section.title}>
-                        <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-unify-blue">{section.title}</h3>
-                        <p className="whitespace-pre-line leading-relaxed text-unify-brown">{section.body}</p>
+                <div className="rounded-3xl border border-border bg-white p-6">
+                  <h3 className="mb-4 font-display text-xl text-unify-brown">Fazat e kampanjës</h3>
+                  <div className="space-y-4">
+                    {CAMPAIGN.milestones.map((m, i) => (
+                      <div key={i} className="flex gap-4">
+                        <div
+                          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
+                            m.done
+                              ? "bg-unify-green text-white"
+                              : m.current
+                              ? "bg-unify-blue text-white"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {m.done ? <CheckIcon className="h-5 w-5" /> : <span className="text-sm font-bold">{i + 1}</span>}
+                        </div>
+                        <div className="flex-1 pt-1">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="font-bold text-unify-brown">{m.label}</p>
+                            <span className="text-sm text-muted-foreground">€{m.amount.toLocaleString()}</span>
+                          </div>
+                          {m.current && <p className="mt-1 text-xs font-bold text-unify-blue">Në progres</p>}
+                          {m.done && <p className="mt-1 text-xs font-bold text-unify-green">Arritur</p>}
+                        </div>
                       </div>
                     ))}
                   </div>
-                </DetailBlock>
-
-                {(campaign.expectedOutcome || campaign.verificationPlan || campaign.partners || campaign.videoUrl) && (
-                  <DetailBlock title="Transparenca dhe rezultati">
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {campaign.expectedOutcome && <InfoTile label="Rezultati i pritur" value={campaign.expectedOutcome} />}
-                      {campaign.verificationPlan && <InfoTile label="Plani i verifikimit" value={campaign.verificationPlan} />}
-                      {campaign.partners && <InfoTile label="Partneret" value={campaign.partners} />}
-                      {campaign.videoUrl && (
-                        <InfoTile
-                          label="Video"
-                          value={<a className="text-unify-blue hover:underline" href={campaign.videoUrl} target="_blank" rel="noreferrer">Hap videon</a>}
-                        />
-                      )}
-                    </div>
-                  </DetailBlock>
-                )}
-
-                {faqs.length > 0 && (
-                  <DetailBlock title="Pyetje te shpeshta">
-                    <div className="space-y-3">
-                      {faqs.map((faq, index) => (
-                        <div key={index} className="rounded-2xl border border-border p-4">
-                          <p className="font-bold text-unify-brown">{textValue(faq.q) || `Pyetja ${index + 1}`}</p>
-                          <p className="mt-2 text-sm text-muted-foreground">{textValue(faq.a)}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </DetailBlock>
-                )}
-              </TabsContent>
-
-              <TabsContent value="budget" className="space-y-6">
-                <DetailBlock title="Buxheti i kampanjes">
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <InfoTile label="Qellimi" value={money(campaign.targetAmount)} />
-                    <InfoTile label="Mbledhur" value={money(campaign.currentAmount)} />
-                    <InfoTile label="Tip per platformen" value={campaign.tipPercent != null ? `${campaign.tipPercent}%` : "Nuk eshte specifikuar"} />
-                  </div>
-
-                  {budgetItems.length > 0 && (
-                    <div className="overflow-hidden rounded-2xl border border-border">
-                      <table className="w-full text-sm">
-                        <thead className="bg-unify-cream text-left text-xs uppercase tracking-wide text-muted-foreground">
-                          <tr>
-                            <th className="px-4 py-3">Item</th>
-                            <th className="px-4 py-3 text-right">Shuma</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border">
-                          {budgetItems.map((item, index) => (
-                            <tr key={index}>
-                              <td className="px-4 py-3 font-medium text-unify-brown">{textValue(item.label) || `Item ${index + 1}`}</td>
-                              <td className="px-4 py-3 text-right text-muted-foreground">
-                                {textValue(item.amount) ? money(Number(textValue(item.amount))) : "-"}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  {budgetBreakdown.length > 0 && (
-                    <div className="grid gap-3 md:grid-cols-2">
-                      {budgetBreakdown.map((item, index) => {
-                        const pctValue = Number(textValue(item.pct)) || 0
-                        return (
-                          <div key={index} className="rounded-2xl bg-unify-cream p-4">
-                            <div className="flex items-center justify-between gap-3">
-                              <span className="font-bold text-unify-brown">{textValue(item.label) || `Ndarja ${index + 1}`}</span>
-                              <span className="text-sm font-bold text-unify-blue">{pctValue}%</span>
-                            </div>
-                            <Progress value={pctValue} className="mt-3" />
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-
-                  {milestones.length > 0 && (
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Milestones</h3>
-                      {milestones.map((milestone) => (
-                        <div key={milestone.id} className="flex flex-col gap-2 rounded-2xl border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <p className="font-bold text-unify-brown">{milestone.title}</p>
-                            {milestone.description && <p className="text-sm text-muted-foreground">{milestone.description}</p>}
-                          </div>
-                          <Badge variant={milestone.isReached ? "success" : "outline"}>{money(milestone.amount)}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {docs.length > 0 && (
-                    <div>
-                      <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted-foreground">Dokumente mbeshtetese</h3>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        {docs.map((doc, index) => (
-                          <a key={doc} href={doc} target="_blank" rel="noreferrer" className="rounded-2xl border border-border p-4 text-sm font-bold text-unify-blue hover:bg-unify-cream">
-                            Dokumenti {index + 1}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </DetailBlock>
+                </div>
               </TabsContent>
 
               <TabsContent value="updates" className="space-y-4">
-                {updates.length === 0 ? (
-                  <div className="py-10 text-center text-muted-foreground">Nuk ka lajme akoma.</div>
-                ) : (
-                  updates.map((update) => (
-                    <DetailBlock key={update.id} title={update.title}>
-                      {update.image && <img src={update.image} alt="" className="max-h-72 w-full rounded-2xl object-cover" />}
-                      <p className="whitespace-pre-line text-muted-foreground">{update.content}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(update.createdAt).toLocaleDateString("sq-AL")}</p>
-                    </DetailBlock>
-                  ))
-                )}
+                {CAMPAIGN.updates.map((u, i) => (
+                  <div key={i} className="rounded-2xl border border-border bg-white p-5">
+                    <p className="mb-1 text-xs text-muted-foreground">{u.date}</p>
+                    <h4 className="mb-2 font-display text-lg text-unify-brown">{u.title}</h4>
+                    <p className="text-sm leading-relaxed text-unify-brown">{u.body}</p>
+                  </div>
+                ))}
               </TabsContent>
 
               <TabsContent value="donors">
-                {donors.length === 0 ? (
-                  <div className="rounded-3xl border border-border bg-white py-10 text-center text-muted-foreground">Ende nuk ka donatore.</div>
-                ) : (
-                  <DonorList title="Donatoret e fundit" donors={donors} />
-                )}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <DonorList title="Më të mëdhenj" donors={CAMPAIGN.topDonors} />
+                  <DonorList title="Të fundit" donors={CAMPAIGN.recentDonors} />
+                </div>
               </TabsContent>
 
               <TabsContent value="comments" className="space-y-4">
                 <div className="rounded-2xl border border-border bg-white p-4">
                   <Textarea
                     value={comment}
-                    onChange={(event) => setComment(event.target.value)}
-                    placeholder="Shkruaj nje koment (vetem te kycurit)..."
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Shkruaj një koment (vetëm të kyçurit)..."
                     rows={3}
                   />
                   <div className="mt-3 flex justify-end">
-                    <Button onClick={submitComment} disabled={comment.trim().length < 3}>
-                      Komento
-                    </Button>
+                    <Button disabled={comment.trim().length < 3}>Komento</Button>
                   </div>
                 </div>
-                {comments.length > 0 ? (
-                  <div className="space-y-3">
-                    {comments.map((item) => (
-                      <div key={item.id} className="rounded-2xl border border-border bg-white p-4">
-                        <p className="text-sm font-bold text-unify-brown">{item.author?.name ?? "Perdorues"}</p>
-                        <p className="mt-1 text-sm text-muted-foreground">{item.content}</p>
+                <ul className="space-y-3">
+                  {CAMPAIGN.comments.map((c) => (
+                    <li key={c.id} className="flex gap-3 rounded-2xl border border-border bg-white p-4">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback>{c.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-bold text-unify-brown">{c.name}</p>
+                          <p className="text-xs text-muted-foreground">{c.date}</p>
+                        </div>
+                        <p className="mt-1 text-sm text-unify-brown">{c.body}</p>
+                        <button className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-unify-brown">
+                          <FlagIcon className="h-3 w-3" /> Raporto
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-8 text-center text-sm text-muted-foreground">Nuk ka komente akoma. Behu i pari!</div>
-                )}
+                    </li>
+                  ))}
+                </ul>
               </TabsContent>
             </Tabs>
 
-            {similar.length > 0 && (
-              <div className="border-t border-border pt-8">
-                <h2 className="mb-6 font-display text-2xl text-unify-brown">Kampanja te ngjashme</h2>
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-                  {similar.map((item) => (
-                    <CampaignCard
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      description={item.shortDescription ?? item.description.slice(0, 100)}
-                      imageUrl={item.images[0] ?? ""}
-                      category={item.category}
-                      location={item.location}
-                      raised={item.currentAmount}
-                      goal={item.targetAmount}
-                      daysLeft={calcDaysLeft(item.endsAt)}
-                      donorCount={item._count.donations}
-                      creatorName={item.isAnonymous ? "Anonim" : item.creator.name}
-                      verified={item.creator.isVerified}
-                      onClick={() => router.push(`/kampanjat/${item.slug}`)}
-                    />
-                  ))}
-                </div>
+            <div className="border-t border-border pt-8">
+              <h2 className="mb-6 font-display text-2xl text-unify-brown">Kampanja të ngjashme</h2>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                {CAMPAIGN.similar.map((s) => (
+                  <CampaignCard
+                    key={s.id}
+                    id={s.id}
+                    title={s.title}
+                    description={s.description}
+                    imageUrl={s.imageUrl}
+                    category={s.category}
+                    location={s.location}
+                    raised={s.raised}
+                    goal={s.goal}
+                    daysLeft={s.daysLeft}
+                    donorCount={s.donorCount}
+                    creatorName={s.creatorName}
+                    verified={s.verified}
+                    onClick={() => {
+                      window.location.href = `/kampanjat/${s.id}`
+                    }}
+                  />
+                ))}
               </div>
-            )}
+            </div>
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="space-y-5 rounded-3xl border border-border bg-white p-6 shadow-sm">
               <div>
                 <div className="mb-2 flex items-baseline justify-between">
-                  <span className="font-display text-3xl text-unify-brown">{money(campaign.currentAmount)}</span>
+                  <span className="font-display text-3xl text-unify-brown">€{CAMPAIGN.raised.toLocaleString()}</span>
                   <span className="text-sm text-muted-foreground">{pct}%</span>
                 </div>
                 <Progress value={pct} />
-                <p className="mt-2 text-sm text-muted-foreground">nga {money(campaign.targetAmount)} qellimi</p>
+                <p className="mt-2 text-sm text-muted-foreground">nga €{CAMPAIGN.goal.toLocaleString()} qëllimi</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-y border-border py-4">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-unify-brown">
                     <UsersIcon className="h-4 w-4" />
-                    <span className="font-display text-xl">{campaign._count.donations}</span>
+                    <span className="font-display text-xl">{CAMPAIGN.donorCount}</span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">Donatore</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Donatorë</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-unify-brown">
                     <CalendarIcon className="h-4 w-4" />
-                    <span className="font-display text-xl">{daysLeft === 999 ? "-" : daysLeft}</span>
+                    <span className="font-display text-xl">{CAMPAIGN.daysLeft}</span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{daysLeft === 999 ? "Pa afat" : "Dite mbetur"}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Ditë mbetur</p>
                 </div>
               </div>
 
               <Button size="lg" className="w-full" onClick={() => setShowModal(true)}>
                 <HeartIcon className="h-5 w-5" />
-                Dhuro Tani
-              </Button>
-              <Button variant={liked ? "primary" : "outline"} className="w-full" onClick={toggleReaction}>
-                {liked ? "E pelqyer" : "Reago / Pelqe"}
+                    Dhuro Tani
               </Button>
 
               <div>
-                <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Ndaje kete kampanje</p>
-                <ShareButtons url={shareUrl} title={campaign.title} />
+                <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Ndaje këtë kampanjë
+                </p>
+                <ShareButtons url={shareUrl} title={CAMPAIGN.title} />
               </div>
 
               <Separator />
 
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <MapPinIcon className="h-3 w-3" /> {campaign.location}
+                  <MapPinIcon className="h-3 w-3" /> {CAMPAIGN.location}
                 </span>
                 <button className="inline-flex items-center gap-1 hover:text-unify-brown">
                   <FlagIcon className="h-3 w-3" /> Raporto
@@ -588,8 +613,10 @@ export default function CampaignDetailPage() {
       <DonationModal
         open={showModal}
         onOpenChange={setShowModal}
-        campaignTitle={campaign.title}
-        onSubmit={() => router.push("/sukses/donacion")}
+        campaignTitle={CAMPAIGN.title}
+        onSubmit={() => {
+          window.location.href = "/sukses/donacion"
+        }}
       />
     </PublicLayout>
   )

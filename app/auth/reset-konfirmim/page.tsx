@@ -7,56 +7,49 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
+import { useSearchParams } from "next/navigation"
 import { Button, Card, CardContent } from "@/components/ui"
-import { AuthLayout } from "@/components/layout"
-import { CheckCircleIcon, MailIcon } from "@/components/icons"
+import { ArrowLeftIcon, CheckCircleIcon, MailIcon } from "@/components/icons"
 
 export default function ResetKonfirmimPage() {
+  const params = useSearchParams()
+  const email = params.get("email") || "ana.kelmendi@gmail.com"
+
   return (
-    <AuthLayout
-      imageUrl="https://images.unsplash.com/photo-1423784346385-c1d4dac9893a?w=1600"
-      title="Kontrollo email-in tënd"
-      description="Linku i rivendosjes skadon pas 15 minutash. Kontrolloni edhe folderin Spam nëse nuk e gjeni."
-    >
-      <Card className="w-full max-w-md">
-        <CardContent className="p-8 space-y-6 text-center">
-          <div className="mx-auto h-20 w-20 rounded-full bg-unify-green/10 flex items-center justify-center">
-            <CheckCircleIcon className="h-10 w-10 text-unify-green" />
-          </div>
+    <main className="min-h-screen bg-[#faf7f2]">
+      <header className="flex h-16 items-center px-6 md:px-20">
+        <a href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue">Unify</a>
+      </header>
 
-          <div className="space-y-2">
-            <h1 className="font-display text-3xl text-unify-brown">Email-i u dërgua</h1>
-            <p className="text-sm text-muted-foreground">
-              Ne të dërguam një link për të rivendosur fjalëkalimin. Ndiq udhëzimet në email.
+      <section className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-5 py-10">
+        <Card className="w-full max-w-[512px] rounded-[28px] border-none bg-white shadow-sm">
+          <CardContent className="p-10 text-center">
+            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-unify-blue/10 text-unify-blue">
+              <MailIcon className="h-12 w-12" />
+            </div>
+            <h1 className="mt-8 font-display text-3xl text-unify-brown">Kontrollo Email-in Tënd!</h1>
+            <p className="mt-4 text-muted-foreground">Dërguam instruksionet e rivendosjes tek:</p>
+            <div className="mt-4 rounded-[14px] bg-unify-cream px-4 py-3 font-bold text-unify-brown">{email}</div>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              Hap email-in dhe kliko linkun brenda 15 minutave. Nëse nuk e sheh, kontrollo edhe spam-in.
             </p>
-          </div>
 
-          <div className="rounded-2xl bg-unify-cream p-4 flex items-start gap-3 text-left">
-            <MailIcon className="h-5 w-5 text-unify-brown flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-unify-brown">
-              Nëse nuk e merr email-in brenda 5 minutash, kontrollo folderin Spam ose provo përsëri
-              me një adresë tjetër email.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={() => { window.location.href = "/auth/login" }}
-            >
-              Kthehu te Hyrja
+            <Button className="mt-8 w-full" onClick={() => { window.location.href = "mailto:" }}>
+              <CheckCircleIcon className="h-4 w-4" />
+              Hap Gmail / Email App
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full"
-              onClick={() => { window.location.href = "/auth/forgot-password" }}
-            >
-              Dërgo përsëri
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </AuthLayout>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <Button variant="outline" onClick={() => { window.location.href = "/auth/forgot-password" }}>
+                <ArrowLeftIcon className="h-4 w-4" />
+                Kthehu
+              </Button>
+              <Button variant="outline" onClick={() => { window.location.href = `/auth/reset-konfirmim?email=${encodeURIComponent(email)}` }}>
+                Ridërgoje Email-in
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+    </main>
   )
 }

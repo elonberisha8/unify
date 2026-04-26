@@ -11,48 +11,51 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { CampaignCard } from "@/components/public"
 import { PublicLayout } from "@/components/layout"
-import { Button, Skeleton } from "@/components/ui"
+import { Button } from "@/components/ui"
 import { MessageCircleIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "@/components/icons"
 import { PUBLIC_FOOTER, PUBLIC_NAVBAR } from "./_lib/public-layout-config"
-import { apiFetch, type Campaign } from "./_lib/api"
 
-type HomeCampaign = {
-  id: string
-  slug: string
-  title: string
-  description: string
-  category: string
-  imageUrl: string
-  raised: number
-  goal: number
-  daysLeft: number
-  donorCount: number
-  creatorName: string
-  verified: boolean
-}
-
-function calcDaysLeft(endsAt: string | null): number {
-  if (!endsAt) return 999
-  const diff = new Date(endsAt).getTime() - Date.now()
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
-}
-
-function mapCampaign(c: Campaign): HomeCampaign {
-  return {
-    id: c.id,
-    slug: c.slug,
-    title: c.title,
-    description: c.shortDescription ?? c.description.slice(0, 120),
-    category: c.isUrgent ? "URGJENTE" : c.category,
-    imageUrl: c.images[0] ?? "",
-    raised: c.currentAmount,
-    goal: c.targetAmount,
-    daysLeft: calcDaysLeft(c.endsAt),
-    donorCount: c._count.donations,
-    creatorName: c.isAnonymous ? "Anonim" : c.creator.name,
-    verified: c.creator.isVerified,
-  }
-}
+const CAMPAIGNS = [
+  {
+    id: "1",
+    title: '"Siguro ujë të pastër për familjet në nevojë."',
+    description: "Ndihmë familjeve të kenë qasje në ujë të pastër çdo ditë.",
+    category: "Ushqim",
+    imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop",
+    raised: 4373,
+    goal: 10000,
+    daysLeft: 18,
+    donorCount: 124,
+    creatorName: "Fondacioni Kosovës",
+    verified: true,
+  },
+  {
+    id: "2",
+    title: '"Ndihmo me vakte ushqyese sot."',
+    description: "Sigurimi i ushqimit ditor për fëmijët dhe familjet në nevojë.",
+    category: "Edukimi",
+    imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&h=400&fit=crop",
+    raised: 5200,
+    goal: 7000,
+    daysLeft: 12,
+    donorCount: 67,
+    creatorName: "Shoqata Edukimit",
+    verified: true,
+  },
+  {
+    id: "3",
+    title: '"Fuqizo jetët nëpërmjet bujarisë suaj."',
+    description: "Bashkohuni me ne dhe ndihmo jetët e njerëzve që kanë nevojë.",
+    category: "Bamirësi",
+    imageUrl: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop",
+    raised: 27890,
+    goal: 50000,
+    daysLeft: 30,
+    donorCount: 203,
+    creatorName: "Organizata Bamirëse",
+    verified: false,
+  },
+]
 
 const SERVICES = [
   {
@@ -69,41 +72,30 @@ const SERVICES = [
   },
 ]
 
-const TEAM = [
+const VOLUNTEERS = [
   {
     name: "Elon Berisha",
-    role: "Frontend & Backend",
+    role: "Themelues & kapiten i kaosit",
     initials: "EB",
     avatarClass: "from-unify-blue to-blue-800",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Elon-Unify-Lead",
-  },
-  {
-    name: "Bleon Bajraktari",
-    role: "Frontend & Backend",
-    initials: "BB",
-    avatarClass: "from-amber-400 to-orange-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Bleon-API-Wizard",
   },
   {
     name: "Resul Sopa",
-    role: "Design & Frontend Management",
+    role: "Frontend & pixel polic",
     initials: "RS",
     avatarClass: "from-emerald-400 to-teal-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Resul-Design-Pro",
+  },
+  {
+    name: "Bleon Bajraktari",
+    role: "UX & butona qe punojne",
+    initials: "BB",
+    avatarClass: "from-amber-400 to-orange-700",
   },
   {
     name: "Albert Aliu",
-    role: "Frontend",
+    role: "CEO & Themelues",
     initials: "AA",
     avatarClass: "from-fuchsia-400 to-rose-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Albert-CSS-Dragon",
-  },
-  {
-    name: "Alketa Citaku",
-    role: "Frontend",
-    initials: "AC",
-    avatarClass: "from-pink-400 to-purple-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Alketa-Frontend-Star",
   },
 ]
 
@@ -159,53 +151,10 @@ const FAQ_ITEMS = [
   },
 ]
 
-type PlatformStats = {
-  totalDonated: number
-  volunteerCount: number
-  campaignCount: number
-}
-
 export default function HomePage() {
   const router = useRouter()
   const [faqOpen, setFaqOpen] = React.useState<number>(0)
   const [storyIndex, setStoryIndex] = React.useState(0)
-  const [homeCampaigns, setHomeCampaigns] = React.useState<HomeCampaign[]>([])
-  const [campaignsLoading, setCampaignsLoading] = React.useState(true)
-  const [platformStats, setPlatformStats] = React.useState<PlatformStats>({
-    totalDonated: 68000,
-    volunteerCount: 15000,
-    campaignCount: 150000,
-  })
-
-  React.useEffect(() => {
-    async function loadFeatured() {
-      try {
-        const res = await apiFetch<{ campaigns: Campaign[] } | Campaign[]>("/campaigns?featured=true&limit=3")
-        const data = Array.isArray(res)
-          ? res
-          : ((res as { campaigns?: Campaign[] }).campaigns ?? [])
-        setHomeCampaigns(data.slice(0, 3).map(mapCampaign))
-      } catch {
-        setHomeCampaigns([])
-      } finally {
-        setCampaignsLoading(false)
-      }
-    }
-
-    async function loadStats() {
-      try {
-        const res = await apiFetch<PlatformStats>("/stats")
-        if (res && typeof res === "object" && "totalDonated" in res) {
-          setPlatformStats(res)
-        }
-      } catch {
-        // keep default fallback values
-      }
-    }
-
-    loadFeatured()
-    loadStats()
-  }, [])
   const story = TESTIMONIALS[storyIndex]
   const showPreviousStory = () => {
     setStoryIndex((current) => (current === 0 ? TESTIMONIALS.length - 1 : current - 1))
@@ -272,9 +221,9 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {[
-              { value: platformStats.campaignCount >= 1000 ? `${Math.round(platformStats.campaignCount / 1000)}K+` : `${platformStats.campaignCount}+`, label: "Numri i Mbështetësve" },
-              { value: platformStats.volunteerCount >= 1000 ? `${Math.round(platformStats.volunteerCount / 1000)}K+` : `${platformStats.volunteerCount}+`, label: "Vullnetarë Botërorë" },
-              { value: platformStats.totalDonated >= 1000 ? `${Math.round(platformStats.totalDonated / 1000)}K+` : `€${platformStats.totalDonated}`, label: "Kemi Mbledhur" },
+              { value: "150K+", label: "Numri i Mbështetësve" },
+              { value: "15K+", label: "Vullnetarë Botërorë" },
+              { value: "68K+", label: "Kemi Mbledhur" },
             ].map((s) => (
               <div
                 key={s.label}
@@ -296,34 +245,16 @@ export default function HomePage() {
           <h2 className="mb-12 text-center font-display text-4xl text-unify-brown">
             Shkaqet Tona të Fundit
           </h2>
-          {campaignsLoading ? (
-            <div className="grid gap-6 md:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-72 w-full rounded-3xl" />
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-3">
-              {homeCampaigns.map((c) => (
-                <CampaignCard
-                  key={c.id}
-                  id={c.id}
-                  title={c.title}
-                  description={c.description}
-                  category={c.category}
-                  imageUrl={c.imageUrl}
-                  raised={c.raised}
-                  goal={c.goal}
-                  daysLeft={c.daysLeft}
-                  donorCount={c.donorCount}
-                  creatorName={c.creatorName}
-                  verified={c.verified}
-                  onDonate={() => router.push(`/kampanjat/${c.slug}`)}
-                  onClick={() => router.push(`/kampanjat/${c.slug}`)}
-                />
-              ))}
-            </div>
-          )}
+          <div className="grid gap-6 md:grid-cols-3">
+            {CAMPAIGNS.map((c) => (
+              <CampaignCard
+                key={c.id}
+                {...c}
+                onDonate={() => router.push(`/kampanjat/${c.id}`)}
+                onClick={() => router.push(`/kampanjat/${c.id}`)}
+              />
+            ))}
+          </div>
           <div className="mt-10 flex justify-center">
             <Button
               variant="outline"
@@ -409,7 +340,7 @@ export default function HomePage() {
               </p>
               <Button
                 variant="outline"
-                onClick={() => router.push("/shpalljet?kind=VOLUNTEER_CONTRIBUTION")}
+                onClick={() => router.push("/vullnetare")}
                 className="uppercase tracking-widest"
               >
                 Bëhu Vullnetar
@@ -560,7 +491,7 @@ export default function HomePage() {
                 </span>
               </button>
               <button
-                onClick={() => router.push("/shpalljet?kind=VOLUNTEER_CONTRIBUTION")}
+                onClick={() => router.push("/vullnetare")}
                 className="flex items-center gap-3 rounded-full bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-unify-brown transition-opacity hover:opacity-90"
               >
                 Hapi 02
@@ -577,16 +508,16 @@ export default function HomePage() {
 
       <section className="bg-unify-cream py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-unify-blue">Ekipi</p>
-          <h2 className="mb-10 font-display text-4xl text-unify-brown">Ekipi Ynë</h2>
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-5">
-            {TEAM.map((v) => (
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-unify-blue">Vullnetarët</p>
+          <h2 className="mb-10 font-display text-4xl text-unify-brown">Vullnetarët Tanë</h2>
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
+            {VOLUNTEERS.map((v) => (
               <div key={v.name} className="overflow-hidden rounded-[20px] bg-white shadow-sm">
                 <div className={`aspect-square bg-gradient-to-br ${v.avatarClass} relative flex items-center justify-center overflow-hidden`}>
                   <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-white/15" />
                   <div className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-black/10" />
-                  <div className="relative h-28 w-28 rotate-[-6deg] overflow-hidden rounded-[30px] bg-white/30 shadow-xl ring-4 ring-white/25 transition-transform duration-500 hover:rotate-3 hover:scale-105">
-                    <img src={v.avatarUrl} alt={v.name} className="h-full w-full object-cover" />
+                  <div className="relative flex h-24 w-24 rotate-[-6deg] items-center justify-center rounded-[30px] bg-white/20 text-3xl font-black text-white shadow-xl ring-4 ring-white/25 transition-transform duration-500 hover:rotate-3 hover:scale-105">
+                    {v.initials}
                   </div>
                 </div>
                 <div className="p-4 text-center">

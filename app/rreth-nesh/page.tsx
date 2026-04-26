@@ -63,43 +63,52 @@ const VALUES = [
 const REAL_TEAM = [
   {
     name: "Albert Aliu",
-    role: "Frontend Developer",
-    bio: "Fronti i duket i qete, por Alberti e di qe nje margin gabim mund ta prishe krejt universin.",
+    role: "CEO & Themelues",
+    bio: "E mban vizionin drejt: platforme e thjeshte, e besueshme dhe e dobishme per komunitetin.",
     initials: "AA",
     avatarClass: "from-fuchsia-400 to-rose-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Albert-CSS-Dragon",
   },
   {
     name: "Rilind Krasniqi",
-    role: "Frontend Developer",
-    bio: "I ben komponentet te rrine drejt edhe kur browseri vendos te kete mendimin e vet artistik.",
+    role: "CTO & Themelues",
+    bio: "Kujdeset qe motori teknik i Unify te mos kollitet kur komuniteti fillon te rritet.",
     initials: "RK",
     avatarClass: "from-sky-400 to-blue-800",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Rilind-Responsive-Ninja",
+  },
+  {
+    name: "Dea Krasniqi",
+    role: "Head of Operations",
+    bio: "I kthen idete, proceset dhe kaosin e embel te startup-it ne hapa te qarte pune.",
+    initials: "DK",
+    avatarClass: "from-violet-400 to-indigo-800",
+  },
+  {
+    name: "Besa Ajeti",
+    role: "Community Manager",
+    bio: "Zeri i komunitetit ne ekip, gjithmone me nje sy te detajet qe i bejne njerezit te ndihen te pare.",
+    initials: "BA",
+    avatarClass: "from-lime-400 to-emerald-700",
   },
   {
     name: "Resul Sopa",
-    role: "Design & Front Management",
-    bio: "Menaxhon dizajnin dhe frontin me sy shqiponje. Nese nje buton leviz 2px, Resuli e degjon.",
+    role: "Frontend & pixel polic",
+    bio: "Kur nje buton leviz 2px pa leje, Resuli e ndjen ne shpirt para se ta shohim ne browser.",
     initials: "RS",
     avatarClass: "from-emerald-400 to-teal-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Resul-Pixel-Police",
   },
   {
     name: "Bleon Bajraktari",
-    role: "Backend Developer",
-    bio: "I flet API-ve me qetesi dhe i bind response-at te kthehen me status 200 si njerez te edukuar.",
+    role: "UX & butona qe punojne",
+    bio: "Nuk e le asnje flow te humbe ne korridor. Klik, kuptim, rezultat. Kaq e do jeta.",
     initials: "BB",
     avatarClass: "from-amber-400 to-orange-700",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Bleon-API-Wizard",
   },
   {
     name: "Elon Berisha",
-    role: "Team Leader, Backend & DB",
-    bio: "Mban drejtimin, backend-in dhe databazen. Pra, njeriu qe pyetet kur tabela vendos te behet filozofike.",
+    role: "Themelues & kapiten i kaosit",
+    bio: "E shtyn ekipin perpara me energji, urgjence dhe nje nivel optimizmi qe duhet futur ne env variables.",
     initials: "EB",
     avatarClass: "from-unify-blue to-blue-900",
-    avatarUrl: "https://api.dicebear.com/9.x/adventurer/svg?seed=Elon-Backend-King",
   },
 ]
 
@@ -198,7 +207,6 @@ export default function RrethNeshPage() {
                 <div className="absolute -left-8 -top-8 h-24 w-24 rounded-full bg-white/15" />
                 <div className="absolute -bottom-10 -right-10 h-28 w-28 rounded-full bg-black/10" />
                 <Avatar className="relative h-24 w-24 rotate-[-5deg] border-4 border-white/30 bg-white/20 shadow-xl transition-transform duration-500 hover:rotate-3 hover:scale-105">
-                  <img src={m.avatarUrl} alt={m.name} className="h-full w-full object-cover" />
                   <AvatarFallback className="bg-transparent font-display text-2xl font-black text-white">
                     {m.initials}
                   </AvatarFallback>

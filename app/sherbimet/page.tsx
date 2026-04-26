@@ -173,7 +173,7 @@ export default function SherbiметPage() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <Button variant="outline" size="lg" onClick={() => { window.location.href = "/shpalljet?kind=VOLUNTEER_CONTRIBUTION" }}>
+          <Button variant="outline" size="lg" onClick={() => { window.location.href = "/vullnetare" }}>
             Shiko mundësitë vullnetare
           </Button>
         </div>

@@ -2,395 +2,413 @@
 
 // ============================================================
 // BRANCH: feat/listings
-// /shpalljet - listimi i vetem per kontribute vullnetare dhe kerkesa mbeshtetjeje.
+// FIGMA:
+//   • Shpalljet Publike → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=54-2
+//   • Search → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=47-2
+// NOTION: https://www.notion.so/34874891227e81fd9a06df93436ce2d9
 // ============================================================
 
 import * as React from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { SearchBar, FilterChips } from "@/components/public"
-import { Pagination, Badge, Button, Skeleton } from "@/components/ui"
+import { CampaignCard, VolunteerCard, SearchBar, FilterChips } from "@/components/public"
+import { Tabs, TabsList, TabsTrigger, Pagination, Badge } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
 import { PUBLIC_NAVBAR, PUBLIC_FOOTER } from "../_lib/public-layout-config"
-import { apiFetch, type VolunteerListing } from "@/app/_lib/api"
-
-const KIND_OPTIONS = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Vullnetare (ofrojne)", value: "VOLUNTEER_CONTRIBUTION" },
-  { label: "Kerkesa mbeshtetjeje", value: "SUPPORT_REQUEST" },
-]
-
-const HELP_TYPES = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Send fizik", value: "PHYSICAL_ITEM" },
-  { label: "Sherbim", value: "SERVICE" },
-  { label: "Para / Fond", value: "FUND" },
-]
 
 const CATEGORIES = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Mjekesore", value: "Mjekësore" },
-  { label: "Ndihme mjekesore", value: "Ndihmë mjekësore" },
-  { label: "Arsim", value: "Arsim" },
-  { label: "Emergjence", value: "Emergjencë" },
-  { label: "Familje", value: "Familje" },
-  { label: "Biznes i vogel", value: "Biznes i vogël" },
-  { label: "Rroba", value: "Rroba" },
-  { label: "Pajisje elektronike", value: "Pajisje elektronike" },
-  { label: "Mobilie", value: "Mobilie" },
-  { label: "Libra", value: "Libra" },
-  { label: "Ushqim", value: "Ushqim" },
-  { label: "Lojera", value: "Lojëra" },
-  { label: "Mesimdhenie", value: "Mësimdhënie" },
-  { label: "Riparim", value: "Riparim" },
-  { label: "Transport", value: "Transport" },
-  { label: "Perkthim", value: "Përkthim" },
-  { label: "IT", value: "IT" },
-  { label: "Konsulence", value: "Konsulencë" },
-  { label: "Tjera", value: "Tjera" },
+  { label: "Të gjitha", value: "all" },
+  { label: "Mjekësore", value: "medical" },
+  { label: "Arsim", value: "education" },
+  { label: "Emergjencë", value: "emergency" },
+  { label: "Komunitet", value: "community" },
+  { label: "Sport", value: "sports" },
+  { label: "Kafshë", value: "animals" },
+  { label: "Mjedis", value: "environment" },
 ]
 
 const LOCATIONS = [
-  { label: "Te gjitha", value: "all" },
-  { label: "Prishtine", value: "Prishtine" },
-  { label: "Tirane", value: "Tirane" },
-  { label: "Prizren", value: "Prizren" },
-  { label: "Shkup", value: "Shkup" },
-  { label: "Diaspore", value: "Diaspore" },
-  { label: "Online", value: "Online" },
+  { label: "Të gjitha", value: "all" },
+  { label: "Prishtinë", value: "prishtine" },
+  { label: "Tiranë", value: "tirane" },
+  { label: "Prizren", value: "prizren" },
+  { label: "Shkup", value: "shkup" },
+  { label: "Diaspora", value: "diaspora" },
 ]
 
-const SORT_OPTIONS = [
-  { label: "Me te rejat", value: "newest" },
-  { label: "Me te vjetrat", value: "oldest" },
-  { label: "Deadline se shpejti", value: "deadline" },
-]
-
-const PAGE_SIZE = 12
-const KIND_VALUES = KIND_OPTIONS.map((item) => item.value)
-const HELP_VALUES = HELP_TYPES.map((item) => item.value)
-const CATEGORY_VALUES = CATEGORIES.map((item) => item.value)
-const LOCATION_VALUES = LOCATIONS.map((item) => item.value)
-const SORT_VALUES = SORT_OPTIONS.map((item) => item.value)
-
-interface VolunteerItem {
+type CampaignItem = {
+  kind: "campaign"
   id: string
   title: string
   description: string
   imageUrl: string
-  helpType: string
   category: string
   location: string
-  kind: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
-  ownerName: string
-  ownerUsername: string | null
-  isAnonymous: boolean
-  applicationDeadline: string | null
-  createdAt: string
+  raised: number
+  goal: number
+  daysLeft: number
+  donorCount: number
+  creatorName: string
+  verified: boolean
+  urgent?: boolean
+}
+
+type VolunteerItem = {
+  kind: "volunteer"
+  id: string
+  title: string
+  organization: string
+  imageUrl: string
+  category: string
+  location: string
+  hoursPerWeek: string
+  startDate: string
   applicantCount: number
+  skills: string[]
 }
 
-function normalizeValue(value: string | null, allowed: string[], fallback: string) {
-  if (!value) return fallback
-  return allowed.includes(value) ? value : fallback
-}
+type Item = CampaignItem | VolunteerItem
 
-function normalizePage(value: string | null) {
-  const parsed = Number.parseInt(value ?? "1", 10)
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
-}
+const MOCK: Item[] = [
+  {
+    kind: "campaign",
+    id: "c1",
+    title: "Ndihmë për operacionin e Ariut",
+    description: "Familja jonë po përballet me një sfidë të madhe shëndetësore. Ju lutemi na ndihmoni.",
+    imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800",
+    category: "Mjekësore",
+    location: "Prishtinë",
+    raised: 8450,
+    goal: 15000,
+    daysLeft: 12,
+    donorCount: 234,
+    creatorName: "Familja Krasniqi",
+    verified: true,
+    urgent: true,
+  },
+  {
+    kind: "volunteer",
+    id: "v1",
+    title: "Mësues vullnetar matematike për 6 fëmijë",
+    organization: "Shkolla '7 Shtatori'",
+    imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800",
+    category: "Arsim",
+    location: "Tiranë",
+    hoursPerWeek: "4h/javë",
+    startDate: "1 Maj",
+    applicantCount: 12,
+    skills: ["Matematikë", "Mësimdhënie"],
+  },
+  {
+    kind: "campaign",
+    id: "c2",
+    title: "Rinovimi i bibliotekës së fshatit",
+    description: "Po mbledhim fonde për librat e rinj dhe mobiliet për bibliotekën e komunitetit tonë.",
+    imageUrl: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800",
+    category: "Arsim",
+    location: "Prizren",
+    raised: 3200,
+    goal: 5000,
+    daysLeft: 25,
+    donorCount: 87,
+    creatorName: "Shoqata Dritë",
+    verified: true,
+  },
+  {
+    kind: "volunteer",
+    id: "v2",
+    title: "Dhurim rrobash dimërore",
+    organization: "Individuale (anonim)",
+    imageUrl: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800",
+    category: "Komunitet",
+    location: "Shkup",
+    hoursPerWeek: "Një herë",
+    startDate: "Menjëherë",
+    applicantCount: 34,
+    skills: ["Rroba fëmijësh"],
+  },
+  {
+    kind: "campaign",
+    id: "c3",
+    title: "Strehimi për qentë e rrugës",
+    description: "Ndërtojmë një strehë për qentë pa shtëpi në periferi të qytetit.",
+    imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800",
+    category: "Kafshë",
+    location: "Tiranë",
+    raised: 1800,
+    goal: 8000,
+    daysLeft: 45,
+    donorCount: 56,
+    creatorName: "Anila Hoxha",
+    verified: false,
+  },
+  {
+    kind: "campaign",
+    id: "c4",
+    title: "Pajisje sportive për shkollën fillore",
+    description: "Ndihmonani të blejmë topat, rrjetat dhe pajisje për edukatën fizike.",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800",
+    category: "Sport",
+    location: "Prishtinë",
+    raised: 950,
+    goal: 2500,
+    daysLeft: 30,
+    donorCount: 41,
+    creatorName: "Drin Gashi",
+    verified: true,
+  },
+  {
+    kind: "volunteer",
+    id: "v3",
+    title: "Transport për të moshuarit te mjeku",
+    organization: "Drita e Shpresës",
+    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800",
+    category: "Komunitet",
+    location: "Prishtinë",
+    hoursPerWeek: "6h/javë",
+    startDate: "Menjëherë",
+    applicantCount: 8,
+    skills: ["Patentë shoferi", "Makinë"],
+  },
+  {
+    kind: "campaign",
+    id: "c5",
+    title: "Trajtim urgjent për Lirën (2 vjeç)",
+    description: "Lira ka nevojë për operacion jashtë vendit. Çdo euro ndihmon.",
+    imageUrl: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=800",
+    category: "Mjekësore",
+    location: "Diaspora",
+    raised: 23100,
+    goal: 45000,
+    daysLeft: 8,
+    donorCount: 512,
+    creatorName: "Familja Berisha",
+    verified: true,
+    urgent: true,
+  },
+  {
+    kind: "volunteer",
+    id: "v4",
+    title: "Riparim laptopësh për studentë",
+    organization: "TechHelp KS (Verified)",
+    imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800",
+    category: "Arsim",
+    location: "Prishtinë",
+    hoursPerWeek: "2h/javë",
+    startDate: "15 Maj",
+    applicantCount: 19,
+    skills: ["IT", "Hardware"],
+  },
+  {
+    kind: "campaign",
+    id: "c6",
+    title: "Mbjellja e 1000 pemëve",
+    description: "Projekt mjedisor për të rikthyer gjelbërimin në zonën tonë.",
+    imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+    category: "Mjedis",
+    location: "Shkup",
+    raised: 4200,
+    goal: 6000,
+    daysLeft: 20,
+    donorCount: 118,
+    creatorName: "EcoAlbania",
+    verified: true,
+  },
+  {
+    kind: "volunteer",
+    id: "v5",
+    title: "Kurs falas kompjuteri për të moshuarit",
+    organization: "Qendra e Komunitetit",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800",
+    category: "Arsim",
+    location: "Tiranë",
+    hoursPerWeek: "3h/javë",
+    startDate: "1 Qershor",
+    applicantCount: 6,
+    skills: ["Kompjuter bazik"],
+  },
+  {
+    kind: "campaign",
+    id: "c7",
+    title: "Ndihmë për familjet pas tërmetit",
+    description: "Ushqim, strehim dhe pajisje për familjet e prekura nga tërmeti i fundit.",
+    imageUrl: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800",
+    category: "Emergjencë",
+    location: "Tiranë",
+    raised: 12800,
+    goal: 20000,
+    daysLeft: 5,
+    donorCount: 367,
+    creatorName: "Kryqi i Kuq",
+    verified: true,
+    urgent: true,
+  },
+]
 
-function labelFor(options: Array<{ label: string; value: string }>, value: string) {
-  return options.find((item) => item.value === value)?.label ?? value
-}
-
-function mapVolunteer(v: VolunteerListing): VolunteerItem {
-  return {
-    id: v.id,
-    title: v.title,
-    description: v.description?.slice(0, 140) ?? "",
-    imageUrl: v.images[0] ?? "",
-    helpType: v.subtype ?? "PHYSICAL_ITEM",
-    kind: v.kind ?? "VOLUNTEER_CONTRIBUTION",
-    category: v.category,
-    location: v.location,
-    ownerName: v.isAnonymous ? "Pronar Anonim" : v.owner.name,
-    ownerUsername: v.isAnonymous ? null : (v.owner as { username?: string | null }).username ?? null,
-    isAnonymous: v.isAnonymous,
-    applicationDeadline: v.applicationDeadline,
-    createdAt: v.createdAt,
-    applicantCount: v._count.applications,
-  }
-}
+const PAGE_SIZE = 9
 
 export default function ShpalljetPage() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const [tab, setTab] = React.useState<"all" | "campaign" | "volunteer">("all")
+  const [category, setCategory] = React.useState("all")
+  const [location, setLocation] = React.useState("all")
+  const [query, setQuery] = React.useState("")
+  const [page, setPage] = React.useState(1)
 
-  const kind = normalizeValue(searchParams.get("kind"), KIND_VALUES, "all")
-  const subtype = normalizeValue(searchParams.get("subtype"), HELP_VALUES, "all")
-  const category = normalizeValue(searchParams.get("category"), CATEGORY_VALUES, "all")
-  const location = normalizeValue(searchParams.get("location"), LOCATION_VALUES, "all")
-  const sort = normalizeValue(searchParams.get("sort"), SORT_VALUES, "newest")
-  const query = (searchParams.get("search") ?? "").trim()
-  const page = normalizePage(searchParams.get("page"))
-
-  const [items, setItems] = React.useState<VolunteerItem[]>([])
-  const [total, setTotal] = React.useState(0)
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
-  const [queryDraft, setQueryDraft] = React.useState(query)
-
-  const updateQuery = React.useCallback(
-    (next: Record<string, string | number | null>) => {
-      const params = new URLSearchParams(searchParams.toString())
-      Object.entries(next).forEach(([key, value]) => {
-        if (value === null || value === "" || value === "all" || value === 1) {
-          params.delete(key)
-        } else {
-          params.set(key, String(value))
-        }
-      })
-      const url = params.toString() ? `${pathname}?${params.toString()}` : pathname
-      router.replace(url, { scroll: false })
-    },
-    [pathname, router, searchParams]
-  )
-
-  React.useEffect(() => {
-    setQueryDraft(query)
-  }, [query])
-
-  React.useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const clean = queryDraft.trim()
-      if (clean !== query) updateQuery({ search: clean || null, page: null })
-    }, 350)
-
-    return () => window.clearTimeout(timer)
-  }, [queryDraft, query, updateQuery])
-
-  React.useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      setLoading(true)
-      setError(null)
-      try {
-        const params = new URLSearchParams({
-          sort,
-          page: String(page),
-          limit: String(PAGE_SIZE),
-        })
-        if (kind !== "all") params.set("kind", kind)
-        if (subtype !== "all") params.set("subtype", subtype)
-        if (category !== "all") params.set("category", category)
-        if (location !== "all") params.set("location", location)
-        if (query) params.set("search", query)
-
-        const res = await apiFetch<{ listings: VolunteerListing[]; total: number }>(
-          `/volunteers?${params.toString()}`
-        )
-
-        if (!cancelled) {
-          setItems(res.listings.map(mapVolunteer))
-          setTotal(res.total)
-        }
-      } catch {
-        if (!cancelled) {
-          setItems([])
-          setTotal(0)
-          setError("Nuk arritem t'i marrim shpalljet nga databaza.")
-        }
-      } finally {
-        if (!cancelled) setLoading(false)
+  const filtered = React.useMemo(() => {
+    return MOCK.filter((it) => {
+      if (tab === "campaign" && it.kind !== "campaign") return false
+      if (tab === "volunteer" && it.kind !== "volunteer") return false
+      if (
+        category !== "all" &&
+        it.category.toLowerCase() !== category.toLowerCase() &&
+        !(category === "medical" && it.category === "Mjekësore") &&
+        !(category === "education" && it.category === "Arsim") &&
+        !(category === "emergency" && it.category === "Emergjencë") &&
+        !(category === "community" && it.category === "Komunitet") &&
+        !(category === "sports" && it.category === "Sport") &&
+        !(category === "animals" && it.category === "Kafshë") &&
+        !(category === "environment" && it.category === "Mjedis")
+      ) {
+        return false
       }
-    }
+      if (location !== "all") {
+        const map: Record<string, string> = {
+          prishtine: "Prishtinë",
+          tirane: "Tiranë",
+          prizren: "Prizren",
+          shkup: "Shkup",
+          diaspora: "Diaspora",
+        }
+        if (it.location !== map[location]) return false
+      }
+      if (query && !it.title.toLowerCase().includes(query.toLowerCase())) return false
+      return true
+    })
+  }, [tab, category, location, query])
 
-    load()
-    return () => {
-      cancelled = true
-    }
-  }, [category, kind, location, page, query, sort, subtype])
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
-  const hasFilters =
-    kind !== "all" || subtype !== "all" || category !== "all" || location !== "all" || sort !== "newest" || query.length > 0
-  const clearFilters = () => router.replace(pathname, { scroll: false })
+  React.useEffect(() => {
+    setPage(1)
+  }, [tab, category, location, query])
+
+  const counts = React.useMemo(
+    () => ({
+      all: MOCK.length,
+      campaign: MOCK.filter((i) => i.kind === "campaign").length,
+      volunteer: MOCK.filter((i) => i.kind === "volunteer").length,
+    }),
+    []
+  )
 
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       <section className="border-b border-border bg-unify-cream">
         <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
           <div className="max-w-3xl">
-            <Badge className="mb-3">Shpallje Vullnetare dhe Kerkesa Mbeshtetjeje</Badge>
-            <h1 className="font-display text-4xl text-unify-brown md:text-5xl">Shfleto shpalljet</h1>
-            <p className="mt-3 text-base text-muted-foreground md:text-lg">
-              Te gjitha shpalljet ne nje vend: ata qe ofrojne ndihme dhe ata qe kerkojne mbeshtetje.
-              Per kampanja financiare shko tek{" "}
-              <a href="/kampanjat" className="font-bold text-unify-blue hover:underline">
-                kampanjat
-              </a>
-              .
+            <Badge variant="secondary" className="mb-4">
+              Të gjitha shpalljet
+            </Badge>
+            <h1 className="mb-4 font-display text-4xl text-unify-brown md:text-5xl">Shpalljet Publike</h1>
+            <p className="mb-8 text-lg text-muted-foreground">
+              Kërko mes kampanjave të donacioneve dhe aseteve vullnetare. Algoritmi ynë rendit
+              sipas urgjencës dhe interesit.
             </p>
+            <SearchBar
+              value={query}
+              onChange={setQuery}
+              placeholder="Kërko kampanja, vullnetarë, vende..."
+              size="lg"
+            />
           </div>
         </div>
       </section>
 
-      <section className="border-b border-border bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
-          <SearchBar value={queryDraft} onChange={setQueryDraft} placeholder="Kerko ne shpalljet..." />
+      <section className="border-b border-border bg-background">
+        <div className="mx-auto max-w-7xl space-y-4 px-4 py-6 md:px-6">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+            <TabsList>
+              <TabsTrigger value="all">Të Gjitha ({counts.all})</TabsTrigger>
+              <TabsTrigger value="campaign">Donacione ({counts.campaign})</TabsTrigger>
+              <TabsTrigger value="volunteer">Vullnetare ({counts.volunteer})</TabsTrigger>
+            </TabsList>
+          </Tabs>
 
-          <div className="mt-5 space-y-4">
+          <div className="space-y-3">
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Lloji i shpalljes</p>
-              <FilterChips
-                options={KIND_OPTIONS}
-                value={kind}
-                onChange={(value) => updateQuery({ kind: value, page: null })}
-              />
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Kategoria</p>
+              <FilterChips options={CATEGORIES} value={category} onChange={setCategory} />
             </div>
-
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Lloji i ndihmes</p>
-              <FilterChips
-                options={HELP_TYPES}
-                value={subtype}
-                onChange={(value) => updateQuery({ subtype: value, page: null })}
-              />
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Kategoria</p>
-              <FilterChips
-                options={CATEGORIES}
-                value={category}
-                onChange={(value) => updateQuery({ category: value, page: null })}
-              />
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Lokacioni</p>
-              <FilterChips
-                options={LOCATIONS}
-                value={location}
-                onChange={(value) => updateQuery({ location: value, page: null })}
-              />
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Rendit</p>
-              <FilterChips
-                options={SORT_OPTIONS}
-                value={sort}
-                onChange={(value) => updateQuery({ sort: value, page: null })}
-              />
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Lokacioni</p>
+              <FilterChips options={LOCATIONS} value={location} onChange={setLocation} />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-background">
-        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <section className="py-10">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              <strong className="text-gray-900">{total}</strong> shpallje per filtrin e zgjedhur
+              <span className="font-bold text-unify-brown">{filtered.length}</span> rezultate
             </p>
-            {hasFilters && (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                Pastro filtrat
-              </Button>
-            )}
           </div>
 
-          {loading ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-72 rounded-2xl" />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="rounded-2xl border border-border bg-white p-12 text-center">
-              <p className="mb-2 font-display text-xl text-unify-brown">Dicka shkoi keq</p>
-              <p className="mb-6 text-sm text-muted-foreground">{error}</p>
-              <Button onClick={() => window.location.reload()}>Provo perseri</Button>
-            </div>
-          ) : items.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-white p-16 text-center">
-              <p className="font-display text-xl text-unify-brown">Asnje shpallje per kete filter</p>
-              <p className="mt-2 text-sm text-muted-foreground">Provo nje kategori tjeter ose pastro filtrat.</p>
-              {hasFilters && (
-                <Button variant="outline" className="mt-6" onClick={clearFilters}>
-                  Pastro filtrat
-                </Button>
-              )}
+          {pageItems.length === 0 ? (
+            <div className="py-20 text-center">
+              <p className="mb-2 font-display text-2xl text-unify-brown">Nuk u gjet asgjë</p>
+              <p className="text-muted-foreground">Provo filtra tjerë ose fjalë kyçe.</p>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {items.map((item) => (
-                <a key={item.id} href={`/vullnetare/${item.id}`} className="group">
-                  <article className="overflow-hidden rounded-2xl border border-border bg-white transition hover:shadow-lg">
-                    {item.imageUrl && (
-                      <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                        <img
-                          src={item.imageUrl}
-                          alt={item.title}
-                          className="h-full w-full object-cover transition group-hover:scale-105"
-                        />
-                      </div>
-                    )}
-                    <div className="space-y-3 p-5">
-                      <div className="flex flex-wrap gap-1.5">
-                        <Badge variant={item.kind === "SUPPORT_REQUEST" ? "secondary" : "primary"} className="text-xs">
-                          {labelFor(KIND_OPTIONS, item.kind)}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {labelFor(HELP_TYPES, item.helpType)}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {item.category}
-                        </Badge>
-                      </div>
-                      <h3 className="line-clamp-2 font-display text-lg text-unify-brown transition group-hover:text-unify-blue">
-                        {item.title}
-                      </h3>
-                      <p className="line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
-                      <div className="flex items-center justify-between border-t border-gray-100 pt-2 text-xs">
-                        <span className="text-gray-600">
-                          {item.isAnonymous ? (
-                            <span>Pronar anonim</span>
-                          ) : item.ownerUsername ? (
-                            <span>
-                              nga <span className="font-bold text-unify-blue">@{item.ownerUsername}</span>
-                            </span>
-                          ) : (
-                            <span>nga {item.ownerName}</span>
-                          )}
-                        </span>
-                        <span className="text-gray-500">{item.applicantCount} aplikues</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{item.location}</span>
-                        {item.applicationDeadline && (
-                          <span className="text-orange-700">
-                            Deadline: {new Date(item.applicationDeadline).toLocaleDateString("sq-AL")}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                </a>
-              ))}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {pageItems.map((it) =>
+                it.kind === "campaign" ? (
+                  <CampaignCard
+                    key={it.id}
+                    id={it.id}
+                    title={it.title}
+                    description={it.description}
+                    imageUrl={it.imageUrl}
+                    category={it.urgent ? "URGJENTE" : it.category}
+                    location={it.location}
+                    raised={it.raised}
+                    goal={it.goal}
+                    daysLeft={it.daysLeft}
+                    donorCount={it.donorCount}
+                    creatorName={it.creatorName}
+                    verified={it.verified}
+                    onClick={() => {
+                      window.location.href = `/kampanjat/${it.id}`
+                    }}
+                    onDonate={() => {
+                      window.location.href = `/kampanjat/${it.id}`
+                    }}
+                  />
+                ) : (
+                  <VolunteerCard
+                    key={it.id}
+                    title={it.title}
+                    organization={it.organization}
+                    imageUrl={it.imageUrl}
+                    category={it.category}
+                    location={it.location}
+                    hoursPerWeek={it.hoursPerWeek}
+                    startDate={it.startDate}
+                    applicantCount={it.applicantCount}
+                    skills={it.skills}
+                    onClick={() => {
+                      window.location.href = `/vullnetare/${it.id}`
+                    }}
+                    onApply={() => {}}
+                  />
+                )
+              )}
             </div>
           )}
 
-          {!loading && !error && totalPages > 1 && (
+          {totalPages > 1 && (
             <div className="mt-10 flex justify-center">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={(nextPage) => updateQuery({ page: nextPage })}
-              />
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </div>
           )}
         </div>
