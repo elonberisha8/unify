@@ -160,12 +160,11 @@ function LocationCombobox({ value, onChange }: { value: string; onChange: (v: st
                   {group.label}
                 </p>
                 {group.cities.map((city) => (
-                  /* SelectItem — h-11 rounded-xl pl-8 pr-2 me check absolut */
                   <button
                     key={city}
                     type="button"
                     onMouseDown={(e) => { e.preventDefault(); select(city); }}
-                    className="relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm text-left outline-none hover:bg-accent/10 focus:bg-accent/10"
+                    className="relative flex w-full select-none items-center rounded-lg py-2 pl-8 pr-2 text-sm text-left outline-none hover:bg-accent/10"
                   >
                     {value === city && (
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -184,7 +183,7 @@ function LocationCombobox({ value, onChange }: { value: string; onChange: (v: st
                 <button
                   type="button"
                   onMouseDown={(e) => { e.preventDefault(); select(query.trim()); }}
-                  className="relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pl-8 pr-2 text-sm text-left text-unify-blue outline-none hover:bg-accent/10"
+                  className="relative flex w-full select-none items-center rounded-lg py-2 pl-8 pr-2 text-sm text-left text-unify-blue outline-none hover:bg-accent/10"
                 >
                   <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                     <PlusIcon className="h-4 w-4" />
