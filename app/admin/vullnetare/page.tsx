@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminFilterBar, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -48,6 +49,7 @@ function toLifecycle(s: string): AdminLifecycleStatus {
 }
 
 export default function AdminVullnetarePage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [listings, setListings] = React.useState<ListingRow[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -97,8 +99,8 @@ export default function AdminVullnetarePage() {
       status: listing._lifecycle,
       noun: "shpalljen",
       details: () => setEditing(listing),
-      preview: () => { window.location.href = `/vullnetare/${listing.id}` },
-      owner: () => { window.location.href = `/admin/perdoruesit/${listing.owner.id}` },
+      preview: () => { router.push(`/vullnetare/${listing.id}`) },
+      owner: () => { router.push(`/admin/perdoruesit/${listing.owner.id}`) },
       approve: () => mutate(`/admin/volunteers/${listing.id}/approve`),
       pause: () => setListingStatus(listing.id, "PAUSED", "Pauzuar nga admin."),
       resume: () => mutate(`/admin/volunteers/${listing.id}/approve`),
@@ -116,7 +118,7 @@ export default function AdminVullnetarePage() {
         actions: (
           <div className="flex gap-2">
             <Button variant="outline" onClick={load}>Rifresko</Button>
-            <Button onClick={() => { window.location.href = "/shpalljet" }}>Shiko shpalljet</Button>
+            <Button onClick={() => { router.push("/shpalljet") }}>Shiko shpalljet</Button>
           </div>
         ),
         user: { name: "Unify Admin", role: "Internal" },
@@ -239,7 +241,7 @@ export default function AdminVullnetarePage() {
                     Refuzo
                   </Button>
                 )}
-                <Button variant="outline" onClick={() => { window.location.href = `/vullnetare/${editing.id}` }}>
+                <Button variant="outline" onClick={() => { router.push(`/vullnetare/${editing.id}`) }}>
                   Preview publik
                 </Button>
                 <Button variant="ghost" onClick={() => setEditing(null)}>Mbyll</Button>

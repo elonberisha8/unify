@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminChartCard, AdminFilterBar, AdminQuickStats, AdminTable, type AdminActionMenuItem } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -48,6 +49,7 @@ const statusVariant = {
 } as const
 
 export default function AdminRaportimetPage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [reports, setReports] = React.useState<ReportRow[]>([])
   const [adminStats, setAdminStats] = React.useState<AdminStatsResponse | null>(null)
@@ -102,8 +104,8 @@ export default function AdminRaportimetPage() {
   const getReportActions = (report: ReportRow): AdminActionMenuItem[] => {
     const actions: AdminActionMenuItem[] = [
       { label: "Hap detajet", onClick: () => setSelected(report) },
-      { label: "Hap objektivin", onClick: () => { window.location.href = report.targetUrl } },
-      { label: "Dergo ne moderim", onClick: () => { window.location.href = "/admin/moderim" } },
+      { label: "Hap objektivin", onClick: () => { router.push(report.targetUrl) } },
+      { label: "Dergo ne moderim", onClick: () => { router.push("/admin/moderim") } },
     ]
 
     if (report.status === "open") {
@@ -235,7 +237,7 @@ export default function AdminRaportimetPage() {
               ],
             },
           ]}
-          actions={<Button variant="outline" onClick={() => { window.location.href = "/admin/moderim" }}>Hap moderimin</Button>}
+          actions={<Button variant="outline" onClick={() => { router.push("/admin/moderim") }}>Hap moderimin</Button>}
         />
 
         {loading ? (
@@ -287,8 +289,8 @@ export default function AdminRaportimetPage() {
                 {selected.status === "investigating" && <Button onClick={() => patchReport(selected.id, { status: "resolved" })}>Zgjidh pas hetimit</Button>}
                 {(selected.status === "resolved" || selected.status === "dismissed") && <Button onClick={() => patchReport(selected.id, { status: "open" })}>Rihap</Button>}
                 {(selected.status === "open" || selected.status === "investigating") && <Button variant="outline" onClick={() => patchReport(selected.id, { status: "dismissed" })}>Mbyll pa veprim</Button>}
-                <Button variant="outline" onClick={() => { window.location.href = "/admin/moderim" }}>Dergo ne moderim</Button>
-                <Button variant="outline" onClick={() => { window.location.href = selected.targetUrl }}>Hap objektivin</Button>
+                <Button variant="outline" onClick={() => { router.push("/admin/moderim") }}>Dergo ne moderim</Button>
+                <Button variant="outline" onClick={() => { router.push(selected.targetUrl) }}>Hap objektivin</Button>
                 <Button variant="ghost" onClick={() => setSelected(null)}>Mbyll</Button>
               </div>
             </div>

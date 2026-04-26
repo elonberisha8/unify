@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminFilterBar, AdminTable, BlogEditor, type AdminActionMenuItem, type BlogEditorData } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -34,6 +35,7 @@ const statusVariant = {
 } as const
 
 export default function AdminBlogPage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [posts, setPosts] = React.useState<BlogPost[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -157,7 +159,7 @@ export default function AdminBlogPage() {
         actions: (
           <div className="flex gap-2">
             <Button variant="outline" onClick={load}>Rifresko</Button>
-            <Button variant="outline" onClick={() => { window.location.href = "/blog" }}>Shiko blogun</Button>
+            <Button variant="outline" onClick={() => { router.push("/blog") }}>Shiko blogun</Button>
           </div>
         ),
         user: { name: "Unify Admin", role: "Internal" },

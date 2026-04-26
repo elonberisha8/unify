@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminFilterBar, AdminTable, type AdminActionMenuItem } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -41,6 +42,7 @@ const verificationLabel: Record<string, string> = {
 }
 
 export default function AdminPerdoruesitPage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [users, setUsers] = React.useState<AdminUser[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -83,7 +85,7 @@ export default function AdminPerdoruesitPage() {
 
   const getUserActions = (user: AdminUser): AdminActionMenuItem[] => {
     const actions: AdminActionMenuItem[] = [
-      { label: "Hap detajet", onClick: () => { window.location.href = `/admin/perdoruesit/${user.id}` } },
+      { label: "Hap detajet", onClick: () => { router.push(`/admin/perdoruesit/${user.id}`) } },
       { label: "Edito user-in", onClick: () => setEditing(user) },
     ]
 
@@ -159,7 +161,7 @@ export default function AdminPerdoruesitPage() {
                 render: (row) => (
                   <button
                     className="text-left"
-                    onClick={() => { window.location.href = `/admin/perdoruesit/${row.id}` }}
+                    onClick={() => { router.push(`/admin/perdoruesit/${row.id}`) }}
                   >
                     <p className="font-bold text-unify-brown">{row.name}</p>
                     <p className="text-xs text-muted-foreground">{row.email}</p>

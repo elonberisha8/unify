@@ -34,6 +34,16 @@ function ClerkAuthProbe() {
   }
 }
 
+function ClerkSignOut() {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { useClerk } = require("@clerk/nextjs");
+    return useClerk();
+  } catch {
+    return { signOut: async () => {} };
+  }
+}
+
 export function Navbar({
   logo, links = [], onLogin, onRegister, onSearch,
   isAuthenticated, userMenu, className,
@@ -58,9 +68,22 @@ export function Navbar({
   // Effective auth: explicit prop > Clerk > localStorage fallback
   const effectiveAuthenticated = isAuthenticated ?? (clerkSignedIn || localAuth);
   const router = useRouter();
+  const clerk = ClerkSignOut();
   const goToLogin = onLogin ?? (() => { router.push("/auth/login"); });
   const goToRegister = onRegister ?? (() => { router.push("/auth/register"); });
   const goToDashboard = () => { router.push("/dashboard"); };
+
+  const handleLogoutDefault = async () => {
+    try {
+      if (clerkSignedIn) await clerk.signOut();
+    } catch { /* ignore */ }
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("authToken");
+      window.localStorage.removeItem("unifyUsername");
+      window.dispatchEvent(new Event("unify-auth-change"));
+    }
+    router.replace("/");
+  };
 
   React.useEffect(() => {
     if (isAuthenticated !== undefined) {
@@ -131,7 +154,14 @@ export function Navbar({
           {!authReady ? (
             <div className="h-11 w-[196px]" aria-hidden="true" />
           ) : effectiveAuthenticated ? (
-            userMenu ?? <Button onClick={goToDashboard}>Dashboard</Button>
+            userMenu ?? (
+              <>
+                <Button variant="ghost" onClick={goToDashboard}>Dashboard</Button>
+                <Button variant="outline" onClick={handleLogoutDefault} aria-label="Dil">
+                  Dil
+                </Button>
+              </>
+            )
           ) : (
             <>
               <Button variant="ghost" onClick={goToLogin}>Hyr</Button>

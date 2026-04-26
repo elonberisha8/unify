@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser, useClerk } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, BellIcon, FileIcon } from "@/components/icons";
@@ -48,8 +48,43 @@ export function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { user: clerkUser } = useUser();
+  const clerk = useClerk();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState<DashboardNotification[]>([]);
+
+  // Effective user info: prop > Clerk > localStorage demo
+  const [demoUsername, setDemoUsername] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setDemoUsername(window.localStorage.getItem("unifyUsername"));
+    }
+  }, []);
+
+  const effectiveUser = user ?? (
+    clerkUser ? {
+      name: clerkUser.fullName ?? clerkUser.username ?? "User",
+      email: clerkUser.primaryEmailAddress?.emailAddress,
+      avatarUrl: clerkUser.imageUrl,
+    } : demoUsername ? {
+      name: demoUsername,
+      email: undefined,
+      avatarUrl: undefined,
+    } : null
+  );
+
+  const handleLogout = React.useCallback(async () => {
+    if (onLogout) { onLogout(); return; }
+    try {
+      if (isSignedIn) await clerk.signOut();
+    } catch { /* ignore */ }
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("authToken");
+      window.localStorage.removeItem("unifyUsername");
+      window.dispatchEvent(new Event("unify-auth-change"));
+    }
+    router.replace("/");
+  }, [onLogout, isSignedIn, clerk, router]);
 
   React.useEffect(() => {
     async function loadNotifications() {
@@ -139,22 +174,20 @@ export function DashboardLayout({
           })}
         </nav>
 
-        {user && (
+        {effectiveUser && (
           <div className="p-3 border-t border-border">
             <div className="flex items-center gap-3 p-2">
               <Avatar>
-                {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
-                <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                {effectiveUser.avatarUrl && <AvatarImage src={effectiveUser.avatarUrl} />}
+                <AvatarFallback>{effectiveUser.name.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold truncate">{user.name}</p>
-                {user.email && <p className="text-xs text-muted-foreground truncate">{user.email}</p>}
+                <p className="text-sm font-bold truncate">{effectiveUser.name}</p>
+                {effectiveUser.email && <p className="text-xs text-muted-foreground truncate">{effectiveUser.email}</p>}
               </div>
-              {onLogout && (
-                <button onClick={onLogout} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center" aria-label="Dil">
-                  <LogOutIcon className="h-4 w-4" />
-                </button>
-              )}
+              <button onClick={handleLogout} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center" aria-label="Dil" title="Dil nga llogaria">
+                <LogOutIcon className="h-4 w-4" />
+              </button>
             </div>
           </div>
         )}

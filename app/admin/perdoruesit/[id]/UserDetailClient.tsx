@@ -1,12 +1,14 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminLayout } from "@/components/layout"
 import { Badge, Button, Card, CardContent, Separator, Skeleton } from "@/components/ui"
 import { apiFetch, type AdminUserDetail } from "@/app/_lib/api"
 
 export function UserDetailClient({ id }: { id: string }) {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [user, setUser] = React.useState<AdminUserDetail | null>(null)
   const [loading, setLoading] = React.useState(true)
@@ -68,7 +70,7 @@ export function UserDetailClient({ id }: { id: string }) {
         <Card>
           <CardContent className="p-8 text-center">
             <p className="font-display text-xl text-unify-brown">Useri nuk u gjet</p>
-            <Button className="mt-4" variant="outline" onClick={() => { window.location.href = "/admin/perdoruesit" }}>
+            <Button className="mt-4" variant="outline" onClick={() => { router.push("/admin/perdoruesit") }}>
               Kthehu te lista
             </Button>
           </CardContent>
@@ -133,7 +135,7 @@ export function UserDetailClient({ id }: { id: string }) {
                     variant="destructive"
                     onClick={() => {
                       if (!window.confirm("A je i sigurt qe do ta fshish kete user?")) return
-                      window.location.href = "/admin/perdoruesit"
+                      router.push("/admin/perdoruesit")
                     }}
                   >
                     Fshi
@@ -220,7 +222,7 @@ export function UserDetailClient({ id }: { id: string }) {
             <Button
               variant="ghost"
               className="w-full"
-              onClick={() => { window.location.href = "/admin/perdoruesit" }}
+              onClick={() => { router.push("/admin/perdoruesit") }}
             >
               Kthehu te lista
             </Button>

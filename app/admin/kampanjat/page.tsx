@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminActionMenu, AdminFilterBar, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -52,6 +53,7 @@ function toLifecycle(s: string): AdminLifecycleStatus {
 type CampaignRow = AdminCampaign & { _lifecycle: AdminLifecycleStatus }
 
 export default function AdminKampanjatPage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [campaigns, setCampaigns] = React.useState<CampaignRow[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -112,8 +114,8 @@ export default function AdminKampanjatPage() {
       status: c._lifecycle,
       noun: "kampanjen",
       details: () => setEditing(c),
-      preview: () => { window.location.href = `/kampanjat/${c.slug}` },
-      owner: () => { window.location.href = `/admin/perdoruesit/${c.creator.id}` },
+      preview: () => { router.push(`/kampanjat/${c.slug}`) },
+      owner: () => { router.push(`/admin/perdoruesit/${c.creator.id}`) },
       approve: () => approve(c.id),
       pause: () => setCampaignStatus(c.id, "PAUSED", "Pauzuar nga admin."),
       resume: () => setCampaignStatus(c.id, "ACTIVE", "Riaktivizuar nga admin."),
@@ -132,7 +134,7 @@ export default function AdminKampanjatPage() {
         actions: (
           <div className="flex gap-2">
             <Button variant="outline" onClick={load}>Rifresko</Button>
-            <Button onClick={() => { window.location.href = "/kampanjat" }}>Shiko publiken</Button>
+            <Button onClick={() => { router.push("/kampanjat") }}>Shiko publiken</Button>
           </div>
         ),
         user: { name: "Unify Admin", role: "Internal" },
@@ -305,7 +307,7 @@ export default function AdminKampanjatPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => { window.location.href = `/kampanjat/${editing.slug}` }}
+                  onClick={() => { router.push(`/kampanjat/${editing.slug}`) }}
                 >
                   Preview publik
                 </Button>

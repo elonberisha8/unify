@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { AdminQuickStats, AdminStatCard, AdminTable } from "@/components/admin"
 import { AdminLayout } from "@/components/layout"
@@ -24,6 +25,7 @@ interface RecentEvent {
 }
 
 export default function AdminDashPage() {
+  const router = useRouter()
   const { getToken } = useAuth()
   const [stats, setStats] = React.useState<AdminStats | null>(null)
   const [loading, setLoading] = React.useState(true)
@@ -81,7 +83,7 @@ export default function AdminDashPage() {
         description: "Panel intern pa login per momentin. Kufizimi real duhet bere ne nivel VPN/IP allowlist.",
         notificationCount: stats?.pendingCampaigns ?? 0,
         user: { name: "Unify Admin", role: "Internal" },
-        actions: <Button onClick={() => { window.location.href = "/" }}>Faqja publike</Button>,
+        actions: <Button onClick={() => { router.push("/") }}>Faqja publike</Button>,
       }}
     >
       <div className="space-y-6">
@@ -93,7 +95,7 @@ export default function AdminDashPage() {
                 Ky admin nuk ka login per MVP. Para deploy publik duhet izoluar me VPN, reverse proxy allowlist ose firewall rules.
               </p>
             </div>
-            <Button variant="outline" onClick={() => { window.location.href = "/admin/audit-log" }}>
+            <Button variant="outline" onClick={() => { router.push("/admin/audit-log") }}>
               Shiko audit log
             </Button>
           </CardContent>
