@@ -164,6 +164,18 @@ export interface Campaign {
   shortDescription: string | null
   description: string
   images: string[]
+  problemStatement?: string | null
+  targetGroup?: string | null
+  urgency?: number | null
+  videoUrl?: string | null
+  budgetBreakdown?: unknown
+  budgetItems?: unknown
+  faqs?: unknown
+  supportingDocs?: string[]
+  partners?: string | null
+  verificationPlan?: string | null
+  expectedOutcome?: string | null
+  tipPercent?: number | null
   status: string
   category: string
   location: string
@@ -181,6 +193,18 @@ export interface Campaign {
     isVerified: boolean
     username: string | null
   }
+  donations?: Array<{
+    id: string
+    amount: number
+    message: string | null
+    isAnonymous: boolean
+    guestName: string | null
+    createdAt: string
+    donor?: { id: string; name: string; image: string | null; username: string | null } | null
+  }>
+  milestones?: Array<{ id: string; title: string; amount: number; description: string | null; isReached: boolean }>
+  updates?: Array<{ id: string; title: string; content: string; image: string | null; createdAt: string }>
+  comments?: Array<{ id: string; content: string; createdAt: string; author?: { id: string; name: string; image: string | null; username: string | null } }>
   _count: { donations: number }
 }
 
@@ -195,11 +219,13 @@ export interface VolunteerListing {
   organization?: string | null
   valueLabel?: string | null
   remote?: boolean
+  helpDetails?: unknown
   images: string[]
   status: string
   isAnonymous: boolean
   applicationDeadline: string | null
   conditions: string | null
+  fulfilledAt?: string | null
   createdAt: string
   owner: {
     id: string
@@ -343,6 +369,7 @@ export interface DashboardTransaction {
   amount: number
   currency: string
   campaignId: string | null
+  campaignSlug?: string | null
   campaignTitle: string | null
   counterparty: string
   status: "SUCCEEDED" | "PENDING" | "FAILED"
