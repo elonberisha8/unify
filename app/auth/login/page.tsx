@@ -8,6 +8,7 @@
 // ============================================================
 
 import { FormEvent } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { AuthLayout } from "@/components/layout"
 import { Button, Input, SocialButton } from "@/components/ui"
 import { LockIcon, MailIcon } from "@/components/icons"
@@ -36,9 +37,15 @@ function GoogleIcon() {
 }
 
 export default function LoginPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const completeLogin = () => {
     window.localStorage.setItem("authToken", "demo-session")
-    window.location.href = "/dashboard"
+    // Sinjalizon Navbar dhe komponentet tjera që auth-state ndryshoi
+    window.dispatchEvent(new Event("unify-auth-change"))
+    const redirect = searchParams?.get("redirect") || "/dashboard"
+    router.replace(redirect)
   }
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {

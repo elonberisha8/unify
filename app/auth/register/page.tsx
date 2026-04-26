@@ -8,6 +8,7 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
 import { AuthLayout } from "@/components/layout"
 import { Button, Checkbox, Input } from "@/components/ui"
 import { LockIcon, MailIcon, UserIcon } from "@/components/icons"
@@ -15,6 +16,7 @@ import { apiFetch } from "@/app/_lib/api"
 import { normalizeUsername, validateUsername } from "@/app/_lib/username"
 
 export default function RegisterPage() {
+  const router = useRouter()
   const [accepted, setAccepted] = useState(false)
   const [username, setUsername] = useState("")
   const [usernameError, setUsernameError] = useState<string | null>(null)
@@ -48,7 +50,8 @@ export default function RegisterPage() {
 
     window.localStorage.setItem("authToken", "demo-session")
     window.localStorage.setItem("unifyUsername", cleanUsername)
-    window.location.href = "/onboarding"
+    window.dispatchEvent(new Event("unify-auth-change"))
+    router.replace("/onboarding")
   }
 
   return (

@@ -6,7 +6,6 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
@@ -18,6 +17,7 @@ import {
   EditIcon, CheckIcon, CloseIcon, HandHeartIcon, MegaphoneIcon,
 } from "@/components/icons";
 import { apiFetch } from "@/app/_lib/api";
+import { useAuthGuard } from "@/app/_lib/useAuthGuard";
 
 type ListingKind = "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST";
 type ListingStatus = "PENDING" | "ACTIVE" | "IN_REVIEW" | "CLAIMED" | "CLOSED";
@@ -102,7 +102,7 @@ function formatDate(value: string | null) {
 
 export default function DashShpalljetPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { ready, authenticated, getToken } = useAuthGuard({ currentPath: "/dashboard/shpalljet" });
   const [listings, setListings] = React.useState<DashboardListing[]>([]);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [filter, setFilter] = React.useState<ListingKind | "all">("all");
@@ -113,11 +113,7 @@ export default function DashShpalljetPage() {
   const pendingRequests = listings.reduce((sum, listing) => sum + listing.applications.filter((request) => request.status === "PENDING").length, 0);
 
   const load = React.useCallback(async () => {
-    if (!isLoaded) return;
-    if (!isSignedIn) {
-      router.push(`/auth/login?redirect=${encodeURIComponent("/dashboard/shpalljet")}`);
-      return;
-    }
+    if (!ready || !authenticated) return;
     setLoading(true);
     try {
       const token = await getToken();
@@ -128,7 +124,7 @@ export default function DashShpalljetPage() {
     } finally {
       setLoading(false);
     }
-  }, [getToken, isLoaded, isSignedIn, router]);
+  }, [ready, authenticated, getToken]);
 
   React.useEffect(() => { load(); }, [load]);
 
