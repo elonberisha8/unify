@@ -148,7 +148,8 @@ export default function KrijoKampanjePage() {
       });
       router.push("/dashboard/kampanjat?created=1");
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Gabim gjatë krijimit");
+      const msg = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e)
+      alert(msg || "Gabim gjatë krijimit të kampanjës")
     }
   }
 
