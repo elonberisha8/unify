@@ -1,0 +1,526 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// â”€â”€â”€ ENUMS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum CampaignStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  REJECTED
+  SUSPENDED
+  PAUSED
+}
+
+enum CampaignCategory {
+  MEDICAL
+  EDUCATION
+  EMERGENCY
+  COMMUNITY
+  SPORTS
+  ENVIRONMENT
+  ANIMALS
+  TECHNOLOGY
+  CREATIVE
+  OTHER
+}
+
+enum VolunteerSubtype {
+  PHYSICAL_ITEM
+  SERVICE
+  FUND
+}
+
+enum ListingKind {
+  VOLUNTEER_CONTRIBUTION
+  SUPPORT_REQUEST
+}
+
+enum VolunteerStatus {
+  PENDING
+  ACTIVE
+  IN_REVIEW
+  CLAIMED
+  CLOSED
+  PAUSED
+  REJECTED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ADMIN_REVIEW
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum DonationStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum BlogStatus {
+  PENDING
+  DRAFT
+  PUBLISHED
+  REJECTED
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
+enum BlockListType {
+  USER
+  EMAIL
+  IP
+  DOMAIN
+}
+
+enum NetworkRuleType {
+  ALLOW
+  BLOCK
+}
+
+// â”€â”€â”€ MODELS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+model User {
+  id       String   @id @default(cuid())
+  clerkId  String   @unique
+  email    String   @unique
+  name     String
+  username String?  @unique
+  image    String?
+  bio      String?  @db.VarChar(200)
+  location String?
+  phone    String?
+  role     UserRole @default(USER)
+
+  isVerified      Boolean @default(false)
+  isBanned        Boolean @default(false)
+  stripeAccountId String? // Stripe Connect account ID
+
+  // Password reset (Resend email flow)
+  passwordResetToken       String?   @unique
+  passwordResetTokenExpiry DateTime?
+
+  // Privacy settings
+  privacyProfilePublic   Boolean @default(true)
+  privacyCampaignsPublic Boolean @default(true)
+  privacyDonationsPublic Boolean @default(false)
+  privacyVolunteerPublic Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  campaigns         Campaign[]
+  donations         Donation[]
+  volunteerListings VolunteerListing[]
+  applications      Application[]
+  bookmarks         Bookmark[]
+  comments          Comment[]
+  sentMessages      Message[]                 @relation("SentMessages")
+  conversationsAsU1 Conversation[]            @relation("User1Conversations")
+  conversationsAsU2 Conversation[]            @relation("User2Conversations")
+  conversationParts ConversationParticipant[] @relation("UserConversationParticipations")
+  reports           Report[]                  @relation("Reporter")
+  reportedBy        Report[]                  @relation("Reported")
+  auditLogs         AuditLog[]
+  emailLogs         EmailLog[]
+  notifications     Notification[]
+  blogs             Blog[]
+  moderationBlocks  ModerationBlock[]         @relation("ModerationBlockAdmin")
+
+  @@index([clerkId])
+  @@index([username])
+}
+
+model Campaign {
+  id               String           @id @default(cuid())
+  slug             String           @unique
+  title            String
+  description      String           @db.Text
+  shortDescription String?          @db.VarChar(200)
+  images           String[]
+  targetAmount     Float
+  currentAmount    Float            @default(0)
+  category         CampaignCategory
+  location         String
+  isUrgent         Boolean          @default(false)
+  isFeatured       Boolean          @default(false)
+  status           CampaignStatus   @default(PENDING)
+  rejectionReason  String?
+  problemStatement String?          @db.Text
+  targetGroup      String?
+  urgency          Int?
+  videoUrl         String?
+  budgetBreakdown  Json?
+  budgetItems      Json?
+  faqs             Json?
+  supportingDocs   String[]         @default([])
+  partners         String?
+  verificationPlan String?          @db.Text
+  expectedOutcome  String?          @db.Text
+  tipPercent       Float?
+
+  endsAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  donations  Donation[]
+  milestones Milestone[]
+  updates    CampaignUpdate[]
+  comments   Comment[]
+  bookmarks  Bookmark[]
+  reports    Report[]
+
+  @@index([status])
+  @@index([category])
+  @@index([creatorId])
+  @@index([isFeatured])
+}
+
+model Milestone {
+  id          String  @id @default(cuid())
+  title       String
+  amount      Float
+  description String?
+  isReached   Boolean @default(false)
+
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model CampaignUpdate {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  image     String?
+  createdAt DateTime @default(now())
+
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model Donation {
+  id                    String         @id @default(cuid())
+  amount                Float
+  isAnonymous           Boolean        @default(false)
+  message               String?
+  guestName             String? // pÃ«r donatorÃ« pa llogari
+  status                DonationStatus @default(PENDING)
+  stripePaymentIntentId String?        @unique
+
+  createdAt DateTime @default(now())
+
+  donorId    String?
+  donor      User?    @relation(fields: [donorId], references: [id])
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+  @@index([campaignId])
+  @@index([donorId])
+  @@index([status])
+}
+
+model VolunteerListing {
+  id                  String           @id @default(cuid())
+  title               String
+  description         String           @db.Text
+  kind                ListingKind      @default(VOLUNTEER_CONTRIBUTION)
+  subtype             VolunteerSubtype
+  category            String
+  location            String
+  organization        String?
+  valueLabel          String?
+  remote              Boolean          @default(false)
+  images              String[]
+  conditions          String?          @db.Text
+  applicationDeadline DateTime?
+  isAnonymous         Boolean          @default(false)
+  status              VolunteerStatus  @default(PENDING)
+  fulfilledAt         DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  // Detaje sipas tipit (PHYSICAL_ITEM/SERVICE/FUND) â€” JSON i fleksibÃ«l
+  helpDetails Json?
+
+  applications Application[]
+  reports      Report[]
+
+  @@index([kind])
+  @@index([status])
+  @@index([ownerId])
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  reason      String            @db.Text
+  isAnonymous Boolean           @default(false)
+  status      ApplicationStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicantId String
+  applicant   User             @relation(fields: [applicantId], references: [id])
+  listingId   String
+  listing     VolunteerListing @relation(fields: [listingId], references: [id])
+
+  @@unique([applicantId, listingId])
+  @@index([listingId])
+  @@index([applicantId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  reports    Report[]
+
+  @@index([campaignId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, campaignId])
+}
+
+model Conversation {
+  id        String           @id @default(cuid())
+  type      ConversationType @default(DIRECT)
+  name      String? // VetÃ«m pÃ«r grupe
+  image     String? // Avatar grupi
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Backwards-compat (DM): user1Id + user2Id mbeten optional
+  // NÃ« grupe pÃ«rdoret tabela e re ConversationParticipant
+  user1Id String?
+  user1   User?   @relation("User1Conversations", fields: [user1Id], references: [id])
+  user2Id String?
+  user2   User?   @relation("User2Conversations", fields: [user2Id], references: [id])
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  // Moderim
+  isSuspended Boolean @default(false)
+
+  @@index([type])
+  @@index([user1Id])
+  @@index([user2Id])
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation("UserConversationParticipations", fields: [userId], references: [id])
+  joinedAt       DateTime     @default(now())
+  isAdmin        Boolean      @default(false) // Admin i grupit (krijuesi)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+model Message {
+  id        String    @id @default(cuid())
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  reason    String
+  status    String   @default("PENDING") // PENDING, REVIEWED, DISMISSED
+  createdAt DateTime @default(now())
+
+  reporterId String
+  reporter   User    @relation("Reporter", fields: [reporterId], references: [id])
+  reportedId String?
+  reported   User?   @relation("Reported", fields: [reportedId], references: [id])
+
+  campaignId String?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id])
+
+  listingId String?
+  listing   VolunteerListing? @relation(fields: [listingId], references: [id])
+
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+}
+
+model Blog {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  content     String     @db.Text
+  excerpt     String?    @db.VarChar(300)
+  coverImage  String?
+  tags        String[]   @default([])
+  status      BlogStatus @default(DRAFT)
+  reviewNote  String?    @db.Text
+  isPublished Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([authorId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String // "APPROVE_CAMPAIGN", "BAN_USER", etj.
+  target    String // ID i objektit
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  adminId String
+  admin   User   @relation(fields: [adminId], references: [id])
+}
+
+// â”€â”€â”€ EMAIL CENTER (Admin) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+enum EmailAudience {
+  ALL_USERS // TÃ« gjithÃ« pÃ«rdoruesit
+  ALL_CREATORS // VetÃ«m Verified Creators
+  CAMPAIGN_DONORS // DonatorÃ«t e njÃ« kampanje specifike
+  BY_LOCATION // Sipas lokacionit
+  INDIVIDUAL // NjÃ« person i vetÃ«m
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String // "Njoftim i Ri", "MirÃ«seardhi", etj.
+  subject   String
+  htmlBody  String   @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  logs EmailLog[]
+}
+
+model EmailLog {
+  id             String        @id @default(cuid())
+  subject        String
+  htmlBody       String        @db.Text
+  audience       EmailAudience
+  audienceRef    String? // campaignId nÃ«se CAMPAIGN_DONORS, lokacioni nÃ«se BY_LOCATION, userId nÃ«se INDIVIDUAL
+  recipientCount Int           @default(0)
+  status         String        @default("SENT") // SENT, FAILED, DRAFT
+  sentAt         DateTime      @default(now())
+
+  templateId String?
+  template   EmailTemplate? @relation(fields: [templateId], references: [id])
+
+  sentById String
+  sentBy   User   @relation(fields: [sentById], references: [id])
+
+  @@index([sentById])
+  @@index([sentAt])
+}
+
+model Notification {
+  id         String    @id @default(cuid())
+  title      String
+  message    String    @db.Text
+  type       String    @default("INFO")
+  targetType String?
+  targetId   String?
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([readAt])
+  @@index([createdAt])
+}
+
+model ModerationBlock {
+  id        String        @id @default(cuid())
+  type      BlockListType
+  value     String
+  reason    String
+  expiresAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  createdById String?
+  createdBy   User?   @relation("ModerationBlockAdmin", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([type, value])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model NetworkRule {
+  id        String          @id @default(cuid())
+  type      NetworkRuleType
+  value     String
+  note      String?
+  createdAt DateTime        @default(now())
+
+  @@unique([type, value])
+  @@index([type])
+}
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
