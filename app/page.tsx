@@ -85,7 +85,7 @@ const NAV_LINKS = [
   { label: "Kryefaqja",         href: "/" },
   { label: "Kampanjat",         href: "/kampanjat" },
   { label: "Ndihmë Vullnetare", href: "/vullnetare" },
-  { label: "Si Funksionon",     href: "/si-funksionon" },
+  { label: "Si Funksionon",     href: "/sherbimet" },
   { label: "Blog",              href: "/blog" },
   { label: "Kontakt",           href: "/kontakt" },
 ]
@@ -108,7 +108,7 @@ export default function HomePage() {
           {
             title: "Platforma",
             links: [
-              { label: "Si Funksionon", href: "/si-funksionon" },
+              { label: "Si Funksionon", href: "/sherbimet" },
               { label: "Rreth Nesh",    href: "/rreth-nesh"    },
               { label: "Blog",          href: "/blog"          },
               { label: "Shërbimet",    href: "/sherbimet"     },

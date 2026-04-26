@@ -1,6 +1,8 @@
 // NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 "use client";
 import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MenuIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
@@ -25,17 +27,31 @@ export function Navbar({
   logo, links = [], onLogin, onRegister, onSearch,
   isAuthenticated, userMenu, className,
 }: NavbarProps) {
+  const pathname = usePathname();
+
   return (
     <header className={cn("sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border", className)}>
       <div className="max-w-7xl mx-auto flex items-center gap-6 px-4 md:px-6 h-16">
-        <div className="font-display text-2xl text-unify-brown">{logo ?? "Unify"}</div>
+        <Link href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue transition-colors">
+          {logo ?? "Unify"}
+        </Link>
 
         <nav className="hidden md:flex items-center gap-1 flex-1">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="px-3 py-2 text-sm font-bold text-unify-brown hover:text-unify-blue transition-colors rounded-full">
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) => {
+            const active = l.href === "/" ? pathname === "/" : pathname === l.href || pathname.startsWith(l.href + "/");
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={cn(
+                  "px-3 py-2 text-sm font-bold transition-colors rounded-full",
+                  active ? "text-unify-blue bg-blue-50" : "text-unify-brown hover:text-unify-blue"
+                )}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:flex items-center gap-2 ml-auto">
@@ -61,9 +77,9 @@ export function Navbar({
           <SheetContent side="right" className="w-[280px]">
             <nav className="flex flex-col gap-1 mt-6">
               {links.map((l) => (
-                <a key={l.href} href={l.href} className="px-3 py-3 text-base font-bold text-unify-brown hover:bg-muted rounded-xl">
+                <Link key={l.href} href={l.href} className="px-3 py-3 text-base font-bold text-unify-brown hover:bg-muted rounded-xl">
                   {l.label}
-                </a>
+                </Link>
               ))}
               <div className="mt-4 flex flex-col gap-2">
                 {onLogin && <Button variant="outline" onClick={onLogin} className="w-full">Hyr</Button>}
