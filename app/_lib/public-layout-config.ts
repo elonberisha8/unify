@@ -5,19 +5,12 @@
 // ============================================================
 
 import type { NavbarProps } from "@/components/layout"
+import { NAV_LINKS } from "@/app/_lib/constants"
 
-export const PUBLIC_NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
-  { label: "Shpalljet", href: "/shpalljet" },
-  { label: "Si Funksionon", href: "/sherbimet" },
-  { label: "Rreth Nesh", href: "/rreth-nesh" },
-  { label: "Blog", href: "/blog" },
-]
+export const PUBLIC_NAV_LINKS = NAV_LINKS
 
 export const PUBLIC_NAVBAR: NavbarProps = {
-  links: PUBLIC_NAV_LINKS,
+  links: NAV_LINKS,
 }
 
 export const PUBLIC_FOOTER = {
