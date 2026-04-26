@@ -27,9 +27,7 @@ export async function apiFetch<T>(
   options?: RequestInit & { token?: string | null }
 ): Promise<T> {
   const { token, headers: extraHeaders, ...rest } = options ?? {}
-  const localToken =
-    typeof window !== "undefined" ? window.localStorage.getItem("authToken") : null
-  const authToken = token ?? localToken
+  const authToken = token ?? null
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
