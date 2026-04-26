@@ -1,8 +1,9 @@
 // NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 "use client";
 import * as React from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MenuIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
@@ -28,6 +29,11 @@ export function Navbar({
   isAuthenticated, userMenu, className,
 }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    links.forEach((l) => router.prefetch(l.href));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <header className={cn("sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border", className)}>
