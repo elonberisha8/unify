@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/static-pages
@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { ValueCard, CallToActionSection, FAQAccordion } from "@/components/public"
 import { Badge, Button, Card, CardContent } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
@@ -74,10 +75,10 @@ export default function SherbiметPage() {
             Ja si funksionon në 4 hapa të thjeshtë.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Button size="lg" onClick={() => { window.location.href = "/shpalljet" }}>
+            <Button size="lg" onClick={() => { router.push("/shpalljet") }}>
               Shfleto kampanjat
             </Button>
-            <Button size="lg" variant="outline" onClick={() => { window.location.href = "/auth/register" }}>
+            <Button size="lg" variant="outline" onClick={() => { router.push("/auth/register") }}>
               Krijo llogari
             </Button>
           </div>
@@ -173,7 +174,7 @@ export default function SherbiметPage() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <Button variant="outline" size="lg" onClick={() => { window.location.href = "/vullnetare" }}>
+          <Button variant="outline" size="lg" onClick={() => { router.push("/vullnetare") }}>
             Shiko mundësitë vullnetare
           </Button>
         </div>
@@ -213,11 +214,11 @@ export default function SherbiметPage() {
           variant="inverse"
           primaryAction={{
             label: "Regjistrohu",
-            onClick: () => { window.location.href = "/auth/register" },
+            onClick: () => { router.push("/auth/register") },
           }}
           secondaryAction={{
             label: "Shfleto kampanjat",
-            onClick: () => { window.location.href = "/shpalljet" },
+            onClick: () => { router.push("/shpalljet") },
           }}
         />
       </section>

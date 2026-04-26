@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/dashboard-home
@@ -7,6 +7,8 @@
 // NOTION: https://www.notion.so/34874891227e81f2a6e0ec234fd70570
 // ============================================================
 
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { DashboardLayout } from "@/components/layout"
 import { Button, Card, CardContent } from "@/components/ui"
 import { FileTextIcon, HandHeartIcon, MegaphoneIcon, WalletIcon } from "@/components/icons"
@@ -19,13 +21,12 @@ const STATS = [
 ]
 
 export default function DashboardHomePage() {
+  const router = useRouter()
   return (
     <DashboardLayout
       activeKey="home"
       user={{ name: "Unify User", email: "user@unify.local" }}
-      onLogout={() => {
-        window.location.href = "/"
-      }}
+      onLogout={() => router.push("/")}
     >
       <div className="space-y-8">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -36,7 +37,7 @@ export default function DashboardHomePage() {
               Menaxho kampanjat, shpalljet, aplikimet dhe hyr shpejt te blogu publik i platformës.
             </p>
           </div>
-          <Button onClick={() => { window.location.href = "/blog" }}>
+          <Button onClick={() => router.push("/blog")}>
             Hap Blogun
           </Button>
         </div>
@@ -61,16 +62,16 @@ export default function DashboardHomePage() {
           <CardContent className="p-6">
             <h2 className="font-display text-2xl text-unify-brown">Hyrje të shpejta</h2>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Button variant="outline" onClick={() => { window.location.href = "/dashboard/krijo/kampanje" }}>
+              <Button variant="outline" onClick={() => router.push("/dashboard/krijo/kampanje")}>
                 Krijo kampanjë
               </Button>
-              <Button variant="outline" onClick={() => { window.location.href = "/dashboard/krijo/shpallje" }}>
+              <Button variant="outline" onClick={() => router.push("/dashboard/krijo/shpallje")}>
                 Krijo shpallje
               </Button>
-              <Button variant="outline" onClick={() => { window.location.href = "/dashboard/aplikimet" }}>
+              <Button variant="outline" onClick={() => router.push("/dashboard/aplikimet")}>
                 Aplikimet
               </Button>
-              <Button variant="outline" onClick={() => { window.location.href = "/blog" }}>
+              <Button variant="outline" onClick={() => router.push("/blog")}>
                 Blog
               </Button>
             </div>

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/campaign-detail
@@ -9,6 +9,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { DonationModal, DonorList, ShareButtons, CampaignCard } from "@/components/public"
 import {
   Button, Badge, Progress, Tabs, TabsList, TabsTrigger, TabsContent,
@@ -112,6 +113,7 @@ function PhotoGallery({ images, title }: { images: string[]; title: string }) {
 }
 
 export default function CampaignDetailPage() {
+  const router = useRouter()
   const [showModal, setShowModal] = React.useState(false)
   const [comment, setComment] = React.useState("")
   const pct = Math.min(100, Math.round((CAMPAIGN.raised / CAMPAIGN.goal) * 100))
@@ -162,7 +164,7 @@ export default function CampaignDetailPage() {
               </div>
               <Button
                 variant="outline"
-                onClick={() => { window.location.href = `/profili/${CAMPAIGN.creator.username}` }}
+                onClick={() => router.push(`/profili/${CAMPAIGN.creator.username}`)}
               >
                 Shiko Profilin
               </Button>
@@ -285,7 +287,7 @@ export default function CampaignDetailPage() {
                     donorCount={s.donorCount}
                     creatorName={s.creatorName}
                     verified={s.verified}
-                    onClick={() => { window.location.href = `/kampanjat/${s.id}` }}
+                    onClick={() => router.push(`/kampanjat/${s.id}`)}
                   />
                 ))}
               </div>
@@ -350,7 +352,7 @@ export default function CampaignDetailPage() {
         open={showModal}
         onOpenChange={setShowModal}
         campaignTitle={CAMPAIGN.title}
-        onSubmit={() => { window.location.href = "/sukses/donacion" }}
+        onSubmit={() => router.push("/sukses/donacion")}
       />
     </PublicLayout>
   )

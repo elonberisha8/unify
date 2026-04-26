@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/auth
@@ -8,6 +8,7 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useSignIn } from "@clerk/nextjs"
 import { AuthLayout } from "@/components/layout"
 import { Button, Input, SocialButton } from "@/components/ui"
@@ -25,6 +26,7 @@ function GoogleIcon() {
 }
 
 export default function LoginPage() {
+  const router = useRouter()
   const { signIn, setActive, isLoaded } = useSignIn()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -50,7 +52,7 @@ export default function LoginPage() {
       const result = await signIn.create({ identifier: email, password })
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId })
-        window.location.href = "/dashboard"
+        router.push("/dashboard")
       }
     } catch (err: unknown) {
       const clerkErr = err as { errors?: { message: string }[] }

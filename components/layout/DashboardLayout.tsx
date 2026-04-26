@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, FileTextIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
@@ -46,26 +47,37 @@ export function DashboardLayout({
           <p className="font-display text-2xl text-unify-brown">Unify</p>
         </div>
         <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
-          {navItems.map((it) => (
-            <button
-              key={it.key}
-              onClick={() => {
-                onSelect?.(it.key);
-                if (it.href) window.location.href = it.href;
-              }}
-              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
-                activeKey === it.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
-              )}
-            >
-              {it.icon}
-              <span className="flex-1">{it.label}</span>
-              {it.badge != null && (
-                <span className={cn("text-xs px-2 py-0.5 rounded-full",
-                  activeKey === it.key ? "bg-white text-unify-blue" : "bg-unify-blue text-white"
-                )}>{it.badge}</span>
-              )}
-            </button>
-          ))}
+          {navItems.map((it) =>
+            it.href ? (
+              <Link
+                key={it.key}
+                href={it.href}
+                onClick={() => onSelect?.(it.key)}
+                className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors",
+                  activeKey === it.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+                )}
+              >
+                {it.icon}
+                <span className="flex-1">{it.label}</span>
+                {it.badge != null && (
+                  <span className={cn("text-xs px-2 py-0.5 rounded-full",
+                    activeKey === it.key ? "bg-white text-unify-blue" : "bg-unify-blue text-white"
+                  )}>{it.badge}</span>
+                )}
+              </Link>
+            ) : (
+              <button
+                key={it.key}
+                onClick={() => onSelect?.(it.key)}
+                className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
+                  activeKey === it.key ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+                )}
+              >
+                {it.icon}
+                <span className="flex-1">{it.label}</span>
+              </button>
+            )
+          )}
         </nav>
 
         {user && (

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/volunteer-detail
@@ -18,6 +18,7 @@
 // ============================================================
 
 import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import { useUser } from "@clerk/nextjs"
@@ -59,6 +60,7 @@ const FOOTER_SECTIONS = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function VolunteerDetailPage() {
+  const router = useRouter()
   const params = useParams<{ id: string }>()
   const { isSignedIn } = useUser()
   const [applyOpen, setApplyOpen] = useState(false)
@@ -153,8 +155,8 @@ export default function VolunteerDetailPage() {
       mainClassName="bg-unify-cream"
       navbar={{
         links: NAV_LINKS,
-        onLogin: () => (window.location.href = "/sign-in"),
-        onRegister: () => (window.location.href = "/sign-up"),
+        onLogin: () => (router.push("/auth/login")),
+        onRegister: () => (router.push("/auth/register")),
         className: "bg-white",
       }}
       footer={{
@@ -406,7 +408,7 @@ export default function VolunteerDetailPage() {
             <Button variant="outline" onClick={() => setLoginModalOpen(false)}>
               Mbyll
             </Button>
-            <Button onClick={() => (window.location.href = "/sign-in")}>Hyr / Regjistrohu</Button>
+            <Button onClick={() => (router.push("/auth/login"))}>Hyr / Regjistrohu</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

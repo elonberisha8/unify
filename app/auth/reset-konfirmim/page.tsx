@@ -7,18 +7,20 @@
 // NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
 // ============================================================
 
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button, Card, CardContent } from "@/components/ui"
 import { ArrowLeftIcon, CheckCircleIcon, MailIcon } from "@/components/icons"
 
 export default function ResetKonfirmimPage() {
+  const router = useRouter()
   const params = useSearchParams()
   const email = params.get("email") || "ana.kelmendi@gmail.com"
 
   return (
     <main className="min-h-screen bg-[#faf7f2]">
       <header className="flex h-16 items-center px-6 md:px-20">
-        <a href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue">Unify</a>
+        <Link href="/" className="font-display text-2xl text-unify-brown hover:text-unify-blue">Unify</Link>
       </header>
 
       <section className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-5 py-10">
@@ -34,16 +36,16 @@ export default function ResetKonfirmimPage() {
               Hap email-in dhe kliko linkun brenda 15 minutave. Nëse nuk e sheh, kontrollo edhe spam-in.
             </p>
 
-            <Button className="mt-8 w-full" onClick={() => { window.location.href = "mailto:" }}>
+            <Button className="mt-8 w-full" onClick={() => { window.open("mailto:", "_blank") }}>
               <CheckCircleIcon className="h-4 w-4" />
               Hap Gmail / Email App
             </Button>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <Button variant="outline" onClick={() => { window.location.href = "/auth/forgot-password" }}>
+              <Button variant="outline" onClick={() => router.push("/auth/forgot-password")}>
                 <ArrowLeftIcon className="h-4 w-4" />
                 Kthehu
               </Button>
-              <Button variant="outline" onClick={() => { window.location.href = `/auth/reset-konfirmim?email=${encodeURIComponent(email)}` }}>
+              <Button variant="outline" onClick={() => router.push(`/auth/reset-konfirmim?email=${encodeURIComponent(email)}`)}>
                 Ridërgoje Email-in
               </Button>
             </div>

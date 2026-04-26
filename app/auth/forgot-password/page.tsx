@@ -8,16 +8,19 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { AuthLayout } from "@/components/layout"
 import { Button, Input } from "@/components/ui"
 import { ArrowLeftIcon, MailIcon } from "@/components/icons"
 
 export default function ForgotPasswordPage() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    window.location.href = `/auth/reset-konfirmim?email=${encodeURIComponent(email || "ana.kelmendi@gmail.com")}`
+    router.push(`/auth/reset-konfirmim?email=${encodeURIComponent(email || "ana.kelmendi@gmail.com")}`)
   }
 
   return (
@@ -27,10 +30,10 @@ export default function ForgotPasswordPage() {
       description={"Vendosni email adresën tuaj dhe do t'ju\ndërgojmë udhëzimet e rikthimit."}
     >
       <section className="w-full max-w-[448px]">
-        <a href="/auth/login" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-unify-blue hover:underline">
+        <Link href="/auth/login" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-unify-blue hover:underline">
           <ArrowLeftIcon className="h-5 w-5" />
           Kthehu tek Login
-        </a>
+        </Link>
 
         <div className="mb-8">
           <h1 className="font-display text-4xl text-gray-950">Harruat Fjalëkalimin?</h1>

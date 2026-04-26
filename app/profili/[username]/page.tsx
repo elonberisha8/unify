@@ -1,4 +1,5 @@
-"use client"
+﻿"use client"
+import { useRouter } from "next/navigation"
 
 // ============================================================
 // BRANCH: feat/dashboard-profile
@@ -92,6 +93,7 @@ const ACTIVITY = [
 ]
 
 export default function PublicProfilPage() {
+  const router = useRouter()
   const params = useParams<{ username: string }>()
   const username = params?.username ?? PROFILE.username
   const shareUrl = typeof window !== "undefined" ? window.location.href : ""
@@ -117,7 +119,7 @@ export default function PublicProfilPage() {
           bio={PROFILE.bio}
           verified={PROFILE.verified}
           stats={PROFILE.stats}
-          primaryAction={{ label: "Shiko kampanjat", onClick: () => { window.location.href = "/kampanjat" } }}
+          primaryAction={{ label: "Shiko kampanjat", onClick: () => router.push("/kampanjat") }}
         />
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
@@ -144,8 +146,8 @@ export default function PublicProfilPage() {
                     <CampaignCard
                       key={campaign.id}
                       {...campaign}
-                      onClick={() => { window.location.href = `/kampanjat/${campaign.id}` }}
-                      onDonate={() => { window.location.href = `/kampanjat/${campaign.id}` }}
+                      onClick={() => router.push(`/kampanjat/${campaign.id}`)}
+                      onDonate={() => router.push(`/kampanjat/${campaign.id}`)}
                     />
                   ))}
                 </div>

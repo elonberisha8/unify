@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/volunteer-detail
@@ -7,6 +7,7 @@
 // NOTION: https://www.notion.so/34874891227e81f29f6fe850f597bd61
 // ============================================================
 
+import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
 import { SearchBar, VolunteerCard } from "@/components/public"
@@ -52,6 +53,7 @@ const VOLUNTEER_POSTS = [
 ]
 
 export default function VullnetarePage() {
+  const router = useRouter()
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER} mainClassName="bg-unify-cream">
       <section className="border-b border-border bg-unify-cream">
@@ -76,10 +78,10 @@ export default function VullnetarePage() {
               key={post.id}
               {...post}
               onClick={() => {
-                window.location.href = `/vullnetare/${post.id}`
+                router.push(`/vullnetare/${post.id}`)
               }}
               onApply={() => {
-                window.location.href = `/vullnetare/${post.id}`
+                router.push(`/vullnetare/${post.id}`)
               }}
             />
           ))}

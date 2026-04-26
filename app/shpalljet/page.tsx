@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/listings
@@ -9,6 +9,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { CampaignCard, VolunteerCard, SearchBar, FilterChips } from "@/components/public"
 import { Tabs, TabsList, TabsTrigger, TabsContent, Pagination, Badge } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
@@ -246,6 +247,7 @@ const MOCK: Item[] = [
 const PAGE_SIZE = 9
 
 export default function ShpalljetPage() {
+  const router = useRouter()
   const [tab, setTab] = React.useState<"all" | "campaign" | "volunteer">("all")
   const [category, setCategory] = React.useState("all")
   const [location, setLocation] = React.useState("all")
@@ -384,7 +386,7 @@ export default function ShpalljetPage() {
                     donorCount={it.donorCount}
                     creatorName={it.creatorName}
                     verified={it.verified}
-                    onClick={() => { window.location.href = `/kampanjat/${it.id}` }}
+                    onClick={() => router.push(`/kampanjat/${it.id}`)}
                     onBookmark={() => {}}
                     onShare={() => {}}
                     onDonate={() => {}}
@@ -401,7 +403,7 @@ export default function ShpalljetPage() {
                     startDate={it.startDate}
                     applicantCount={it.applicantCount}
                     skills={it.skills}
-                    onClick={() => { window.location.href = `/vullnetare/${it.id}` }}
+                    onClick={() => router.push(`/vullnetare/${it.id}`)}
                     onApply={() => {}}
                   />
                 )

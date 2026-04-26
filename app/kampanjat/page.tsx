@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/listings
@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { CampaignCard, SearchBar, FilterChips } from "@/components/public"
 import { Pagination, Badge, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
@@ -68,6 +69,7 @@ const PAGE_SIZE = 9
 type SortKey = "newest" | "urgent" | "almostDone" | "mostFunded"
 
 export default function KampanjaListPage() {
+  const router = useRouter()
   const [category, setCategory] = React.useState("all")
   const [location, setLocation] = React.useState("all")
   const [query, setQuery] = React.useState("")
@@ -186,7 +188,7 @@ export default function KampanjaListPage() {
                   donorCount={c.donorCount}
                   creatorName={c.creatorName}
                   verified={c.verified}
-                  onClick={() => { window.location.href = `/kampanjat/${c.id}` }}
+                  onClick={() => router.push(`/kampanjat/${c.id}`)}
                   onBookmark={() => {}}
                   onShare={() => {}}
                   onDonate={() => {}}

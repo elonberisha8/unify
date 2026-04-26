@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/auth
@@ -8,12 +8,14 @@
 // ============================================================
 
 import { FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useSignUp } from "@clerk/nextjs"
 import { AuthLayout } from "@/components/layout"
 import { Button, Checkbox, Input } from "@/components/ui"
 import { LockIcon, MailIcon, UserIcon } from "@/components/icons"
 
 export default function RegisterPage() {
+  const router = useRouter()
   const { signUp, setActive, isLoaded } = useSignUp()
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState("")
@@ -39,10 +41,10 @@ export default function RegisterPage() {
       })
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId })
-        window.location.href = "/onboarding"
+        router.push("/onboarding")
       } else {
         // Email verification e nevojshme — ridrejtoje te onboarding
-        window.location.href = "/onboarding"
+        router.push("/onboarding")
       }
     } catch (err: unknown) {
       const clerkErr = err as { errors?: { message: string }[] }

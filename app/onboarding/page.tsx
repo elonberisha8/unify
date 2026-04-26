@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/auth
@@ -11,6 +11,7 @@
 // ============================================================
 
 import { ChangeEvent, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button, Card, CardContent, Input, Stepper, Textarea } from "@/components/ui"
 import {
   ArrowLeftIcon,
@@ -47,6 +48,7 @@ const roles = [
 ]
 
 export default function OnboardingPage() {
+  const router = useRouter()
   const [current, setCurrent] = useState(0)
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [role, setRole] = useState("Donator")
@@ -62,7 +64,7 @@ export default function OnboardingPage() {
 
   const next = () => {
     if (current === steps.length - 1) {
-      window.location.href = "/dashboard"
+      router.push("/dashboard")
       return
     }
     setCurrent((value) => Math.min(value + 1, steps.length - 1))

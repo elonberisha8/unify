@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/static-pages
@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { ValueCard, StatsBar, CallToActionSection } from "@/components/public"
 import { Badge, Card, CardContent, Avatar, AvatarFallback } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
@@ -120,6 +121,7 @@ const STATS = [
 ]
 
 export default function RrethNeshPage() {
+  const router = useRouter()
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       {/* Hero */}
@@ -237,11 +239,11 @@ export default function RrethNeshPage() {
           variant="inverse"
           primaryAction={{
             label: "Fillo një kampanjë",
-            onClick: () => { window.location.href = "/dashboard/krijo/kampanje" },
+            onClick: () => { router.push("/dashboard/krijo/kampanje") },
           }}
           secondaryAction={{
             label: "Shfleto kampanjat",
-            onClick: () => { window.location.href = "/shpalljet" },
+            onClick: () => { router.push("/shpalljet") },
           }}
         />
       </section>

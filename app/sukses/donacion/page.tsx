@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 // ============================================================
 // BRANCH: feat/campaign-detail
@@ -8,6 +8,7 @@
 // ============================================================
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { SuccessHero, ShareButtons, DonorList } from "@/components/public"
 import { Button, Card, CardContent } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
@@ -33,6 +34,7 @@ const RECENT_DONORS = [
 ]
 
 export default function SuksesPage() {
+  const router = useRouter()
   const shareUrl = typeof window !== "undefined"
     ? `${window.location.origin}/kampanjat/${DONATION.campaignSlug}`
     : ""
@@ -100,14 +102,14 @@ export default function SuksesPage() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button
                 className="flex-1"
-                onClick={() => { window.location.href = `/kampanjat/${DONATION.campaignSlug}` }}
+                onClick={() => router.push(`/kampanjat/${DONATION.campaignSlug}`)}
               >
                 <HeartIcon className="h-4 w-4" /> Kthehu te kampanja
               </Button>
               <Button
                 variant="outline"
                 className="flex-1"
-                onClick={() => { window.location.href = "/kampanjat" }}
+                onClick={() => router.push("/kampanjat")}
               >
                 Zbulo kampanja të tjera <ArrowRightIcon className="h-4 w-4" />
               </Button>

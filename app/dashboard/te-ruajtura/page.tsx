@@ -27,6 +27,7 @@ function daysLeft(endsAt: string | null) {
 }
 
 export default function TeRuajturaPage() {
+  const router = useRouter()
   const { isLoaded, isSignedIn, getToken } = useAuth();
   const [tab, setTab] = React.useState<Tab>("kampanja");
   const [bookmarks, setBookmarks] = React.useState<SavedCampaign[]>([]);
@@ -104,7 +105,7 @@ export default function TeRuajturaPage() {
                   daysLeft={daysLeft(campaign.endsAt)}
                   creatorName={campaign.isAnonymous ? "Anonim" : campaign.creator.name}
                   verified={campaign.creator.isVerified}
-                  onClick={() => { window.location.href = `/kampanjat/${campaign.slug}` }}
+                  onClick={() => router.push(`/kampanjat/${campaign.slug}`)}
                 />
               ))}
             </div>
