@@ -18,8 +18,6 @@ import { MultiImageUpload } from "@/components/dashboard";
 import {
   Button, Input, Textarea, Label, Badge,
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
-  Popover, PopoverTrigger, PopoverContent,
-  Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem,
 } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";
 import { CheckIcon, ChevronDownIcon, TrashIcon, PlusIcon } from "@/components/icons";
@@ -86,10 +84,24 @@ const LOCATION_GROUPS: { label: string; cities: string[] }[] = [
 
 const ALL_CITIES = LOCATION_GROUPS.flatMap((g) => g.cities);
 
-// ── Combobox duke përdorur Popover + Command (identik me Select) ──
+// ── Combobox — stil identik me Select, klikim i besueshëm ───────
 function LocationCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Mbyll kur klikon jashtë
+  React.useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery("");
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, []);
 
   function select(city: string) {
     onChange(city);
@@ -98,84 +110,94 @@ function LocationCombobox({ value, onChange }: { value: string; onChange: (v: st
   }
 
   const q = query.toLowerCase();
-
   const filteredGroups = q.length > 0
     ? LOCATION_GROUPS
         .map((g) => ({ ...g, cities: g.cities.filter((c) => c.toLowerCase().includes(q)) }))
         .filter((g) => g.cities.length > 0)
     : LOCATION_GROUPS;
-
-  const showCustom =
-    q.length > 0 && !ALL_CITIES.some((c) => c.toLowerCase() === q);
+  const showCustom = q.length > 0 && !ALL_CITIES.some((c) => c.toLowerCase() === q);
 
   return (
-    <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) setQuery(""); }}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          role="combobox"
-          aria-expanded={open}
-          className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-white px-4 py-2 text-sm focus:outline-none focus:border-unify-blue disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <span className={value ? "text-foreground" : "text-muted-foreground"}>
-            {value || "Zgjidh qytetin"}
-          </span>
-          <ChevronDownIcon className="h-4 w-4 opacity-50" />
-        </button>
-      </PopoverTrigger>
+    <div ref={containerRef} className="relative">
 
-      <PopoverContent
-        className="p-0 w-[var(--radix-popover-trigger-width)]"
-        align="start"
-        sideOffset={4}
+      {/* Trigger — identik me SelectTrigger */}
+      <button
+        type="button"
+        onClick={() => { setOpen((o) => !o); setTimeout(() => inputRef.current?.focus(), 10); }}
+        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-white px-4 py-2 text-sm focus:outline-none focus:border-unify-blue disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <Command shouldFilter={false}>
-          <CommandInput
-            placeholder="Kërko qytetin..."
-            value={query}
-            onValueChange={setQuery}
-          />
-          <CommandList>
-            {filteredGroups.length === 0 && !showCustom && (
-              <CommandEmpty>Nuk u gjet asnjë qytet.</CommandEmpty>
-            )}
+        <span className={value ? "text-foreground" : "text-muted-foreground"}>
+          {value || "Zgjidh qytetin"}
+        </span>
+        <ChevronDownIcon className="h-4 w-4 opacity-50" />
+      </button>
 
+      {/* Dropdown — identik me SelectContent */}
+      {open && (
+        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md">
+
+          {/* Input kërkim — stil CommandInput */}
+          <div className="flex items-center border-b px-3">
+            <svg className="mr-2 h-4 w-4 shrink-0 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Kërko qytetin..."
+              className="flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* Lista */}
+          <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1">
             {filteredGroups.map((group) => (
-              <CommandGroup key={group.label} heading={group.label}>
+              <div key={group.label} className="overflow-hidden p-1 text-foreground">
+                {/* Group heading — stil CommandGroup */}
+                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+                  {group.label}
+                </div>
                 {group.cities.map((city) => (
-                  <CommandItem
+                  // div me onClick — klikim i besueshëm pa interferim nga cmdk/Radix
+                  <div
                     key={city}
-                    value={city}
-                    onSelect={select}
-                    className="pl-8"
+                    role="option"
+                    aria-selected={value === city}
+                    onClick={() => select(city)}
+                    className="relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none hover:bg-muted aria-selected:bg-muted"
                   >
-                    {value === city && (
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <CheckIcon className="h-4 w-4" />
-                      </span>
-                    )}
+                    {value === city
+                      ? <CheckIcon className="mr-2 h-4 w-4 shrink-0" />
+                      : <span className="mr-2 h-4 w-4 shrink-0" />
+                    }
                     {city}
-                  </CommandItem>
+                  </div>
                 ))}
-              </CommandGroup>
+              </div>
             ))}
 
             {showCustom && (
-              <CommandGroup>
-                <CommandItem
-                  value={query.trim()}
-                  onSelect={() => select(query.trim())}
-                  className="text-unify-blue"
+              <div className="overflow-hidden p-1">
+                <div
+                  role="option"
+                  onClick={() => select(query.trim())}
+                  className="relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm text-unify-blue outline-none hover:bg-muted"
                 >
                   <PlusIcon className="mr-2 h-4 w-4 shrink-0" />
                   Vendos &quot;{query.trim()}&quot;
-                </CommandItem>
-              </CommandGroup>
+                </div>
+              </div>
             )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+
+            {filteredGroups.length === 0 && !showCustom && (
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                Nuk u gjet asnjë qytet.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
