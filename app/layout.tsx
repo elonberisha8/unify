@@ -1,6 +1,7 @@
 // NOTION: https://www.notion.so/34874891227e8103a6b4cf331028bb95
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { UserSync } from "@/components/auth";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             rel="stylesheet"
           />
         </head>
-        <body>{children}</body>
+        <body>
+          <UserSync />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

@@ -39,6 +39,18 @@ const CATEGORIES = [
 const LOCATIONS = ["Prishtinë", "Prizren", "Mitrovicë", "Pejë", "Ferizaj", "Gjakovë", "Gjilan", "Tiranë", "Tetovë", "Shkup", "Diasporë", "Online"];
 
 const STEP_LABELS = ["Problemi", "Storyja", "Plani", "Buxheti", "FAQ", "Preview"];
+const URGENCY_LABELS: Record<number, string> = {
+  1: "Mund të presë",
+  2: "E ulët",
+  3: "Jo urgjente",
+  4: "Mesatare",
+  5: "Duhet vëmendje",
+  6: "E rëndësishme",
+  7: "E lartë",
+  8: "Urgjente",
+  9: "Shumë urgjente",
+  10: "Emergjencë absolute",
+};
 
 interface Milestone { id: string; name: string; target: string; deadline: string }
 interface BudgetItem { id: string; label: string; amount: string }
@@ -222,11 +234,79 @@ export default function KrijoKampanjePage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label>Urgjenca: <span className="font-bold text-unify-blue">{urgency}/10</span></Label>
-                  <input type="range" min={1} max={10} value={urgency} onChange={(e) => setUrgency(Number(e.target.value))} className="w-full accent-unify-blue" />
-                  <div className="flex justify-between text-xs text-gray-400">
-                    <span>1 — Mund të presë</span>
-                    <span>10 — Emergjencë absolute</span>
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <Label className="text-sm font-bold text-gray-900">Urgjenca</Label>
+                        <p className="mt-1 text-xs text-gray-500">Zgjidh sa shpejt duhet të trajtohet kjo kampanjë.</p>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-full bg-unify-blue/10 px-3 py-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wide text-unify-blue">{URGENCY_LABELS[urgency]}</span>
+                        <span className="rounded-full bg-unify-blue px-2 py-0.5 text-xs font-bold text-white">{urgency}/10</span>
+                      </div>
+                    </div>
+
+                    <div className="relative px-1 pb-1 pt-5">
+                      <div className="absolute left-1 right-1 top-[31px] h-3 rounded-full bg-gray-200" />
+                      <div
+                        className="absolute left-1 top-[31px] h-3 rounded-full bg-gradient-to-r from-sky-400 to-unify-blue"
+                        style={{ width: `calc(${((urgency - 1) / 9) * 100}% - ${((urgency - 1) / 9) * 8}px)` }}
+                      />
+                      <input
+                        type="range"
+                        min={1}
+                        max={10}
+                        value={urgency}
+                        onChange={(e) => setUrgency(Number(e.target.value))}
+                        className="urgency-slider relative z-10 w-full"
+                        aria-label="Urgjenca e kampanjës"
+                      />
+                      <div className="mt-4 flex justify-between text-xs font-medium text-gray-400">
+                        <span>1 — Mund të presë</span>
+                        <span>10 — Emergjencë absolute</span>
+                      </div>
+                    </div>
+
+                    <style jsx>{`
+                      .urgency-slider {
+                        height: 28px;
+                        appearance: none;
+                        background: transparent;
+                        cursor: pointer;
+                      }
+
+                      .urgency-slider::-webkit-slider-runnable-track {
+                        height: 12px;
+                        background: transparent;
+                        border-radius: 999px;
+                      }
+
+                      .urgency-slider::-webkit-slider-thumb {
+                        appearance: none;
+                        width: 28px;
+                        height: 28px;
+                        margin-top: -8px;
+                        border-radius: 999px;
+                        border: 4px solid white;
+                        background: #1798e8;
+                        box-shadow: 0 8px 18px rgba(23, 152, 232, 0.28), 0 0 0 1px rgba(17, 24, 39, 0.08);
+                      }
+
+                      .urgency-slider::-moz-range-track {
+                        height: 12px;
+                        background: transparent;
+                        border-radius: 999px;
+                      }
+
+                      .urgency-slider::-moz-range-thumb {
+                        width: 22px;
+                        height: 22px;
+                        border-radius: 999px;
+                        border: 4px solid white;
+                        background: #1798e8;
+                        box-shadow: 0 8px 18px rgba(23, 152, 232, 0.28), 0 0 0 1px rgba(17, 24, 39, 0.08);
+                      }
+                    `}</style>
                   </div>
                 </div>
               </div>

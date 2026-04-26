@@ -31,12 +31,18 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const getRedirectUrl = () => {
+    if (typeof window === "undefined") return "/dashboard"
+    const redirect = new URLSearchParams(window.location.search).get("redirect")
+    return redirect?.startsWith("/") ? redirect : "/dashboard"
+  }
+
   const handleGoogle = async () => {
     if (!isLoaded) return
     await signIn.authenticateWithRedirect({
       strategy: "oauth_google",
       redirectUrl: `${window.location.origin}/sso-callback`,
-      redirectUrlComplete: "/dashboard",
+      redirectUrlComplete: getRedirectUrl(),
     })
   }
 
@@ -46,14 +52,28 @@ export default function LoginPage() {
     setError("")
     setLoading(true)
     const formData = new FormData(event.currentTarget)
-    const email = formData.get("email") as string
+    const email = (formData.get("email") as string).trim()
     const password = formData.get("password") as string
     try {
       const result = await signIn.create({ identifier: email, password })
-      if (result.status === "complete") {
+      if (result.status === "complete" && result.createdSessionId) {
         await setActive({ session: result.createdSessionId })
-        router.push("/dashboard")
+        router.replace(getRedirectUrl())
+        router.refresh()
+        return
       }
+
+      if (result.status === "needs_second_factor") {
+        setError("Kjo llogari kërkon verifikim shtesë. Ju lutem përdorni metodën e verifikimit në Clerk.")
+        return
+      }
+
+      if (result.status === "needs_new_password") {
+        setError("Kjo llogari kërkon fjalëkalim të ri para kyçjes.")
+        return
+      }
+
+      setError("Kyçja nuk u kompletua. Verifikoni email-in ose provoni përsëri.")
     } catch (err: unknown) {
       const clerkErr = err as { errors?: { message: string }[] }
       setError(clerkErr.errors?.[0]?.message ?? "Email ose fjalëkalim i gabuar.")

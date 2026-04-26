@@ -57,6 +57,7 @@ export default function AdminKampanjatPage() {
   const { getToken } = useAuth()
   const [campaigns, setCampaigns] = React.useState<CampaignRow[]>([])
   const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState("")
   const [query, setQuery] = React.useState("")
   const [status, setStatus] = React.useState<StatusFilter>("all")
   const [editing, setEditing] = React.useState<CampaignRow | null>(null)
@@ -64,6 +65,7 @@ export default function AdminKampanjatPage() {
 
   const load = React.useCallback(async () => {
     setLoading(true)
+    setError("")
     try {
       const token = await getToken()
       const res = await apiFetch<{ campaigns: AdminCampaign[]; total: number }>(
@@ -73,8 +75,9 @@ export default function AdminKampanjatPage() {
       setCampaigns(
         res.campaigns.map((c) => ({ ...c, _lifecycle: toLifecycle(c.status) }))
       )
-    } catch {
+    } catch (err) {
       setCampaigns([])
+      setError(err instanceof Error ? err.message : "Kampanjat nuk u ngarkuan.")
     } finally {
       setLoading(false)
     }
@@ -168,6 +171,14 @@ export default function AdminKampanjatPage() {
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
           </div>
+        ) : error ? (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="p-5">
+              <p className="font-bold text-red-700">Kampanjat nuk u shfaqën</p>
+              <p className="mt-1 text-sm text-red-700">{error}</p>
+              <Button variant="outline" className="mt-4" onClick={load}>Provo përsëri</Button>
+            </CardContent>
+          </Card>
         ) : (
           <AdminTable
             rows={filtered}

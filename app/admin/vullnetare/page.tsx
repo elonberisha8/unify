@@ -53,18 +53,21 @@ export default function AdminVullnetarePage() {
   const { getToken } = useAuth()
   const [listings, setListings] = React.useState<ListingRow[]>([])
   const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState("")
   const [query, setQuery] = React.useState("")
   const [status, setStatus] = React.useState("all")
   const [editing, setEditing] = React.useState<ListingRow | null>(null)
 
   const load = React.useCallback(async () => {
     setLoading(true)
+    setError("")
     try {
       const token = await getToken()
       const data = await apiFetch<AdminVolunteer[]>("/admin/volunteers", { token })
       setListings(data.map((l) => ({ ...l, _lifecycle: toLifecycle(l.status) })))
-    } catch {
+    } catch (err) {
       setListings([])
+      setError(err instanceof Error ? err.message : "Shpalljet nuk u ngarkuan.")
     } finally {
       setLoading(false)
     }
@@ -152,6 +155,14 @@ export default function AdminVullnetarePage() {
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
           </div>
+        ) : error ? (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="p-5">
+              <p className="font-bold text-red-700">Shpalljet nuk u shfaqën</p>
+              <p className="mt-1 text-sm text-red-700">{error}</p>
+              <Button variant="outline" className="mt-4" onClick={load}>Provo përsëri</Button>
+            </CardContent>
+          </Card>
         ) : (
           <AdminTable
             rows={filtered}
