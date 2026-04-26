@@ -1,9 +1,9 @@
 "use client";
+
 import * as React from "react";
 import { BellIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
-import { Input } from "../ui/Input";
+import { Avatar, AvatarFallback, AvatarImage, Input } from "@/components/ui";
 
 export interface AdminHeaderProps {
   title: string;
@@ -18,26 +18,26 @@ export interface AdminHeaderProps {
 
 export function AdminHeader({ title, description, user, onSearch, notificationCount, onNotificationsClick, actions, className }: AdminHeaderProps) {
   return (
-    <header className={cn("flex items-center gap-4 py-4 px-6 border-b border-border bg-white", className)}>
-      <div className="flex-1 min-w-0">
-        <h1 className="font-display text-2xl text-unify-brown truncate">{title}</h1>
-        {description && <p className="text-sm text-muted-foreground truncate">{description}</p>}
+    <header className={cn("sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-border bg-white/95 px-4 py-4 shadow-sm shadow-black/[0.02] backdrop-blur sm:px-6", className)}>
+      <div className="min-w-[220px] flex-1">
+        <h1 className="truncate font-display text-2xl text-unify-brown">{title}</h1>
+        {description && <p className="truncate text-sm text-muted-foreground">{description}</p>}
       </div>
 
       {onSearch && (
-        <div className="relative w-72 hidden md:block">
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Kërko..." className="pl-10" onChange={(e) => onSearch(e.target.value)} />
+        <div className="relative hidden w-72 md:block">
+          <SearchIcon className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Kerko..." className="pl-10" onChange={(e) => onSearch(e.target.value)} />
         </div>
       )}
 
-      {actions}
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
 
       {onNotificationsClick && (
-        <button onClick={onNotificationsClick} className="relative h-10 w-10 rounded-full hover:bg-muted flex items-center justify-center">
+        <button onClick={onNotificationsClick} className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border hover:bg-muted">
           <BellIcon className="h-4 w-4" />
           {notificationCount != null && notificationCount > 0 && (
-            <span className="absolute top-1 right-1 h-4 min-w-4 px-1 rounded-full bg-destructive text-white text-[10px] font-bold flex items-center justify-center">
+            <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white">
               {notificationCount > 9 ? "9+" : notificationCount}
             </span>
           )}
@@ -45,8 +45,8 @@ export function AdminHeader({ title, description, user, onSearch, notificationCo
       )}
 
       {user && (
-        <div className="flex items-center gap-3">
-          <div className="text-right hidden sm:block">
+        <div className="flex items-center gap-3 rounded-full border border-border bg-white px-2 py-1">
+          <div className="hidden text-right sm:block">
             <p className="text-sm font-bold">{user.name}</p>
             {user.role && <p className="text-xs text-muted-foreground">{user.role}</p>}
           </div>

@@ -1,0 +1,708 @@
+﻿"use client";
+
+// ============================================================
+// Wizard 6-hapësh — Kampanjë Donacionesh (e avancuar)
+//   Hapi 1: Problemi
+//   Hapi 2: Storyja + Multimedia
+//   Hapi 3: Plani i Zgjidhjes
+//   Hapi 4: Buxheti
+//   Hapi 5: FAQ + Transparency
+//   Hapi 6: Preview + Publikim
+// ============================================================
+
+import * as React from "react";
+import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { MultiImageUpload } from "@/components/dashboard";
+import {
+  Button, Input, Textarea, Label, Badge,
+  Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
+} from "@/components/ui";
+import { DashboardLayout } from "@/components/layout";
+import { CheckIcon, ChevronDownIcon, TrashIcon, PlusIcon } from "@/components/icons";
+import { apiFetch } from "@/app/_lib/api";
+
+const CATEGORIES = [
+  { label: "Mjekësore", value: "MEDICAL" },
+  { label: "Arsim", value: "EDUCATION" },
+  { label: "Emergjencë", value: "EMERGENCY" },
+  { label: "Komunitare", value: "COMMUNITY" },
+  { label: "Sport", value: "SPORTS" },
+  { label: "Mjedis", value: "ENVIRONMENT" },
+  { label: "Kafshët", value: "ANIMALS" },
+  { label: "Teknologji", value: "TECHNOLOGY" },
+  { label: "Kreative", value: "CREATIVE" },
+  { label: "Tjera", value: "OTHER" },
+];
+
+// ── Trojet shqiptare — të gjitha qytetet/komunat ─────────────
+const LOCATION_GROUPS: { label: string; cities: string[] }[] = [
+  {
+    label: "Kosovë",
+    cities: [
+      "Prishtinë", "Prizren", "Pejë", "Mitrovicë", "Ferizaj", "Gjakovë", "Gjilan",
+      "Vushtrri", "Suharekë", "Rahovec", "Lipjan", "Podujevë", "Istog", "Klinë",
+      "Skënderaj", "Drenas", "Deçan", "Malishevë", "Dragash", "Kaçanik", "Shtime",
+      "Fushë Kosovë", "Obiliq", "Novo Bërdë", "Kamenicë", "Vitia", "Hani i Elezit",
+      "Junik", "Mamushë", "Graçanicë", "Shtërpcë", "Leposaviq", "Zubin Potok",
+      "Zveçan", "Ranillug", "Partesh", "Kllokot", "Mitrovica e Veriut",
+    ],
+  },
+  {
+    label: "Shqipëri",
+    cities: [
+      "Tiranë", "Durrës", "Vlorë", "Shkodër", "Elbasan", "Fier", "Korçë", "Berat",
+      "Gjirokastër", "Lushnjë", "Kavajë", "Pogradec", "Sarandë", "Peshkopi", "Kukës",
+      "Lezhë", "Krujë", "Laç", "Burrel", "Përmet", "Tepelenë", "Çorovodë", "Gramsh",
+      "Librazhd", "Rrogozhinë", "Patos", "Ballsh", "Orikum", "Himarë", "Delvinë",
+    ],
+  },
+  {
+    label: "Maqedonia e Veriut",
+    cities: [
+      "Tetovë", "Gostivar", "Shkup", "Struga", "Ohër", "Dibër", "Kërçovë",
+      "Studeničani", "Zelino", "Vrapçishtë", "Bogovinjë", "Tearce", "Jegunovcë",
+      "Mavrovë e Rostushë", "Centar Zhupë", "Plasnicë",
+    ],
+  },
+  {
+    label: "Mali i Zi",
+    cities: [
+      "Ulqin", "Tuz", "Rozhajë", "Plavë", "Guci", "Bar", "Podgoricë", "Beranë",
+    ],
+  },
+  {
+    label: "Lugina e Preshevës",
+    cities: ["Preshevë", "Bujanoc", "Medvegjë"],
+  },
+  {
+    label: "Tjera",
+    cities: ["Diasporë", "Online", "Jashtë Trojeve"],
+  },
+];
+
+const ALL_CITIES = LOCATION_GROUPS.flatMap((g) => g.cities);
+
+// ── Combobox — stil identik me Select, klikim i besueshëm ───────
+function LocationCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState("");
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Mbyll kur klikon jashtë
+  React.useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery("");
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, []);
+
+  function select(city: string) {
+    onChange(city);
+    setOpen(false);
+    setQuery("");
+  }
+
+  const q = query.toLowerCase();
+  const filteredGroups = q.length > 0
+    ? LOCATION_GROUPS
+        .map((g) => ({ ...g, cities: g.cities.filter((c) => c.toLowerCase().includes(q)) }))
+        .filter((g) => g.cities.length > 0)
+    : LOCATION_GROUPS;
+  const showCustom = q.length > 0 && !ALL_CITIES.some((c) => c.toLowerCase() === q);
+
+  return (
+    <div ref={containerRef} className="relative">
+
+      {/* Trigger — identik me SelectTrigger */}
+      <button
+        type="button"
+        onClick={() => { setOpen((o) => !o); setTimeout(() => inputRef.current?.focus(), 10); }}
+        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-white px-4 py-2 text-sm focus:outline-none focus:border-unify-blue disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <span className={value ? "text-foreground" : "text-muted-foreground"}>
+          {value || "Zgjidh qytetin"}
+        </span>
+        <ChevronDownIcon className="h-4 w-4 opacity-50" />
+      </button>
+
+      {/* Dropdown — identik me SelectContent */}
+      {open && (
+        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md">
+
+          {/* Input kërkim — stil CommandInput */}
+          <div className="flex items-center border-b px-3">
+            <svg className="mr-2 h-4 w-4 shrink-0 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Kërko qytetin..."
+              className="flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* Lista */}
+          <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1">
+            {filteredGroups.map((group) => (
+              <div key={group.label} className="overflow-hidden p-1 text-foreground">
+                {/* Group heading — stil CommandGroup */}
+                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+                  {group.label}
+                </div>
+                {group.cities.map((city) => (
+                  // div me onClick — klikim i besueshëm pa interferim nga cmdk/Radix
+                  <div
+                    key={city}
+                    role="option"
+                    aria-selected={value === city}
+                    onClick={() => select(city)}
+                    className="relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none hover:bg-muted aria-selected:bg-muted"
+                  >
+                    {value === city
+                      ? <CheckIcon className="mr-2 h-4 w-4 shrink-0" />
+                      : <span className="mr-2 h-4 w-4 shrink-0" />
+                    }
+                    {city}
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {showCustom && (
+              <div className="overflow-hidden p-1">
+                <div
+                  role="option"
+                  onClick={() => select(query.trim())}
+                  className="relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm text-unify-blue outline-none hover:bg-muted"
+                >
+                  <PlusIcon className="mr-2 h-4 w-4 shrink-0" />
+                  Vendos &quot;{query.trim()}&quot;
+                </div>
+              </div>
+            )}
+
+            {filteredGroups.length === 0 && !showCustom && (
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                Nuk u gjet asnjë qytet.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const STEP_LABELS = ["Problemi", "Storyja", "Plani", "Buxheti", "FAQ", "Preview"];
+const URGENCY_LABELS: Record<number, string> = {
+  1: "Mund të presë",
+  2: "E ulët",
+  3: "Jo urgjente",
+  4: "Mesatare",
+  5: "Duhet vëmendje",
+  6: "E rëndësishme",
+  7: "E lartë",
+  8: "Urgjente",
+  9: "Shumë urgjente",
+  10: "Emergjencë absolute",
+};
+
+interface Milestone { id: string; name: string; target: string; deadline: string }
+interface BudgetItem { id: string; label: string; amount: string }
+interface FaqItem { id: string; q: string; a: string }
+interface BudgetBreakdown { id: string; label: string; pct: string }
+
+function WizardStepper({ current }: { current: number }) {
+  return (
+    <div className="flex items-center justify-between w-full overflow-x-auto pb-2">
+      {STEP_LABELS.map((label, i) => {
+        const done = i < current;
+        const active = i === current;
+        const isLast = i === STEP_LABELS.length - 1;
+        return (
+          <React.Fragment key={label}>
+            <div className="flex flex-col items-center gap-2 shrink-0">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition ${
+                  done ? "bg-green-600 text-white" : active ? "bg-unify-blue text-white" : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                {done ? <CheckIcon className="w-4 h-4" /> : i + 1}
+              </div>
+              <span className={`text-xs font-medium whitespace-nowrap ${
+                done ? "text-green-600" : active ? "text-unify-blue" : "text-gray-400"
+              }`}>{label}</span>
+            </div>
+            {!isLast && <div className={`flex-1 h-0.5 mx-2 mb-4 transition ${i < current ? "bg-green-600" : "bg-gray-200"}`} />}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function KrijoKampanjePage() {
+  const router = useRouter();
+  const { isSignedIn, getToken } = useAuth();
+  const [step, setStep] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Hapi 1
+  const [title, setTitle] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [location, setLocation] = useState("");
+  const [problemStatement, setProblemStatement] = useState("");
+  const [targetGroup, setTargetGroup] = useState("");
+  const [urgency, setUrgency] = useState(5);
+
+  // Hapi 2
+  const [background, setBackground] = useState("");
+  const [timeline, setTimeline] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
+
+  // Hapi 3
+  const [solutionPlan, setSolutionPlan] = useState("");
+  const [breakdown, setBreakdown] = useState<BudgetBreakdown[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [expectedOutcome, setExpectedOutcome] = useState("");
+  const [verificationPlan, setVerificationPlan] = useState("");
+
+  // Hapi 4
+  const [targetAmount, setTargetAmount] = useState("");
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
+  const [tip, setTip] = useState("5");
+  const [endDate, setEndDate] = useState("");
+
+  // Hapi 5
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [supportingDocs, setSupportingDocs] = useState<string[]>([]);
+  const [partners, setPartners] = useState("");
+
+  function addBreakdown() {
+    setBreakdown((p) => [...p, { id: `b${Date.now()}`, label: "", pct: "" }]);
+  }
+  function addMilestone() {
+    setMilestones((p) => [...p, { id: `m${Date.now()}`, name: "", target: "", deadline: "" }]);
+  }
+  function addBudgetItem() {
+    setBudgetItems((p) => [...p, { id: `bi${Date.now()}`, label: "", amount: "" }]);
+  }
+  function addFaq() {
+    setFaqs((p) => [...p, { id: `f${Date.now()}`, q: "", a: "" }]);
+  }
+
+  async function handleSubmit() {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const token = isSignedIn ? await getToken() : null;
+      await apiFetch("/campaigns", {
+        method: "POST",
+        token,
+        body: JSON.stringify({
+          title, shortDescription,
+          description: `${problemStatement}\n\n## Storyja\n${background}\n\n## Timeline\n${timeline}\n\n## Plani\n${solutionPlan}\n\n## Rezultati i pritur\n${expectedOutcome}`,
+          category, location,
+          problemStatement, targetGroup, urgency,
+          images, videoUrl,
+          breakdown, milestones, budgetItems,
+          targetAmount: Number(targetAmount),
+          endsAt: endDate ? new Date(endDate).toISOString() : undefined,
+          tipPercent: Number(tip),
+          faqs, supportingDocs, partners,
+          isUrgent: urgency >= 8,
+          verificationPlan, expectedOutcome,
+        }),
+      });
+      router.push("/dashboard/kampanjat?created=1");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e)
+      alert(msg || "Gabim gjatë krijimit të kampanjës")
+      setSubmitting(false);
+    }
+  }
+
+  const canProceed = [
+    title.trim().length >= 10 && category && location && problemStatement.trim().length >= 50 && targetGroup.trim(),
+    background.trim().length >= 50 && images.length > 0,
+    solutionPlan.trim().length >= 50,
+    Number(targetAmount) >= 50 && endDate,
+    true,
+    true,
+  ][step];
+
+  return (
+    <DashboardLayout activeKey="campaigns">
+      <div className="max-w-4xl space-y-6">
+        <div>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Krijo Kampanjë</p>
+          <h1 className="text-2xl font-bold text-gray-900">Hapi {step + 1} nga {STEP_LABELS.length} — {STEP_LABELS[step]}</h1>
+          <p className="text-sm text-gray-500 mt-1">Kampanja është një projekt serioz që zgjidh problem të madh — kushtoji kohë çdo hapi.</p>
+        </div>
+
+        <WizardStepper current={step} />
+
+        <div className="bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
+
+          {/* ── HAPI 1: Problemi ─────────────────────────── */}
+          {step === 0 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Identifikimi i Problemit</h2>
+              <p className="text-sm text-gray-500">Çfarë problem po zgjidhin? Kush preken? Sa urgjente?</p>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label>Titulli i Kampanjës * (min 10 karaktere)</Label>
+                  <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="p.sh. Operacion urgjent për Arianitin (5 vjeç)" />
+                  {title.trim().length > 0 && title.trim().length < 10 && (
+                    <p className="text-xs text-red-500">Titulli duhet të ketë të paktën 10 karaktere ({title.trim().length}/10)</p>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Përshkrim i shkurtër (max 200 karaktere) *</Label>
+                  <Textarea value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} maxLength={200} rows={2} placeholder="Një fjali që përmbledh kampanjën — për kartat e listimit dhe SEO." />
+                  <span className="text-xs text-gray-400">{shortDescription.length}/200</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label>Kategoria *</Label>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger><SelectValue placeholder="Zgjidh" /></SelectTrigger>
+                      <SelectContent>{CATEGORIES.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Lokacioni *</Label>
+                    <LocationCombobox value={location} onChange={setLocation} />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Cila është problema? * (min 50 karaktere)</Label>
+                  <Textarea value={problemStatement} onChange={(e) => setProblemStatement(e.target.value)} rows={5} placeholder="Përshkruaj qartë problemin që duhet zgjidhur. Çfarë pasoja ka? Sa kohë ka që ekziston?" />
+                  <span className="text-xs text-gray-400">{problemStatement.length} karaktere</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Kush preken? *</Label>
+                  <Input value={targetGroup} onChange={(e) => setTargetGroup(e.target.value)} placeholder="p.sh. Familjet me të ardhura të ulëta në komunën e Lipjanit" />
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <Label className="text-sm font-bold text-gray-900">Urgjenca</Label>
+                        <p className="mt-1 text-xs text-gray-500">Zgjidh sa shpejt duhet të trajtohet kjo kampanjë.</p>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-full bg-unify-blue/10 px-3 py-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wide text-unify-blue">{URGENCY_LABELS[urgency]}</span>
+                        <span className="rounded-full bg-unify-blue px-2 py-0.5 text-xs font-bold text-white">{urgency}/10</span>
+                      </div>
+                    </div>
+
+                    <div className="relative px-1 pb-1 pt-5">
+                      <div className="absolute left-1 right-1 top-[31px] h-3 rounded-full bg-gray-200" />
+                      <div
+                        className="absolute left-1 top-[31px] h-3 rounded-full bg-gradient-to-r from-sky-400 to-unify-blue"
+                        style={{ width: `calc(${((urgency - 1) / 9) * 100}% - ${((urgency - 1) / 9) * 8}px)` }}
+                      />
+                      <input
+                        type="range"
+                        min={1}
+                        max={10}
+                        value={urgency}
+                        onChange={(e) => setUrgency(Number(e.target.value))}
+                        className="urgency-slider relative z-10 w-full"
+                        aria-label="Urgjenca e kampanjës"
+                      />
+                      <div className="mt-4 flex justify-between text-xs font-medium text-gray-400">
+                        <span>1 — Mund të presë</span>
+                        <span>10 — Emergjencë absolute</span>
+                      </div>
+                    </div>
+
+                    <style jsx>{`
+                      .urgency-slider {
+                        height: 28px;
+                        appearance: none;
+                        background: transparent;
+                        cursor: pointer;
+                      }
+
+                      .urgency-slider::-webkit-slider-runnable-track {
+                        height: 12px;
+                        background: transparent;
+                        border-radius: 999px;
+                      }
+
+                      .urgency-slider::-webkit-slider-thumb {
+                        appearance: none;
+                        width: 28px;
+                        height: 28px;
+                        margin-top: -8px;
+                        border-radius: 999px;
+                        border: 4px solid white;
+                        background: #1798e8;
+                        box-shadow: 0 8px 18px rgba(23, 152, 232, 0.28), 0 0 0 1px rgba(17, 24, 39, 0.08);
+                      }
+
+                      .urgency-slider::-moz-range-track {
+                        height: 12px;
+                        background: transparent;
+                        border-radius: 999px;
+                      }
+
+                      .urgency-slider::-moz-range-thumb {
+                        width: 22px;
+                        height: 22px;
+                        border-radius: 999px;
+                        border: 4px solid white;
+                        background: #1798e8;
+                        box-shadow: 0 8px 18px rgba(23, 152, 232, 0.28), 0 0 0 1px rgba(17, 24, 39, 0.08);
+                      }
+                    `}</style>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 2: Storyja ─────────────────────────── */}
+          {step === 1 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Storyja & Multimedia</h2>
+              <p className="text-sm text-gray-500">Trego sfondin, çfarë ka ndodhur, dhe sill provat. Foto/video ndihmojnë shumë.</p>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label>Sfondi i situatës * (min 50 karaktere)</Label>
+                  <Textarea value={background} onChange={(e) => setBackground(e.target.value)} rows={6} placeholder="Trego storyn — kush janë njerëzit, çfarë i ka çuar në këtë situatë, çfarë kanë provuar deri tani..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Timeline i ngjarjeve (opsionale)</Label>
+                  <Textarea value={timeline} onChange={(e) => setTimeline(e.target.value)} rows={4} placeholder="Janar 2025: Diagnostikim&#10;Mars 2025: Operacioni i parë&#10;Qershor 2025: Komplikime..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Foto * (min 1, max 10) — sa më shumë, aq më besueshme</Label>
+                  <MultiImageUpload
+                    images={images}
+                    onChange={setImages}
+                    max={10}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Video URL (YouTube/Vimeo, opsionale)</Label>
+                  <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..." />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 3: Plani ─────────────────────────── */}
+          {step === 2 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Plani i Zgjidhjes</h2>
+              <p className="text-sm text-gray-500">Si do të përdoren paratë? Çfarë rezultati pritet?</p>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label>Si do të zgjidhet problemi? * (min 50 karaktere)</Label>
+                  <Textarea value={solutionPlan} onChange={(e) => setSolutionPlan(e.target.value)} rows={5} placeholder="Trego planin konkret — hapat, kush do ta bëjë, kur..." />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Si shpërndahen paratë (% breakdown)</Label>
+                    <Button size="sm" variant="outline" onClick={addBreakdown}><PlusIcon className="h-3 w-3 mr-1" /> Shto rresht</Button>
+                  </div>
+                  {breakdown.map((b, i) => (
+                    <div key={b.id} className="flex gap-2 items-center">
+                      <Input className="flex-1" placeholder="Etiketa (p.sh. Materiale)" value={b.label} onChange={(e) => setBreakdown((p) => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))} />
+                      <Input className="w-24" type="number" placeholder="%" value={b.pct} onChange={(e) => setBreakdown((p) => p.map((x, j) => j === i ? { ...x, pct: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setBreakdown((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                  {breakdown.length > 0 && (
+                    <p className="text-xs text-gray-500">Total: {breakdown.reduce((s, x) => s + (Number(x.pct) || 0), 0)}% (duhet 100%)</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Milestones * (faza me shuma + deadline)</Label>
+                    <Button size="sm" variant="outline" onClick={addMilestone}><PlusIcon className="h-3 w-3 mr-1" /> Shto milestone</Button>
+                  </div>
+                  {milestones.map((m, i) => (
+                    <div key={m.id} className="grid grid-cols-12 gap-2 items-center">
+                      <Input className="col-span-5" placeholder="Emri i fazës" value={m.name} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, name: e.target.value } : x))} />
+                      <Input className="col-span-3" type="number" placeholder="€" value={m.target} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, target: e.target.value } : x))} />
+                      <Input className="col-span-3" type="date" value={m.deadline} onChange={(e) => setMilestones((p) => p.map((x, j) => j === i ? { ...x, deadline: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" className="col-span-1" onClick={() => setMilestones((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Çfarë rezultati pritet? *</Label>
+                  <Textarea value={expectedOutcome} onChange={(e) => setExpectedOutcome(e.target.value)} rows={3} placeholder="Pas 6 muajsh, X persona do të kenë akses në..." />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Plan verifikimi (si do të dëshmosh që paratë u përdorën mirë)</Label>
+                  <Textarea value={verificationPlan} onChange={(e) => setVerificationPlan(e.target.value)} rows={3} placeholder="Foto/video çdo muaj, raporte progresi, faturat e shpenzimeve..." />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 4: Buxheti ─────────────────────────── */}
+          {step === 3 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Buxheti i Plotë</h2>
+              <p className="text-sm text-gray-500">Sa duhen gjithsej? Detajet me shumë.</p>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label>Shuma totale (€) *</Label>
+                    <Input type="number" min={50} value={targetAmount} onChange={(e) => setTargetAmount(e.target.value)} placeholder="5000" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Data e përfundimit *</Label>
+                    <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Items të buxhetit *</Label>
+                    <Button size="sm" variant="outline" onClick={addBudgetItem}><PlusIcon className="h-3 w-3 mr-1" /> Shto item</Button>
+                  </div>
+                  {budgetItems.map((it, i) => (
+                    <div key={it.id} className="flex gap-2 items-center">
+                      <Input className="flex-1" placeholder="p.sh. Operacioni mjekësor" value={it.label} onChange={(e) => setBudgetItems((p) => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))} />
+                      <Input className="w-32" type="number" placeholder="€" value={it.amount} onChange={(e) => setBudgetItems((p) => p.map((x, j) => j === i ? { ...x, amount: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setBudgetItems((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /></Button>
+                    </div>
+                  ))}
+                  {budgetItems.length > 0 && (
+                    <p className="text-xs text-gray-500">Total items: €{budgetItems.reduce((s, x) => s + (Number(x.amount) || 0), 0).toFixed(2)} / Target: €{Number(targetAmount).toFixed(2)}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Tip për Unify (opsionale)</Label>
+                  <Select value={tip} onValueChange={setTip}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">0% — Pa tip</SelectItem>
+                      <SelectItem value="5">5% — Standardi</SelectItem>
+                      <SelectItem value="10">10% — Mbështetës i Unify</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 5: FAQ + Transparency ─────────────────────────── */}
+          {step === 4 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">FAQ + Dokumente Mbështetëse</h2>
+              <p className="text-sm text-gray-500">Pyetje të shpeshta + dokumente që rrisin besueshmërinë.</p>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Pyetjet e shpeshta</Label>
+                    <Button size="sm" variant="outline" onClick={addFaq}><PlusIcon className="h-3 w-3 mr-1" /> Shto FAQ</Button>
+                  </div>
+                  {faqs.map((f, i) => (
+                    <div key={f.id} className="border border-gray-200 rounded-lg p-3 space-y-2">
+                      <Input placeholder="Pyetja" value={f.q} onChange={(e) => setFaqs((p) => p.map((x, j) => j === i ? { ...x, q: e.target.value } : x))} />
+                      <Textarea placeholder="Përgjigja" rows={2} value={f.a} onChange={(e) => setFaqs((p) => p.map((x, j) => j === i ? { ...x, a: e.target.value } : x))} />
+                      <Button size="sm" variant="outline" onClick={() => setFaqs((p) => p.filter((_, j) => j !== i))}><TrashIcon className="h-3 w-3" /> Hiq</Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Dokumente mbështetëse (medical reports, ID, etj.)</Label>
+                  <MultiImageUpload images={supportingDocs} onChange={setSupportingDocs} max={5} />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Bashkëpunëtorë / Organizatë (opsionale)</Label>
+                  <Input value={partners} onChange={(e) => setPartners(e.target.value)} placeholder="p.sh. Caritas Kosova, Spitali UCCK..." />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── HAPI 6: Preview ─────────────────────────── */}
+          {step === 5 && (
+            <>
+              <h2 className="font-bold text-lg text-gray-900">Preview & Publikim</h2>
+
+              <div className="rounded-xl border border-gray-200 overflow-hidden">
+                {images[0] && <img src={images[0]} alt="" className="w-full h-56 object-cover" />}
+                <div className="p-5 space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>{CATEGORIES.find((c) => c.value === category)?.label ?? "—"}</Badge>
+                    <Badge variant="outline">{location}</Badge>
+                    {urgency >= 8 && <Badge variant="destructive">URGJENTE ({urgency}/10)</Badge>}
+                  </div>
+                  <h3 className="text-2xl font-bold">{title || "—"}</h3>
+                  <p className="text-sm text-gray-600">{shortDescription}</p>
+                  <div className="grid grid-cols-3 gap-3 text-xs">
+                    <div><span className="text-gray-500">Target:</span> <strong>€{Number(targetAmount).toFixed(2)}</strong></div>
+                    <div><span className="text-gray-500">Items:</span> <strong>{budgetItems.length}</strong></div>
+                    <div><span className="text-gray-500">Milestones:</span> <strong>{milestones.length}</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-900">
+                ⚠️ Pas publikimit, kampanja shkon në statusin <strong>PENDING</strong> dhe pret aprovim nga admini.
+              </div>
+            </>
+          )}
+
+          {/* Footer nav */}
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+            <Button variant="outline" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}>
+              ← Mbrapa
+            </Button>
+            <div className="text-xs text-gray-400">{step + 1} / {STEP_LABELS.length}</div>
+            {step < STEP_LABELS.length - 1 ? (
+              <Button disabled={!canProceed} onClick={() => setStep((s) => s + 1)}>
+                Vazhdo →
+              </Button>
+            ) : (
+              <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700">
+                {submitting ? "Duke publikuar..." : "Publiko Kampanjën"}
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}
+

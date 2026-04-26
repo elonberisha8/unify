@@ -1,0 +1,72 @@
+"use client"
+
+// ============================================================
+// BRANCH: feat/auth
+// FIGMA:
+//   • Forgot Password → https://www.figma.com/design/1OT7I2MkWFD2ClFkMGkQt7/Unify-Platform-Design?node-id=37-2
+// NOTION: https://www.notion.so/34874891227e810bb074e9e50dab305f
+// ============================================================
+
+import { FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { AuthLayout } from "@/components/layout"
+import { Button, Input } from "@/components/ui"
+import { ArrowLeftIcon, MailIcon } from "@/components/icons"
+
+export default function ForgotPasswordPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    router.push(`/auth/reset-konfirmim?email=${encodeURIComponent(email || "ana.kelmendi@gmail.com")}`)
+  }
+
+  return (
+    <AuthLayout
+      variant="forgot"
+      title={"Mos u shqetëso,\nne jemi këtu!"}
+      description={"Vendosni email adresën tuaj dhe do t'ju\ndërgojmë udhëzimet e rikthimit."}
+    >
+      <section className="w-full max-w-[448px]">
+        <Link href="/auth/login" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-unify-blue hover:underline">
+          <ArrowLeftIcon className="h-5 w-5" />
+          Kthehu tek Login
+        </Link>
+
+        <div className="mb-8">
+          <h1 className="font-display text-4xl text-gray-950">Harruat Fjalëkalimin?</h1>
+          <p className="mt-3 text-base text-muted-foreground">
+            Asnjë problem! Vendosni email adresën tuaj më poshtë.
+          </p>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-6">
+          <label className="block">
+            <span className="mb-2 block text-sm font-bold text-gray-700">Email Adresa</span>
+            <span className="relative block">
+              <MailIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                required
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="emri@shembull.com"
+                className="h-14 rounded-[14px] bg-gray-50 pl-12"
+              />
+            </span>
+          </label>
+
+          <Button type="submit" size="lg" className="h-[60px] w-full rounded-[14px] bg-gradient-to-r from-unify-blue to-blue-800 shadow-lg shadow-blue-500/20">
+            Dërgo Email-in
+          </Button>
+
+          <div className="rounded-[14px] bg-blue-50 p-4 text-sm leading-6 text-blue-900">
+            Këshillë: Kontrolloni edhe dosjen e spam-it nëse nuk e gjeni email-in brenda pak minutash.
+          </div>
+        </form>
+      </section>
+    </AuthLayout>
+  )
+}

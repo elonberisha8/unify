@@ -13,4 +13,5 @@ export { InboxSidebar, type InboxSidebarProps, type InboxThread } from "./InboxS
 export { ChatWindow, type ChatWindowProps, type ChatMessage } from "./ChatWindow";
 export { StripeVerificationCard, type StripeVerificationCardProps, type VerifyStatus } from "./StripeVerificationCard";
 export { ImageUploadZone, type ImageUploadZoneProps } from "./ImageUploadZone";
+export { MultiImageUpload, type MultiImageUploadProps } from "./MultiImageUpload";
 export { PublicProfileHero, type PublicProfileHeroProps } from "./PublicProfileHero";

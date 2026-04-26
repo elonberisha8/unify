@@ -6,6 +6,7 @@ export { SearchBar, type SearchBarProps } from "./SearchBar";
 export { FilterChips, type FilterChipsProps } from "./FilterChips";
 export { DonationModal, type DonationModalProps } from "./DonationModal";
 export { BookmarkButton, type BookmarkButtonProps } from "./BookmarkButton";
+export { ReportButton, type ReportButtonProps } from "./ReportButton";
 export { ShareButtons, type ShareButtonsProps } from "./ShareButtons";
 export { StatisticCard, type StatisticCardProps } from "./StatisticCard";
 export { CallToActionSection, type CallToActionSectionProps } from "./CallToActionSection";

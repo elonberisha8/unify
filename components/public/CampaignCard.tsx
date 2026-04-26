@@ -1,12 +1,9 @@
 "use client";
 import * as React from "react";
-import { HeartIcon, MapPinIcon, CalendarIcon, ShareIcon, BookmarkIcon } from "@/components/icons";
+import { HeartIcon, MapPinIcon, CalendarIcon, ShareIcon, BookmarkIcon, CheckCircleIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
-import { Card, CardContent } from "../ui/Card";
-import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
-import { Progress } from "../ui/Progress";
+import { Badge, Button, Card, CardContent, Progress } from "@/components/ui";
 
 export interface CampaignCardProps {
   id: string;
@@ -22,6 +19,7 @@ export interface CampaignCardProps {
   donorCount?: number;
   creatorName?: string;
   verified?: boolean;
+  featured?: boolean;
   bookmarked?: boolean;
   onBookmark?: () => void;
   onShare?: () => void;
@@ -32,7 +30,7 @@ export interface CampaignCardProps {
 
 export function CampaignCard({
   title, description, imageUrl, category, location, raised, goal,
-  currency = "€", daysLeft, donorCount, creatorName, verified,
+  currency = "€", daysLeft, donorCount, creatorName, verified, featured,
   bookmarked, onBookmark, onShare, onDonate, onClick, className,
 }: CampaignCardProps) {
   const pct = Math.min(100, Math.round((raised / goal) * 100));
@@ -40,13 +38,29 @@ export function CampaignCard({
 
   return (
     <Card className={cn("overflow-hidden group hover:shadow-lg transition-shadow", className)}>
-      <button onClick={onClick} className="relative w-full aspect-[4/3] overflow-hidden bg-muted block">
+      <div
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (onClick && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        className="relative w-full aspect-[4/3] overflow-hidden bg-muted block cursor-pointer"
+      >
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="w-full h-full bg-unify-cream" />
         )}
-        {category && <Badge variant="primary" className="absolute top-3 left-3">{category}</Badge>}
+        {featured && (
+          <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-amber-400 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow">
+            ⭐ E Zgjedhur
+          </div>
+        )}
+        {!featured && category && <Badge variant="primary" className="absolute top-3 left-3">{category}</Badge>}
         <div className="absolute top-3 right-3 flex gap-2">
           {onBookmark && (
             <button onClick={(e) => { e.stopPropagation(); onBookmark(); }} className="h-9 w-9 rounded-full bg-white/90 flex items-center justify-center hover:bg-white">
@@ -59,7 +73,7 @@ export function CampaignCard({
             </button>
           )}
         </div>
-      </button>
+      </div>
 
       <CardContent className="p-5 space-y-3">
         <button onClick={onClick} className="text-left w-full">
@@ -87,7 +101,7 @@ export function CampaignCard({
             {creatorName && (
               <span className="flex items-center gap-1 text-muted-foreground">
                 nga <span className="font-bold text-foreground">{creatorName}</span>
-                {verified && <span className="text-unify-blue">✓</span>}
+                {verified && <CheckCircleIcon className="h-3 w-3 text-unify-blue" />}
               </span>
             )}
             {donorCount != null && <span className="text-muted-foreground">{donorCount} donatorë</span>}
@@ -96,7 +110,7 @@ export function CampaignCard({
 
         {onDonate && (
           <Button onClick={onDonate} className="w-full" size="md">
-            <HeartIcon className="h-4 w-4" /> Dono
+            <HeartIcon className="h-4 w-4" /> Dhuro
           </Button>
         )}
       </CardContent>

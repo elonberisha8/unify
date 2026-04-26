@@ -10,6 +10,7 @@ export interface ChatMessage {
   time: string;
   self?: boolean;
   avatar?: string;
+  senderName?: string;
 }
 
 export interface ChatWindowProps {

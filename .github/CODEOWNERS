@@ -1,0 +1,82 @@
+# ============================================================
+# UNIFY FRONTEND — CODEOWNERS
+# ============================================================
+# Si funksionon:
+#   Kur developer bën PR që prek një file,
+#   GitHub automatikisht kërkon review nga owner-i i atij file.
+#   PR nuk mund të merge pa aprovimin e owner-it.
+#
+# TODO: Zëvendëso @placeholder me GitHub username-in real.
+#       Shko te: github.com/USERNAME — aty e gjen username-in.
+# ============================================================
+
+# ── LEAD DEV + CO-LEAD — zona e mbrojtur ────────────────────
+# Askush nuk prek këto pa aprovimin tuaj
+components/                           @elonberisha8 @bleon-bajraktari
+tailwind.config.ts                    @elonberisha8 @bleon-bajraktari
+next.config.js                        @elonberisha8 @bleon-bajraktari
+package.json                          @elonberisha8 @bleon-bajraktari
+.eslintrc.json                        @elonberisha8 @bleon-bajraktari
+.github/                              @elonberisha8 @bleon-bajraktari
+DEVELOPER_GUIDE.md                    @elonberisha8 @bleon-bajraktari
+
+# ── Dev 1 — feat/homepage ────────────────────────────────────
+app/page.tsx                          @dev1-username @bleon-bajraktari
+
+# ── Dev 2 — feat/static-pages ───────────────────────────────
+app/rreth-nesh/                       @dev2-username @bleon-bajraktari
+app/kontakt/                          @dev2-username @bleon-bajraktari
+app/blog/                             @dev2-username @bleon-bajraktari
+app/kushtet/                          @dev2-username @bleon-bajraktari
+app/privatesia/                       @dev2-username @bleon-bajraktari
+app/not-found.tsx                     @dev2-username @bleon-bajraktari
+app/sherbimet/                        @dev2-username @bleon-bajraktari
+
+# ── Dev 3 — feat/listings ────────────────────────────────────
+app/shpalljet/                        @dev3-username @bleon-bajraktari
+app/kampanjat/page.tsx                @dev3-username @bleon-bajraktari
+
+# ── Dev 4 — feat/campaign-detail ────────────────────────────
+app/kampanjat/[slug]/                 @dev4-username @bleon-bajraktari
+app/sukses/                           @dev4-username @bleon-bajraktari
+
+# ── Dev 5 — feat/volunteer-detail ───────────────────────────
+app/vullnetare/                       @dev5-username @bleon-bajraktari
+
+# ── Dev 6 — feat/auth ────────────────────────────────────────
+app/auth/                             @dev6-username @bleon-bajraktari
+app/onboarding/                       @dev6-username @bleon-bajraktari
+
+# ── Dev 7 — feat/dashboard-home ─────────────────────────────
+app/dashboard/page.tsx                @dev7-username @bleon-bajraktari
+app/dashboard/transaksionet/          @dev7-username @bleon-bajraktari
+app/dashboard/te-ruajtura/            @dev7-username @bleon-bajraktari
+app/dashboard/aktiviteti/             @dev7-username @bleon-bajraktari
+
+# ── Dev 8 — feat/dashboard-campaigns ────────────────────────
+app/dashboard/kampanjat/              @dev8-username @bleon-bajraktari
+app/dashboard/shpalljet/              @dev8-username @bleon-bajraktari
+app/dashboard/aplikimet/              @dev8-username @bleon-bajraktari
+app/dashboard/behu-krijues/           @dev8-username @bleon-bajraktari
+app/dashboard/krijo/                  @dev8-username @bleon-bajraktari
+
+# ── Dev 9 — feat/dashboard-inbox ────────────────────────────
+app/dashboard/inbox/                  @dev9-username @bleon-bajraktari
+
+# ── Dev 10 — feat/dashboard-profile ─────────────────────────
+app/dashboard/profili/                @dev10-username @bleon-bajraktari
+app/dashboard/verifikimi/             @dev10-username @bleon-bajraktari
+app/profili/                          @dev10-username @bleon-bajraktari
+
+# ── Dev 11 — feat/admin-core ─────────────────────────────────
+app/admin/page.tsx                    @dev11-username @bleon-bajraktari
+app/admin/kampanjat/                  @dev11-username @bleon-bajraktari
+app/admin/vullnetare/                 @dev11-username @bleon-bajraktari
+app/admin/cilesimet/                  @dev11-username @bleon-bajraktari
+
+# ── Dev 12 — feat/admin-moderation ──────────────────────────
+app/admin/perdoruesit/                @dev12-username @bleon-bajraktari
+app/admin/raportimet/                 @dev12-username @bleon-bajraktari
+app/admin/moderim/                    @dev12-username @bleon-bajraktari
+app/admin/blog/                       @dev12-username @bleon-bajraktari
+app/admin/audit-log/                  @dev12-username @bleon-bajraktari
