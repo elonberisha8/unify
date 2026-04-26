@@ -5,12 +5,11 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/layout";
 import { Skeleton, Badge, Button, Input } from "@/components/ui";
 import { ClockIcon, UserIcon, WalletIcon, MegaphoneIcon, ShareIcon, AlertTriangleIcon, DownloadIcon } from "@/components/icons";
 import { apiFetch, type AuditEntry } from "@/app/_lib/api";
+import { useAuthGuard } from "@/app/_lib/useAuthGuard";
 
 type Category = "ACCOUNT" | "FINANCE" | "CAMPAIGN" | "SOCIAL" | "SYSTEM";
 
@@ -65,34 +64,30 @@ function categorizeAction(action: string): Category {
 }
 
 export default function AktivitetiPage() {
-  const router = useRouter();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { ready, authenticated, getToken } = useAuthGuard({ currentPath: "/dashboard/aktiviteti" });
   const [entries, setEntries] = React.useState<AuditEntry[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [activeCategory, setActiveCategory] = React.useState<Category>("ACCOUNT");
   const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
-    async function load() {
-      if (!isLoaded) return;
-      if (!isSignedIn) {
-        router.push(`/auth/login?redirect=${encodeURIComponent("/dashboard/aktiviteti")}`);
-        return;
-      }
+    if (!ready || !authenticated) return;
+    let cancelled = false;
+    (async () => {
       setLoading(true);
       try {
         const token = await getToken();
         const data = await apiFetch<AuditEntry[] | { entries: AuditEntry[] }>("/dashboard/audit-log", { token });
         const list = Array.isArray(data) ? data : data.entries;
-        setEntries(Array.isArray(list) ? list : []);
+        if (!cancelled) setEntries(Array.isArray(list) ? list : []);
       } catch {
-        setEntries([]);
+        if (!cancelled) setEntries([]);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    }
-    load();
-  }, [getToken, isLoaded, isSignedIn, router]);
+    })();
+    return () => { cancelled = true; };
+  }, [ready, authenticated, getToken]);
 
   const enriched = React.useMemo(() => entries.map((e) => ({
     ...e,

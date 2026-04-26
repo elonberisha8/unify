@@ -5,12 +5,12 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { CalendarIcon, MapPinIcon, FileTextIcon, EyeIcon, CloseIcon } from "@/components/icons";
 import { Button, Skeleton, Badge } from "@/components/ui";
 import { EmptyState, DashboardLayout } from "@/components/layout";
 import { apiFetch, type MyApplication } from "@/app/_lib/api";
+import { useAuthGuard } from "@/app/_lib/useAuthGuard";
 
 type AppStatus = MyApplication["status"];
 
@@ -42,17 +42,13 @@ function formatDate(value: string) {
 
 export default function AplikimetPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { ready, authenticated, getToken } = useAuthGuard({ currentPath: "/dashboard/aplikimet" });
   const [applications, setApplications] = React.useState<MyApplication[]>([]);
   const [activeTab, setActiveTab] = React.useState<AppStatus | "all">("all");
   const [loading, setLoading] = React.useState(true);
 
   const load = React.useCallback(async () => {
-    if (!isLoaded) return;
-    if (!isSignedIn) {
-      router.push(`/auth/login?redirect=${encodeURIComponent("/dashboard/aplikimet")}`);
-      return;
-    }
+    if (!ready || !authenticated) return;
     setLoading(true);
     try {
       const token = await getToken();
@@ -64,7 +60,7 @@ export default function AplikimetPage() {
     } finally {
       setLoading(false);
     }
-  }, [getToken, isLoaded, isSignedIn, router]);
+  }, [ready, authenticated, getToken]);
 
   React.useEffect(() => { load(); }, [load]);
 

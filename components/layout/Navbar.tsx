@@ -2,7 +2,7 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MenuIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Button, Sheet, SheetContent, SheetTrigger } from "@/components/ui";
@@ -23,29 +23,44 @@ export interface NavbarProps {
   className?: string;
 }
 
+function ClerkAuthProbe() {
+  // Lazy: only used inside ClerkProvider tree. We try-catch to be safe.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { useAuth } = require("@clerk/nextjs");
+    return useAuth();
+  } catch {
+    return { isLoaded: true, isSignedIn: false };
+  }
+}
+
 export function Navbar({
   logo, links = [], onLogin, onRegister, onSearch,
   isAuthenticated, userMenu, className,
 }: NavbarProps) {
   const pathname = usePathname();
-  const readAuthState = React.useCallback(() => {
-    const hasAuthCookie = /(^|;\s*)(__session|__client|jwt|token|session)=/.test(document.cookie);
-    const hasAuthStorage = ["__session", "jwt", "token", "authToken", "clerk-db-jwt"].some((key) => {
+  const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn } = ClerkAuthProbe();
+
+  const readLocalAuth = React.useCallback(() => {
+    if (typeof window === "undefined") return false;
+    return ["jwt", "token", "authToken"].some((key) => {
       try {
         return Boolean(window.localStorage.getItem(key) || window.sessionStorage.getItem(key));
       } catch {
         return false;
       }
     });
-
-    return hasAuthCookie || hasAuthStorage;
   }, []);
-  const [detectedAuth, setDetectedAuth] = React.useState(false);
+
+  const [localAuth, setLocalAuth] = React.useState(false);
   const [authReady, setAuthReady] = React.useState(isAuthenticated !== undefined);
-  const effectiveAuthenticated = isAuthenticated ?? detectedAuth;
-  const goToLogin = onLogin ?? (() => { window.location.href = "/auth/login"; });
-  const goToRegister = onRegister ?? (() => { window.location.href = "/auth/register"; });
-  const goToDashboard = () => { window.location.href = "/dashboard"; };
+
+  // Effective auth: explicit prop > Clerk > localStorage fallback
+  const effectiveAuthenticated = isAuthenticated ?? (clerkSignedIn || localAuth);
+  const router = useRouter();
+  const goToLogin = onLogin ?? (() => { router.push("/auth/login"); });
+  const goToRegister = onRegister ?? (() => { router.push("/auth/register"); });
+  const goToDashboard = () => { router.push("/dashboard"); };
 
   React.useEffect(() => {
     if (isAuthenticated !== undefined) {
@@ -54,11 +69,12 @@ export function Navbar({
     }
 
     const syncAuthState = () => {
-      setDetectedAuth(readAuthState());
-      setAuthReady(true);
+      setLocalAuth(readLocalAuth());
     };
 
     syncAuthState();
+    if (clerkLoaded) setAuthReady(true);
+
     window.addEventListener("storage", syncAuthState);
     window.addEventListener("focus", syncAuthState);
     window.addEventListener("pageshow", syncAuthState);
@@ -70,7 +86,7 @@ export function Navbar({
       window.removeEventListener("pageshow", syncAuthState);
       window.removeEventListener("unify-auth-change", syncAuthState);
     };
-  }, [isAuthenticated, readAuthState]);
+  }, [isAuthenticated, readLocalAuth, clerkLoaded]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";

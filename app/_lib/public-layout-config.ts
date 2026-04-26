@@ -9,7 +9,6 @@ import type { NavbarProps } from "@/components/layout"
 export const PUBLIC_NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Kampanjat", href: "/kampanjat" },
-  { label: "Vullnetare", href: "/vullnetare" },
   { label: "Shpalljet", href: "/shpalljet" },
   { label: "Si Funksionon", href: "/sherbimet" },
   { label: "Rreth Nesh", href: "/rreth-nesh" },

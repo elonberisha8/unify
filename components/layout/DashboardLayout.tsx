@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { LayoutDashboardIcon, MegaphoneIcon, HandHeartIcon, InboxIcon, BookmarkIcon, SettingsIcon, WalletIcon, ScrollTextIcon, UserIcon, LogOutIcon, BellIcon, FileIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
@@ -96,26 +97,46 @@ export function DashboardLayout({
           <p className="font-display text-2xl text-unify-brown">Unify</p>
         </div>
         <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
-          {navItems.map((it) => (
-            <button
-              key={it.key}
-              onClick={() => {
-                onSelect?.(it.key);
-                if (it.href) router.push(it.href);
-              }}
-              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
-                isActive(it) ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
-              )}
-            >
-              {it.icon}
-              <span className="flex-1">{it.label}</span>
-              {it.badge != null && (
-                <span className={cn("text-xs px-2 py-0.5 rounded-full",
-                  activeKey === it.key ? "bg-white text-unify-blue" : "bg-unify-blue text-white"
-                )}>{it.badge}</span>
-              )}
-            </button>
-          ))}
+          {navItems.map((it) => {
+            const active = isActive(it);
+            const baseClass = cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-colors",
+              active ? "bg-unify-blue text-white" : "text-unify-brown hover:bg-muted"
+            );
+            const inner = (
+              <>
+                {it.icon}
+                <span className="flex-1">{it.label}</span>
+                {it.badge != null && (
+                  <span className={cn("text-xs px-2 py-0.5 rounded-full",
+                    active ? "bg-white text-unify-blue" : "bg-unify-blue text-white"
+                  )}>{it.badge}</span>
+                )}
+              </>
+            );
+            if (it.href) {
+              return (
+                <Link
+                  key={it.key}
+                  href={it.href}
+                  prefetch
+                  onClick={() => onSelect?.(it.key)}
+                  className={baseClass}
+                >
+                  {inner}
+                </Link>
+              );
+            }
+            return (
+              <button
+                key={it.key}
+                onClick={() => onSelect?.(it.key)}
+                className={baseClass}
+              >
+                {inner}
+              </button>
+            );
+          })}
         </nav>
 
         {user && (

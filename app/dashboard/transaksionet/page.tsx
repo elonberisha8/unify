@@ -7,12 +7,11 @@
 // ============================================================
 
 import * as React from "react";
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/layout";
 import { Badge, Button, Input } from "@/components/ui";
 import { CheckIcon, ClockIcon, WalletIcon, ChevronDownIcon, ChevronUpIcon, HandHeartIcon, DownloadIcon } from "@/components/icons";
 import { apiFetch, type DashboardTransaction, type TransactionKind } from "@/app/_lib/api";
+import { useAuthGuard } from "@/app/_lib/useAuthGuard";
 
 const TAB_META: Record<TransactionKind, { label: string; description: string; color: string; icon: React.ReactNode }> = {
   DONATION_OUT: {
@@ -50,8 +49,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 export default function TransaksionetPage() {
-  const router = useRouter();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { ready, authenticated, getToken } = useAuthGuard({ currentPath: "/dashboard/transaksionet" });
   const [activeTab, setActiveTab] = React.useState<TransactionKind>("DONATION_OUT");
   const [transactions, setTransactions] = React.useState<DashboardTransaction[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -60,25 +58,22 @@ export default function TransaksionetPage() {
   const [dateTo, setDateTo] = React.useState("");
 
   React.useEffect(() => {
-    async function load() {
-      if (!isLoaded) return;
-      if (!isSignedIn) {
-        router.push(`/auth/login?redirect=${encodeURIComponent("/dashboard/transaksionet")}`);
-        return;
-      }
+    if (!ready || !authenticated) return;
+    let cancelled = false;
+    (async () => {
       setLoading(true);
       try {
         const token = await getToken();
         const data = await apiFetch<DashboardTransaction[]>("/dashboard/transactions", { token });
-        setTransactions(Array.isArray(data) ? data : []);
+        if (!cancelled) setTransactions(Array.isArray(data) ? data : []);
       } catch {
-        setTransactions([]);
+        if (!cancelled) setTransactions([]);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    }
-    load();
-  }, [getToken, isLoaded, isSignedIn, router]);
+    })();
+    return () => { cancelled = true; };
+  }, [ready, authenticated, getToken]);
 
   const filtered = React.useMemo(() => {
     return transactions.filter((t) => {

@@ -54,6 +54,7 @@ interface VolunteerItem {
   helpType: string
   category: string
   location: string
+  kind: "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST"
   ownerName: string
   ownerUsername: string | null
   isAnonymous: boolean
@@ -73,6 +74,7 @@ function mapVolunteer(v: VolunteerListing): VolunteerItem {
     description: v.description?.slice(0, 140) ?? "",
     imageUrl: v.images[0] ?? "",
     helpType: v.subtype ?? "PHYSICAL_ITEM",
+    kind: v.kind ?? "VOLUNTEER_CONTRIBUTION",
     category: v.category,
     location: v.location,
     ownerName: v.isAnonymous ? "Pronar Anonim" : v.owner.name,
@@ -89,6 +91,7 @@ export default function ShpalljetPage() {
   const [items, setItems] = React.useState<VolunteerItem[]>([])
   const [loading, setLoading] = React.useState(true)
 
+  const [kindTab, setKindTab] = React.useState<"all" | "VOLUNTEER_CONTRIBUTION" | "SUPPORT_REQUEST">("all")
   const [helpType, setHelpType] = React.useState("all")
   const [category, setCategory] = React.useState("all")
   const [location, setLocation] = React.useState("all")
@@ -114,6 +117,7 @@ export default function ShpalljetPage() {
 
   const filtered = React.useMemo(() => {
     let result = items.filter((it) => {
+      if (kindTab !== "all" && it.kind !== kindTab) return false
       if (helpType !== "all" && it.helpType !== helpType) return false
       if (category !== "all" && it.category !== category) return false
       if (location !== "all" && it.location !== location) return false
@@ -136,7 +140,13 @@ export default function ShpalljetPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  React.useEffect(() => { setPage(1) }, [helpType, category, location, query, sort])
+  React.useEffect(() => { setPage(1) }, [kindTab, helpType, category, location, query, sort])
+
+  const kindCounts = React.useMemo(() => ({
+    all: items.length,
+    VOLUNTEER_CONTRIBUTION: items.filter((i) => i.kind === "VOLUNTEER_CONTRIBUTION").length,
+    SUPPORT_REQUEST: items.filter((i) => i.kind === "SUPPORT_REQUEST").length,
+  }), [items])
 
   const counts = React.useMemo(() => ({
     all: items.length,
@@ -150,11 +160,12 @@ export default function ShpalljetPage() {
       <section className="border-b border-border bg-unify-cream">
         <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
           <div className="max-w-3xl">
-            <Badge className="mb-3">Ndihmë Vullnetare</Badge>
-            <h1 className="font-display text-4xl md:text-5xl text-unify-brown">Shfleto shpalljet vullnetare</h1>
+            <Badge className="mb-3">Shpallje Vullnetare dhe Kërkuese</Badge>
+            <h1 className="font-display text-4xl md:text-5xl text-unify-brown">Shfleto shpalljet</h1>
             <p className="mt-3 text-base md:text-lg text-muted-foreground">
-              Njerëz që ofrojnë sende fizike, shërbime ose mini-fonde monetare. Apliko për të kërkuar ose marrë ndihmë.
-              Për kampanja donacionesh shko tek <a href="/kampanjat" className="text-unify-blue font-bold hover:underline">/kampanjat</a>.
+              Të gjitha shpalljet në një vend — ata që <strong>ofrojnë</strong> ndihmë (kontribues vullnetar)
+              dhe ata që <strong>kërkojnë</strong> ndihmë (kërkues). Për kampanja donacionesh financiare shko tek{" "}
+              <a href="/kampanjat" className="text-unify-blue font-bold hover:underline">/kampanjat</a>.
             </p>
           </div>
         </div>
@@ -162,9 +173,30 @@ export default function ShpalljetPage() {
 
       <section className="border-b border-border bg-white">
         <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
-          <SearchBar value={query} onChange={setQuery} placeholder="Kërko në shpalljet vullnetare..." />
+          <SearchBar value={query} onChange={setQuery} placeholder="Kërko në shpalljet..." />
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-4">
+            {/* Kind tabs */}
+            <div className="flex flex-wrap gap-2">
+              {([
+                { key: "all", label: "Të gjitha", count: kindCounts.all },
+                { key: "VOLUNTEER_CONTRIBUTION", label: "Vullnetare (ofrojnë)", count: kindCounts.VOLUNTEER_CONTRIBUTION },
+                { key: "SUPPORT_REQUEST", label: "Kërkuese (kërkojnë)", count: kindCounts.SUPPORT_REQUEST },
+              ] as const).map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setKindTab(t.key)}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold border-2 transition ${
+                    kindTab === t.key
+                      ? "bg-unify-blue text-white border-unify-blue shadow-md"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-unify-blue"
+                  }`}
+                >
+                  {t.label} <span className="ml-1 opacity-75">({t.count})</span>
+                </button>
+              ))}
+            </div>
+
             <div>
               <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Lloji i ndihmës</p>
               <div className="flex flex-wrap gap-2">
