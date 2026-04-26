@@ -16,7 +16,7 @@ function formatJoined(value: string) {
   return new Date(value).toLocaleDateString("sq-AL", { month: "long", year: "numeric" })
 }
 
-function daysLeft(value: string | null) {
+function daysLeft(value: string | null | undefined) {
   if (!value) return undefined
   const diff = new Date(value).getTime() - Date.now()
   return Math.max(0, Math.ceil(diff / 86400000))
@@ -26,8 +26,8 @@ function imageFromCampaign(campaign: PublicProfileCampaign) {
   return Array.isArray(campaign.images) && campaign.images.length ? campaign.images[0] : undefined
 }
 
-function campaignDescription(campaign: PublicProfileCampaign) {
-  return campaign.shortDescription || campaign.description
+function campaignDescription(campaign: PublicProfileCampaign): string | undefined {
+  return campaign.shortDescription ?? campaign.description ?? undefined
 }
 
 export default function PublicProfilPage() {

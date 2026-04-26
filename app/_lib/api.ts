@@ -311,12 +311,36 @@ export interface PublicProfile {
   location: string | null
   isVerified: boolean
   createdAt: string
-  stats: {
+  privacyCampaignsPublic?: boolean
+  privacyDonationsPublic?: boolean
+  privacyVolunteerPublic?: boolean
+  _count: { campaigns: number; donations: number; volunteerListings: number }
+  campaigns?: PublicProfileCampaign[]
+  stats?: {
     campaigns: number
     donations: number
     totalDonated: number
     volunteerListings: number
   }
+}
+
+// ─── Public Profile Campaign ─────────────────────────────────────────────────
+export interface PublicProfileCampaign {
+  id: string
+  title: string
+  slug: string
+  images: string[]
+  currentAmount: number
+  targetAmount: number
+  status: string
+  category: string
+  location: string
+  isUrgent: boolean
+  createdAt: string
+  endsAt?: string | null
+  shortDescription?: string | null
+  description?: string | null
+  _count?: { donations: number }
 }
 
 // ─── Messaging ───────────────────────────────────────────────────────────────
