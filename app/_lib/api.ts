@@ -230,6 +230,7 @@ export interface VolunteerListing {
     name: string
     image: string | null
     isVerified: boolean
+    username?: string | null
   }
   _count: { applications: number }
 }

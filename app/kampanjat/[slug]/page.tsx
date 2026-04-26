@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useAuth, useUser } from "@clerk/nextjs"
 import { DonationModal, DonorList, ShareButtons } from "@/components/public"
 import {
   Avatar,
@@ -9,6 +10,10 @@ import {
   AvatarImage,
   Badge,
   Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   Progress,
   Separator,
   Spinner,
@@ -19,7 +24,7 @@ import {
   Textarea,
 } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-import { CalendarIcon, CheckIcon, FlagIcon, HeartIcon, MapPinIcon, UsersIcon } from "@/components/icons"
+import { BookmarkIcon, CalendarIcon, CheckIcon, FlagIcon, HeartIcon, MapPinIcon, MessageCircleIcon, UsersIcon } from "@/components/icons"
 import { NAV_LINKS } from "@/app/_lib/constants"
 import { apiFetch, type Campaign } from "@/app/_lib/api"
 import { formatCurrency } from "@/lib/format"
@@ -89,11 +94,21 @@ function PhotoGallery({ images, title }: { images: string[]; title: string }) {
 export default function CampaignDetailPage() {
   const router = useRouter()
   const params = useParams<{ slug: string }>()
+  const { isSignedIn, getToken } = useAuth()
+  const { user } = useUser()
   const [campaign, setCampaign] = React.useState<Campaign | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState("")
   const [showModal, setShowModal] = React.useState(false)
   const [comment, setComment] = React.useState("")
+  const [bookmarked, setBookmarked] = React.useState(false)
+  const [bookmarkLoading, setBookmarkLoading] = React.useState(false)
+  const [showReport, setShowReport] = React.useState(false)
+  const [reportReason, setReportReason] = React.useState("")
+  const [reportSent, setReportSent] = React.useState(false)
+  const [showDm, setShowDm] = React.useState(false)
+  const [dmContent, setDmContent] = React.useState("")
+  const [dmSent, setDmSent] = React.useState(false)
 
   React.useEffect(() => {
     const controller = new AbortController()
@@ -118,6 +133,45 @@ export default function CampaignDetailPage() {
     loadCampaign()
     return () => controller.abort()
   }, [params?.slug])
+
+  // Kontrozo bookmark kur kampanja ngarkohet
+  React.useEffect(() => {
+    if (!campaign?.id || !isSignedIn) return
+    getToken().then(token => {
+      apiFetch<{ bookmarked: boolean }>(`/users/bookmark/${campaign.id}/check`, { token })
+        .then(r => setBookmarked(r.bookmarked))
+        .catch(() => {})
+    })
+  }, [campaign?.id, isSignedIn, getToken])
+
+  async function toggleBookmark() {
+    if (!isSignedIn) { router.push("/auth/login"); return }
+    if (!campaign?.id) return
+    setBookmarkLoading(true)
+    try {
+      const token = await getToken()
+      const r = await apiFetch<{ bookmarked: boolean }>(`/users/bookmark/${campaign.id}`, { method: "POST", token })
+      setBookmarked(r.bookmarked)
+    } catch {} finally { setBookmarkLoading(false) }
+  }
+
+  async function sendReport() {
+    if (!campaign?.id || !reportReason.trim()) return
+    try {
+      const token = await getToken()
+      await apiFetch(`/campaigns/${campaign.id}/report`, { method: "POST", token, body: JSON.stringify({ reason: reportReason }) })
+      setReportSent(true)
+    } catch {}
+  }
+
+  async function sendDm() {
+    if (!campaign?.creator?.username || !dmContent.trim()) return
+    try {
+      const token = await getToken()
+      await apiFetch("/messages/start", { method: "POST", token, body: JSON.stringify({ username: campaign.creator.username, content: dmContent }) })
+      setDmSent(true)
+    } catch {}
+  }
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : ""
 
@@ -339,9 +393,33 @@ export default function CampaignDetailPage() {
                 <span className="flex items-center gap-1">
                   <MapPinIcon className="h-3 w-3" /> {campaign.location}
                 </span>
-                <button className="inline-flex items-center gap-1 hover:text-unify-brown">
+                <button onClick={() => { if (!isSignedIn) { router.push("/auth/login"); return } setShowReport(true) }} className="inline-flex items-center gap-1 hover:text-unify-brown">
                   <FlagIcon className="h-3 w-3" /> Raporto
                 </button>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1.5"
+                  disabled={bookmarkLoading}
+                  onClick={toggleBookmark}
+                >
+                  <BookmarkIcon className={`h-4 w-4 ${bookmarked ? "fill-unify-blue text-unify-blue" : ""}`} />
+                  {bookmarked ? "E Ruajtur" : "Ruaj"}
+                </Button>
+                {campaign.creator?.username && !campaign.isAnonymous && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 gap-1.5"
+                    onClick={() => { if (!isSignedIn) { router.push("/auth/login"); return } setShowDm(true) }}
+                  >
+                    <MessageCircleIcon className="h-4 w-4" />
+                    Mesazh
+                  </Button>
+                )}
               </div>
             </div>
           </aside>
@@ -354,6 +432,56 @@ export default function CampaignDetailPage() {
         campaignId={campaign.id}
         campaignTitle={campaign.title}
       />
+
+      {/* Report Dialog */}
+      <Dialog open={showReport} onOpenChange={(o) => { setShowReport(o); if (!o) { setReportReason(""); setReportSent(false) } }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Raporto këtë kampanjë</DialogTitle></DialogHeader>
+          {reportSent ? (
+            <div className="py-4 text-center text-sm text-green-700 font-medium">✓ Raporti u dërgua. Faleminderit!</div>
+          ) : (
+            <div className="space-y-4">
+              <Textarea
+                value={reportReason}
+                onChange={e => setReportReason(e.target.value)}
+                placeholder="Përshkruaj arsyen e raportimit (p.sh. përmbajtje e rreme, mashtrim...)"
+                rows={4}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowReport(false)}>Anulo</Button>
+                <Button disabled={reportReason.trim().length < 10} onClick={sendReport}>Dërgo Raportin</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* DM Dialog */}
+      <Dialog open={showDm} onOpenChange={(o) => { setShowDm(o); if (!o) { setDmContent(""); setDmSent(false) } }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Dërgoi mesazh krijuesit</DialogTitle></DialogHeader>
+          {dmSent ? (
+            <div className="space-y-4 text-center py-4">
+              <p className="text-sm text-green-700 font-medium">✓ Mesazhi u dërgua!</p>
+              <Button onClick={() => router.push("/dashboard/inbox")}>Shiko Inbox</Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">Dërgoi mesazh <strong>{campaign.isAnonymous ? "Krijuesit" : campaign.creator?.name}</strong> lidhur me këtë kampanjë.</p>
+              <Textarea
+                value={dmContent}
+                onChange={e => setDmContent(e.target.value)}
+                placeholder="Shkruaj mesazhin tënd..."
+                rows={4}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowDm(false)}>Anulo</Button>
+                <Button disabled={dmContent.trim().length < 3} onClick={sendDm}>Dërgo</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </PublicLayout>
   )
 }
