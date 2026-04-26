@@ -85,15 +85,15 @@ export default function Showcase() {
             <Badge variant="secondary">Secondary</Badge>
             <Badge variant="outline">Outline</Badge>
             <Badge variant="destructive">Destructive</Badge>
-            <TagBadge>Shëndetësi</TagBadge>
-            <TagBadge>Arsim</TagBadge>
+            <TagBadge label="Shëndetësi" />
+            <TagBadge label="Arsim" />
           </div>
         </Section>
 
         <Section title="Progress & feedback">
           <div className="max-w-md space-y-4">
             <Progress value={62} />
-            <ProgressBar value={62} label="Kampanja" />
+            <ProgressBar value={62} showLabel />
             <div className="flex items-center gap-3"><Spinner /> Duke ngarkuar…</div>
             <Skeleton className="h-6 w-full" />
           </div>
@@ -136,7 +136,7 @@ export default function Showcase() {
               <CardContent>Përmbajtja kryesore e kartës.</CardContent>
               <CardFooter><Button size="sm">Veprim</Button></CardFooter>
             </Card>
-            <StatCard label="Donacione" value="€12,480" trend={+8.2} />
+            <StatCard label="Donacione" value="€12,480" change={{ value: "+8.2%", direction: "up" }} />
             <CampaignGoalCard title="Shkolla në Gjakovë" raised={7200} goal={12000} />
           </div>
         </Section>
@@ -144,7 +144,7 @@ export default function Showcase() {
         <Section title="Layout helpers">
           <div className="space-y-4">
             <Breadcrumbs items={[{ label: "Kreu", href: "/" }, { label: "Kampanjat", href: "/kampanjat" }, { label: "Detajet" }]} />
-            <EmptyState title="Asgjë këtu ende" description="Provo të shtosh një kampanjë të re." action={<Button>Krijo kampanjë</Button>} />
+            <EmptyState title="Asgjë këtu ende" description="Provo të shtosh një kampanjë të re." action={{ label: "Krijo kampanjë", onClick: () => {} }} />
           </div>
         </Section>
       </div>

@@ -61,6 +61,7 @@ const FAQS = [
 ]
 
 export default function SherbiметPage() {
+  const router = useRouter()
   return (
     <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
       {/* Hero */}

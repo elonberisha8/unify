@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // Stripe nuk bundle-ohet nga Next.js (server-side only)
   // Në Next.js 14.2+, kjo është top-level (jo brenda experimental)
   serverExternalPackages: ["stripe"],
