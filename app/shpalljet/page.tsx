@@ -10,9 +10,17 @@
 
 import * as React from "react"
 import { CampaignCard, VolunteerCard, SearchBar, FilterChips } from "@/components/public"
-import { Tabs, TabsList, TabsTrigger, Pagination, Badge } from "@/components/ui"
+import { Tabs, TabsList, TabsTrigger, TabsContent, Pagination, Badge } from "@/components/ui"
 import { PublicLayout } from "@/components/layout"
-import { PUBLIC_NAVBAR, PUBLIC_FOOTER } from "../_lib/public-layout-config"
+
+const NAV_LINKS = [
+  { label: "Kampanjat", href: "/kampanjat" },
+  { label: "Vullnetare", href: "/vullnetare" },
+  { label: "Shpalljet", href: "/shpalljet" },
+  { label: "Si Funksionon", href: "/si-funksionon" },
+  { label: "Rreth Nesh", href: "/rreth-nesh" },
+  { label: "Blog", href: "/blog" },
+]
 
 const CATEGORIES = [
   { label: "Të gjitha", value: "all" },
@@ -256,30 +264,25 @@ export default function ShpalljetPage() {
     return MOCK.filter((it) => {
       if (tab === "campaign" && it.kind !== "campaign") return false
       if (tab === "volunteer" && it.kind !== "volunteer") return false
-      if (
-        category !== "all" &&
-        it.category.toLowerCase() !== category.toLowerCase() &&
-        !(category === "medical" && it.category === "Mjekësore") &&
-        !(category === "education" && it.category === "Arsim") &&
-        !(category === "emergency" && it.category === "Emergjencë") &&
-        !(category === "community" && it.category === "Komunitet") &&
-        !(category === "sports" && it.category === "Sport") &&
-        !(category === "animals" && it.category === "Kafshë") &&
-        !(category === "environment" && it.category === "Mjedis")
-      ) {
-        return false
-      }
+      if (category !== "all" && it.category.toLowerCase() !== category.toLowerCase() &&
+          !(category === "medical" && it.category === "Mjekësore") &&
+          !(category === "education" && it.category === "Arsim") &&
+          !(category === "emergency" && it.category === "Emergjencë") &&
+          !(category === "community" && it.category === "Komunitet") &&
+          !(category === "sports" && it.category === "Sport") &&
+          !(category === "animals" && it.category === "Kafshë") &&
+          !(category === "environment" && it.category === "Mjedis")) return false
       if (location !== "all") {
         const map: Record<string, string> = {
-          prishtine: "Prishtinë",
-          tirane: "Tiranë",
-          prizren: "Prizren",
-          shkup: "Shkup",
-          diaspora: "Diaspora",
+          prishtine: "Prishtinë", tirane: "Tiranë", prizren: "Prizren",
+          shkup: "Shkup", diaspora: "Diaspora",
         }
         if (it.location !== map[location]) return false
       }
-      if (query && !it.title.toLowerCase().includes(query.toLowerCase())) return false
+      if (query) {
+        const q = query.toLowerCase()
+        if (!it.title.toLowerCase().includes(q)) return false
+      }
       return true
     })
   }, [tab, category, location, query])
@@ -287,31 +290,41 @@ export default function ShpalljetPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  React.useEffect(() => {
-    setPage(1)
-  }, [tab, category, location, query])
+  React.useEffect(() => { setPage(1) }, [tab, category, location, query])
 
-  const counts = React.useMemo(
-    () => ({
-      all: MOCK.length,
-      campaign: MOCK.filter((i) => i.kind === "campaign").length,
-      volunteer: MOCK.filter((i) => i.kind === "volunteer").length,
-    }),
-    []
-  )
+  const counts = React.useMemo(() => ({
+    all: MOCK.length,
+    campaign: MOCK.filter((i) => i.kind === "campaign").length,
+    volunteer: MOCK.filter((i) => i.kind === "volunteer").length,
+  }), [])
 
   return (
-    <PublicLayout navbar={PUBLIC_NAVBAR} footer={PUBLIC_FOOTER}>
-      <section className="border-b border-border bg-unify-cream">
-        <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+    <PublicLayout
+      navbar={{ links: NAV_LINKS, onLogin: () => {}, onRegister: () => {}, onSearch: () => {} }}
+      footer={{
+        tagline: "Platforma e parë për crowdfunding dhe ndihmë vullnetare për të gjithë shqiptarët.",
+        sections: [
+          { title: "Platforma", links: [{ label: "Si Funksionon", href: "/si-funksionon" }, { label: "Rreth Nesh", href: "/rreth-nesh" }, { label: "Blog", href: "/blog" }] },
+          { title: "Ligjore", links: [{ label: "Kushtet", href: "/kushtet" }, { label: "Privatësia", href: "/privatesia" }] },
+          { title: "Kontakt", links: [{ label: "Na Shkruaj", href: "/kontakt" }] },
+        ],
+        socials: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+        ],
+      }}
+    >
+      {/* Hero */}
+      <section className="bg-unify-cream border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
           <div className="max-w-3xl">
-            <Badge variant="secondary" className="mb-4">
-              Të gjitha shpalljet
-            </Badge>
-            <h1 className="mb-4 font-display text-4xl text-unify-brown md:text-5xl">Shpalljet Publike</h1>
-            <p className="mb-8 text-lg text-muted-foreground">
-              Kërko mes kampanjave të donacioneve dhe aseteve vullnetare. Algoritmi ynë rendit
-              sipas urgjencës dhe interesit.
+            <Badge variant="secondary" className="mb-4">Të gjitha shpalljet</Badge>
+            <h1 className="font-display text-4xl md:text-5xl text-unify-brown mb-4">
+              Shpalljet Publike
+            </h1>
+            <p className="text-lg text-muted-foreground mb-8">
+              Kërko mes kampanjave të donacioneve dhe aseteve vullnetare. Algoritmi
+              ynë rendit sipas urgjencës dhe interesit.
             </p>
             <SearchBar
               value={query}
@@ -323,8 +336,9 @@ export default function ShpalljetPage() {
         </div>
       </section>
 
+      {/* Filters + Tabs */}
       <section className="border-b border-border bg-background">
-        <div className="mx-auto max-w-7xl space-y-4 px-4 py-6 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-4">
           <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
             <TabsList>
               <TabsTrigger value="all">Të Gjitha ({counts.all})</TabsTrigger>
@@ -335,32 +349,33 @@ export default function ShpalljetPage() {
 
           <div className="space-y-3">
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Kategoria</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Kategoria</p>
               <FilterChips options={CATEGORIES} value={category} onChange={setCategory} />
             </div>
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Lokacioni</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Lokacioni</p>
               <FilterChips options={LOCATIONS} value={location} onChange={setLocation} />
             </div>
           </div>
         </div>
       </section>
 
+      {/* Results grid */}
       <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="mb-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between mb-6">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold text-unify-brown">{filtered.length}</span> rezultate
             </p>
           </div>
 
           {pageItems.length === 0 ? (
-            <div className="py-20 text-center">
-              <p className="mb-2 font-display text-2xl text-unify-brown">Nuk u gjet asgjë</p>
+            <div className="text-center py-20">
+              <p className="font-display text-2xl text-unify-brown mb-2">Nuk u gjet asgjë</p>
               <p className="text-muted-foreground">Provo filtra tjerë ose fjalë kyçe.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pageItems.map((it) =>
                 it.kind === "campaign" ? (
                   <CampaignCard
@@ -377,12 +392,10 @@ export default function ShpalljetPage() {
                     donorCount={it.donorCount}
                     creatorName={it.creatorName}
                     verified={it.verified}
-                    onClick={() => {
-                      window.location.href = `/kampanjat/${it.id}`
-                    }}
-                    onDonate={() => {
-                      window.location.href = `/kampanjat/${it.id}`
-                    }}
+                    onClick={() => { window.location.href = `/kampanjat/${it.id}` }}
+                    onBookmark={() => {}}
+                    onShare={() => {}}
+                    onDonate={() => {}}
                   />
                 ) : (
                   <VolunteerCard
@@ -396,9 +409,7 @@ export default function ShpalljetPage() {
                     startDate={it.startDate}
                     applicantCount={it.applicantCount}
                     skills={it.skills}
-                    onClick={() => {
-                      window.location.href = `/vullnetare/${it.id}`
-                    }}
+                    onClick={() => { window.location.href = `/vullnetare/${it.id}` }}
                     onApply={() => {}}
                   />
                 )
@@ -407,7 +418,7 @@ export default function ShpalljetPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="mt-10 flex justify-center">
+            <div className="flex justify-center mt-10">
               <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </div>
           )}
