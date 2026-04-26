@@ -20,7 +20,7 @@ import {
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
 } from "@/components/ui";
 import { DashboardLayout } from "@/components/layout";
-import { CheckIcon, TrashIcon, PlusIcon } from "@/components/icons";
+import { CheckIcon, ChevronDownIcon, TrashIcon, PlusIcon } from "@/components/icons";
 import { apiFetch } from "@/app/_lib/api";
 
 const CATEGORIES = [
@@ -36,129 +36,164 @@ const CATEGORIES = [
   { label: "Tjera", value: "OTHER" },
 ];
 
-// ── Të gjitha komunat + qytetet kryesore të Kosovës ─────────────
-const KOSOVO_LOCATIONS = [
-  // Qytetet kryesore
-  "Prishtinë",
-  "Prizren",
-  "Pejë",
-  "Mitrovicë",
-  "Ferizaj",
-  "Gjakovë",
-  "Gjilan",
-  // Komunat e tjera
-  "Vushtrri",
-  "Suharekë",
-  "Rahovec",
-  "Lipjan",
-  "Podujevë",
-  "Istog",
-  "Klinë",
-  "Skënderaj",
-  "Drenas",
-  "Deçan",
-  "Malishevë",
-  "Dragash",
-  "Kaçanik",
-  "Shtime",
-  "Fushë Kosovë",
-  "Obiliq",
-  "Novo Bërdë",
-  "Kamenicë",
-  "Vitia",
-  "Leposaviq",
-  "Zubin Potok",
-  "Zveçan",
-  "Shtërpcë",
-  "Graçanicë",
-  "Ranillug",
-  "Partesh",
-  "Kllokot",
-  "Mamushë",
-  "Hani i Elezit",
-  "Junik",
-  "Mitrovica e Veriut",
-  // Jashtë Kosovës
-  "Diasporë",
-  "Online",
-  "Jashtë Kosovës",
+// ── Trojet shqiptare — të gjitha qytetet/komunat ─────────────
+const LOCATION_GROUPS: { label: string; cities: string[] }[] = [
+  {
+    label: "Kosovë",
+    cities: [
+      "Prishtinë", "Prizren", "Pejë", "Mitrovicë", "Ferizaj", "Gjakovë", "Gjilan",
+      "Vushtrri", "Suharekë", "Rahovec", "Lipjan", "Podujevë", "Istog", "Klinë",
+      "Skënderaj", "Drenas", "Deçan", "Malishevë", "Dragash", "Kaçanik", "Shtime",
+      "Fushë Kosovë", "Obiliq", "Novo Bërdë", "Kamenicë", "Vitia", "Hani i Elezit",
+      "Junik", "Mamushë", "Graçanicë", "Shtërpcë", "Leposaviq", "Zubin Potok",
+      "Zveçan", "Ranillug", "Partesh", "Kllokot", "Mitrovica e Veriut",
+    ],
+  },
+  {
+    label: "Shqipëri",
+    cities: [
+      "Tiranë", "Durrës", "Vlorë", "Shkodër", "Elbasan", "Fier", "Korçë", "Berat",
+      "Gjirokastër", "Lushnjë", "Kavajë", "Pogradec", "Sarandë", "Peshkopi", "Kukës",
+      "Lezhë", "Krujë", "Laç", "Burrel", "Përmet", "Tepelenë", "Çorovodë", "Gramsh",
+      "Librazhd", "Rrogozhinë", "Patos", "Ballsh", "Orikum", "Himarë", "Delvinë",
+    ],
+  },
+  {
+    label: "Maqedonia e Veriut",
+    cities: [
+      "Tetovë", "Gostivar", "Shkup", "Struga", "Ohër", "Dibër", "Kërçovë",
+      "Studeničani", "Zelino", "Vrapçishtë", "Bogovinjë", "Tearce", "Jegunovcë",
+      "Mavrovë e Rostushë", "Centar Zhupë", "Plasnicë",
+    ],
+  },
+  {
+    label: "Mali i Zi",
+    cities: [
+      "Ulqin", "Tuz", "Rozhajë", "Plavë", "Guci", "Bar", "Podgoricë", "Beranë",
+    ],
+  },
+  {
+    label: "Lugina e Preshevës",
+    cities: ["Preshevë", "Bujanoc", "Medvegjë"],
+  },
+  {
+    label: "Tjera",
+    cities: ["Diasporë", "Online", "Jashtë Trojeve"],
+  },
 ];
 
-// ── Combobox për lokacion ─────────────────────────────────────
+const ALL_CITIES = LOCATION_GROUPS.flatMap((g) => g.cities);
+
+// ── Combobox me stil identik me Select ───────────────────────
 function LocationCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = React.useState(false);
-  const [query, setQuery] = React.useState(value);
+  const [query, setQuery] = React.useState("");
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  // Sync input when value is set externally
-  React.useEffect(() => { setQuery(value); }, [value]);
-
-  // Close on outside click
   React.useEffect(() => {
-    function handleClick(e: MouseEvent) {
+    function onMouseDown(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
-        // if user typed something but didn't pick, keep it as custom
-        if (query.trim() && query !== value) onChange(query.trim());
+        setQuery("");
       }
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [query, value, onChange]);
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, []);
 
-  const filtered = KOSOVO_LOCATIONS.filter((l) =>
-    l.toLowerCase().includes(query.toLowerCase())
-  );
+  function select(city: string) {
+    onChange(city);
+    setOpen(false);
+    setQuery("");
+  }
+
+  const q = query.toLowerCase();
+  const isSearching = q.length > 0;
+
+  const filteredGroups = isSearching
+    ? LOCATION_GROUPS.map((g) => ({ ...g, cities: g.cities.filter((c) => c.toLowerCase().includes(q)) })).filter((g) => g.cities.length > 0)
+    : LOCATION_GROUPS;
 
   const showCustom =
-    query.trim().length > 0 &&
-    !KOSOVO_LOCATIONS.some((l) => l.toLowerCase() === query.trim().toLowerCase());
-
-  function select(loc: string) {
-    onChange(loc);
-    setQuery(loc);
-    setOpen(false);
-  }
+    q.length > 0 &&
+    !ALL_CITIES.some((c) => c.toLowerCase() === q);
 
   return (
     <div ref={containerRef} className="relative">
-      <input
-        type="text"
-        value={query}
-        placeholder="Kërko qytetin ose shtyp vetë..."
-        className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        onFocus={() => setOpen(true)}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setOpen(true);
-          if (e.target.value === "") onChange("");
-        }}
-      />
-      {open && (filtered.length > 0 || showCustom) && (
-        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
-          {filtered.map((loc) => (
-            <button
-              key={loc}
-              type="button"
-              onMouseDown={(e) => { e.preventDefault(); select(loc); }}
-              className={`flex w-full items-center px-3 py-2 text-sm hover:bg-unify-blue/5 text-left ${
-                value === loc ? "font-semibold text-unify-blue bg-unify-blue/5" : "text-gray-800"
-              }`}
-            >
-              {value === loc && <CheckIcon className="mr-2 h-3.5 w-3.5 shrink-0 text-unify-blue" />}
-              <span className={value === loc ? "" : "ml-5"}>{loc}</span>
-            </button>
-          ))}
-          {showCustom && (
-            <button
-              type="button"
-              onMouseDown={(e) => { e.preventDefault(); select(query.trim()); }}
-              className="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2.5 text-sm text-unify-blue hover:bg-unify-blue/5 text-left"
-            >
-              <PlusIcon className="h-3.5 w-3.5 shrink-0" />
-              Përdor <span className="font-semibold">&quot;{query.trim()}&quot;</span>
-            </button>
-          )}
+      {/* Trigger — identik me SelectTrigger */}
+      <button
+        type="button"
+        onClick={() => { setOpen((o) => !o); setTimeout(() => inputRef.current?.focus(), 10); }}
+        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      >
+        <span className={value ? "text-foreground" : "text-muted-foreground"}>
+          {value || "Zgjidh qytetin"}
+        </span>
+        <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute z-50 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+          {/* Search input */}
+          <div className="border-b border-gray-100 p-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Kërko qytetin..."
+              className="w-full rounded-sm px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* List */}
+          <div className="max-h-64 overflow-y-auto py-1">
+            {filteredGroups.map((group) => (
+              <div key={group.label}>
+                <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  {group.label}
+                </p>
+                {group.cities.map((city) => (
+                  <button
+                    key={city}
+                    type="button"
+                    onMouseDown={(e) => { e.preventDefault(); select(city); }}
+                    className={`flex w-full items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground ${
+                      value === city ? "bg-accent/60 font-semibold text-unify-blue" : ""
+                    }`}
+                  >
+                    {value === city
+                      ? <CheckIcon className="h-3.5 w-3.5 shrink-0 text-unify-blue" />
+                      : <span className="w-3.5" />
+                    }
+                    {city}
+                  </button>
+                ))}
+              </div>
+            ))}
+
+            {/* Opsioni custom */}
+            {showCustom && (
+              <div className="border-t border-gray-100 pt-1">
+                <button
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); select(query.trim()); }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-left text-unify-blue hover:bg-accent"
+                >
+                  <PlusIcon className="h-3.5 w-3.5 shrink-0" />
+                  Vendos <span className="font-semibold">&quot;{query.trim()}&quot;</span>
+                </button>
+              </div>
+            )}
+
+            {filteredGroups.length === 0 && !showCustom && (
+              <p className="px-3 py-4 text-center text-sm text-muted-foreground">
+                Nuk u gjet asnjë qytet.
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>
